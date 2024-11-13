@@ -25,14 +25,10 @@ jobs:
         run: |
           if [[ -n "$changed_images" ]]; then
             # Convert the comma-separated list into JSON
-            echo "images=$(echo '[\"'${changed_images//,/\",\"}'\"]')" >> $GITHUB_ENV
+            echo "images=$(echo '[\"'${changed_images//,/\",\"}'\"]')" >> $GITHUB_OUTPUT
           else
-            echo "images=[]" >> $GITHUB_ENV
-          fi
-        env:
-          changed_images: $changed_images
-        outputs:
-          images: ${{ env.images }}
+            echo "images=[]" >> $GITHUB_OUTPUT
+          fi 
 
   build-images:
     needs: determine-changes
