@@ -1,4 +1,4 @@
-#!/Users/georgi_nikolov/.homebrew/bin/bash
+#!/bin/bash
 
 #====================================================================================================
 # Script to determine which images need to be rebuilt based on recent changes.
