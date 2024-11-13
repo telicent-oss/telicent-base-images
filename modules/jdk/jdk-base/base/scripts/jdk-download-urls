@@ -1,0 +1,84 @@
+#!/bin/bash
+
+#===========================================================================================
+# Helper script to fetch the latest JDK build links from Adoptium API.
+# Given a Java version, it retrieves the .tar.gz archive, signature, and checksum URLs.
+# This script is POSIX compatible and intended for use in image build processes.
+#===========================================================================================
+set -e
+
+# source the utils file
+. ../utils
+
+# Default values
+JAVA_INSTALL_VERSION="21"
+IMAGE_TYPE="jre"
+JVM_IMPL="hotspot" # Static as eclipse is the only option available in Adoptium API
+OS=$(uname -s | tr '[:upper:]' '[:lower:]')  # Default to the current OS derived from uname
+VENDOR="eclipse" # Static as eclipse is the only option available in Adoptium API
+
+# Determine architecture based on uname -m (for macOS and Linux) and convert to format expected by Adoptium API
+ARCHITECTURE=$(uname -m | sed -e 's/x86_64/x64/' -e 's/armv7l/arm/' -e 's/arm64/aarch64/')
+
+# Argument handling:
+# - 1 argument sets JAVA_INSTALL_VERSION
+# - 2 arguments set JAVA_INSTALL_VERSION and ARCHITECTURE
+# - 3 arguments set JAVA_INSTALL_VERSION, ARCHITECTURE, and IMAGE_TYPE
+# - 4 or more arguments will set all respective variables (JAVA_INSTALL_VERSION, ARCHITECTURE, IMAGE_TYPE, JVM_IMPL, OS, VENDOR)
+
+if [ $# -ge 1 ]; then
+    JAVA_INSTALL_VERSION=$1
+fi
+
+if [ $# -ge 2 ]; then
+    ARCHITECTURE=$2
+fi
+
+if [ $# -ge 3 ]; then
+    IMAGE_TYPE=$3
+fi
+
+if [ $# -ge 4 ]; then
+    JVM_IMPL=$4
+fi
+
+if [ $# -ge 5 ]; then
+    OS=$5
+fi
+
+if [ $# -ge 6 ]; then
+    VENDOR=$6
+fi
+
+
+# Adapt uname output for common systems to what the Adoptium API expects
+case "$OS" in
+  "darwin")
+    OS="mac"
+    ;;
+  "linux")
+    OS="linux"
+    ;;
+  *)
+    exit_error "Unsupported OS: $OS"
+    ;;
+esac
+
+API_URL="https://api.adoptium.net/v3/assets/latest/${JAVA_INSTALL_VERSION}/${JVM_IMPL}?"
+API_URL+="architecture=${ARCHITECTURE}&image_type=${IMAGE_TYPE}&os=${OS}&vendor=${VENDOR}"
+
+JSON_RESPONSE=$(curl -s "$API_URL")
+
+TAR_GZ_URL=$(echo "$JSON_RESPONSE" | awk -F'"' '/"link":.*\.tar\.gz/ {print $4; exit}')
+SIG_URL=$(echo "$JSON_RESPONSE" | awk -F'"' '/"signature_link":/ {print $4; exit}')
+CHECKSUM_URL=$(echo "$JSON_RESPONSE" | awk -F'"' '/"checksum_link":/ {print $4; exit}')
+
+echo "Java download url: ${TAR_GZ_URL}"
+
+if [ -z "$TAR_GZ_URL" ] || [ -z "$SIG_URL" ] || [ -z "$CHECKSUM_URL" ]; then
+  exit_error "Unable to extract necessary URLs from Temurin API response"
+fi
+
+echo "TAR_GZ_URL=$TAR_GZ_URL"
+echo "SIG_URL=$SIG_URL"
+echo "CHECKSUM_URL=$CHECKSUM_URL"

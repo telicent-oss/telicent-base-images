@@ -1,0 +1,12 @@
+
+RED="\033[31m"
+END="\033[0m"
+
+log() {
+    echo "[INFO] $1"
+}
+
+error_exit() {
+    echo -e "${RED} [ERROR] $1 ${END}" >&2
+    exit 1
+}

@@ -1,0 +1,15 @@
+schema_version: 1
+
+# Used to inject necessary scripts to jdk module destinations
+# this is to prevent code duplication, read on cekit module discovery.
+
+name: "telicent.container.python.base"
+description: "Provides helper scripts to python modules"
+version: 1
+
+envs:
+  - name: DESTINATION_SCRIPTS
+    value: "/tmp/scripts/telicent.container.python"
+
+execute:
+  - script: configure.sh

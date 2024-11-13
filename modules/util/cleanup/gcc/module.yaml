@@ -1,0 +1,11 @@
+schema_version: 1
+
+name: "telicent.container.util.cleanup.gcc"
+version: "1.0.0"
+
+description: "Cleans up microdnf cache, metadata and gcc to reduce image size."
+
+packages:
+  remove:
+    - gcc-c++
+    - gcc

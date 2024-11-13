@@ -1,0 +1,12 @@
+schema_version: 1
+
+name: telicent.container.util.readlines
+description: "Installs specified readlines verions needed by pyenv"
+version: 1.0
+
+envs:
+- name: "PYTHON_INSTALL_VERSION"
+  value: "8.2"
+
+execute:
+- script: configure.sh

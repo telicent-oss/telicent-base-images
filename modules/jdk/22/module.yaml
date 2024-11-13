@@ -1,0 +1,28 @@
+schema_version: 1
+
+# Configure.sh is injected by `telicent.container.openjdk.base` alongside other necessary scripts
+
+name: "telicent.container.openjdk"
+description: "Installs the JDK for Temurin OpenJDK."
+version: &jdkver "22"
+
+labels:
+- name: "org.telicent.product"
+  value: "openjdk"
+- name: "org.telicent.product.version"
+  value: *jdkver
+- name: "org.telicent.product.openjdk.version"
+  value: *jdkver
+
+envs:
+- name: "JAVA_INSTALL_VERSION"
+  value: *jdkver
+
+modules:
+  install:
+    - name: telicent.container.user
+    - name: telicent.container.openjdk.base
+
+
+execute:
+  - script: configure.sh

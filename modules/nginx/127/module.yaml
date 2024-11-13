@@ -1,0 +1,62 @@
+schema_version: 1
+
+name: "telicent.container.nginx"
+version: "1.0.0"
+
+description: "Builds and installs NGINX 1.26 on UBI9 Minimal and configures it to run as a non-root user (GUID 185)."
+
+
+envs:
+  - name: "NGINX_VERSION"
+    value: "1.27.2"
+  - name: "NGINX_GPG_KEY"
+    value: "D6786CE303D9A9022998DC6CC8464D549AF75C0A"
+  - name: UID
+    value: "185"
+
+# todo see if we need equivalent of this on ubi9
+#artifacts:
+#  # Entrypoint script credits to https://github.com/nginxinc/docker-nginx-unprivileged/
+#  - name: docker-entrypoint.sh
+#    url: "https://raw.githubusercontent.com/nginxinc/docker-nginx-unprivileged/refs/tags/1.27.2/entrypoint/docker-entrypoint.sh"
+#    dest: /usr/local/bin/docker-entrypoint.sh
+#
+#  - name: 10-listen-on-ipv6-by-default.sh
+#    url: "https://raw.githubusercontent.com/nginxinc/docker-nginx-unprivileged/refs/tags/1.27.2/entrypoint/10-listen-on-ipv6-by-default.sh"
+#    dest: /docker-entrypoint.d/10-listen-on-ipv6-by-default.sh
+#
+#  - name: 15-local-resolvers.envsh
+#    url: "https://raw.githubusercontent.com/nginxinc/docker-nginx-unprivileged/refs/tags/1.27.2/entrypoint/15-local-resolvers.envsh"
+#    dest: /docker-entrypoint.d/15-local-resolvers.envsh
+#
+#  - name: 20-envsubst-on-templates.sh
+#    url: "https://raw.githubusercontent.com/nginxinc/docker-nginx-unprivileged/refs/tags/1.27.2/entrypoint/20-envsubst-on-templates.sh"
+#    dest: /docker-entrypoint.d/20-envsubst-on-templates.sh
+#
+#  - name: 30-tune-worker-processes.sh
+#    url: "https://github.com/nginxinc/docker-nginx-unprivileged/tree/1.27.2/entrypoint/30-tune-worker-processes.sh"
+#    dest: /docker-entrypoint.d/30-tune-worker-processes.sh
+
+modules:
+  repositories:
+   - path: ../modules
+  install:
+    - name: telicent.container.util.pkg-update
+    - name: telicent.container.util.tzdata
+    - name: telicent.container.tar-gzip
+    - name: telicent.container.user
+
+packages:
+  install:
+    - gcc
+    - gcc-c++
+    - make
+    - pcre2-devel
+    - zlib-devel
+    - openssl-devel
+    - wget
+    - gnupg2
+    - ca-certificates
+
+execute:
+  - script: configure.sh

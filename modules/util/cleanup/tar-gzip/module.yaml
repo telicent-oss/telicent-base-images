@@ -1,0 +1,10 @@
+schema_version: 1
+name: telicent.container.utils.cleanup.tar-gzip
+version: '1.0'
+description: Packages to remove after all modules are executed - java images only
+
+
+packages:
+  remove:
+    - gzip
+    - tar

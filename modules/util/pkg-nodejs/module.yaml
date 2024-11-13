@@ -1,0 +1,17 @@
+schema_version: 1
+name: telicent.container.util.pkg-nodejs
+version: '1.0'
+description: "Enable NodeJS 20 and add dependant packages"
+
+envs:
+  - name: "HOME"
+    value: "/home/user"
+  - name: NPM_CONFIG_PREFIX
+    value: "$HOME/.npm-global"
+  - name: PATH
+    value: "$HOME/node_modules/.bin/:$HOME/.npm-global/bin/:$PATH"
+  - name: "NODEJS_VERSION"
+    value: "20"
+
+execute:
+- script: exec.sh

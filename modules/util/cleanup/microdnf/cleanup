@@ -1,0 +1,8 @@
+#!/bin/bash
+
+set -e
+
+microdnf clean all || true
+
+rm -rf /var/cache/* /var/log/dnf* /tmp/* /var/tmp/*
+rm -rf /var/lib/dnf/*
