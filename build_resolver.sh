@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/Users/georgi_nikolov/.homebrew/bin/bash
 
 #====================================================================================================
 # Script to determine which images need to be rebuilt based on recent changes.
@@ -206,9 +206,16 @@ function detect_image_changes() {
     for image in "${affected_images[@]}"; do
       echo "$image"
     done
+
+    matrix_output=$(IFS=','; echo "${affected_images[*]}")
+    echo "Changed image descriptor(s): $matrix_output"
+
+    [[ -n "$GITHUB_ENV" ]] && echo "changed_images=$matrix_output" >> $GITHUB_ENV
   else
     echo "No images need rebuilding."
-  fi
+    [[ -n "$GITHUB_ENV" ]] && echo "changed_images=[]" >> $GITHUB_ENV
+fi
+
 }
 
 detect_image_changes "image-descriptors/"
