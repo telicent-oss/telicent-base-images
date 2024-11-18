@@ -23,5 +23,3 @@ execute:
 run:
   user: *uid
   workdir: *home
-
-#trigger full rebuild
