@@ -65,6 +65,7 @@ jobs:
             echo "Branch release/${{ env.new_version }} already exists. Fetching and checking out."
             git fetch origin release/${{ env.new_version }}
             git checkout release/${{ env.new_version }}
+            
           else
             echo "Branch release/${{ env.new_version }} does not exist. Creating from dev."
             git checkout -b release/${{ env.new_version }} dev
@@ -100,7 +101,6 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "chore: prepare release ${{ env.new_version }}"
-          base: dev
           branch: release/${{ env.new_version }}
           title: "chore: prepare release ${{ env.new_version }}"
           body: |
