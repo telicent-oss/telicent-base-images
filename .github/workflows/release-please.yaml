@@ -3,7 +3,7 @@ name: Release Please
 on:
   push:
     branches:
-      - dev
+      - "dev"
   workflow_dispatch:
 
 permissions:
@@ -17,14 +17,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          ref: dev
+          ref: "dev"
 
       - name: Run Release Please
         uses: googleapis/release-please-action@v4
         with:
-          target-branch: dev
+          target-branch: "dev"
           config-file: .github/release-please-config.json
-          path: .
           manifest-file: .github/release-please-manifest.json
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
