@@ -53,22 +53,22 @@ jobs:
           echo "new_version=$NEW_VERSION" >> $GITHUB_ENV
           echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
 
-      - name: Prepare or Update Release Branch
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          # Fetch the latest state of the remote repository
-          git fetch origin
-
-          # Handle existing release branch
-          if git ls-remote --exit-code --heads origin release/${{ env.new_version }}; then
-            echo "Branch release/${{ env.new_version }} already exists. Fetching and checking out."
-            git checkout -B release/${{ env.new_version }} origin/release/${{ env.new_version }}
-          else
-            echo "Branch release/${{ env.new_version }} does not exist. Creating from dev."
-            git checkout -b release/${{ env.new_version }} dev
-          fi
+#      - name: Prepare or Update Release Branch
+#        run: |
+#          git config user.name "github-actions[bot]"
+#          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+#
+#          # Fetch the latest state of the remote repository
+#          git fetch origin
+#
+#          # Handle existing release branch
+#          if git ls-remote --exit-code --heads origin release/${{ env.new_version }}; then
+#            echo "Branch release/${{ env.new_version }} already exists. Fetching and checking out."
+#            git checkout -B release/${{ env.new_version }} origin/release/${{ env.new_version }}
+#          else
+#            echo "Branch release/${{ env.new_version }} does not exist. Creating from dev."
+#            git checkout -b release/${{ env.new_version }} dev
+#          fi
 
       - name: Update Versions in Image Descriptors
         id: update-versions
