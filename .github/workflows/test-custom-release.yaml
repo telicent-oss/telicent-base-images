@@ -27,7 +27,7 @@ jobs:
         id: determine-version
         run: |
           # Extract the last release tag
-          LAST_TAG=$(git describe --tags --abbrev=0 HEAD^ || echo "v0.0.0")
+          LAST_TAG=$(git describe --tags --abbrev=0 || echo "v0.0.0")
           echo "Last tag: $LAST_TAG"
 
           # Extract version numbers
@@ -58,13 +58,13 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          # Check if release branch exists
+          # Fetch existing release branch if it exists
           if git ls-remote --exit-code --heads origin release/${{ env.new_version }}; then
-            echo "Branch release/${{ env.new_version }} already exists. Checking out."
-            git fetch origin release/${{ env.new_version }}:release/${{ env.new_version }}
+            echo "Branch release/${{ env.new_version }} already exists. Fetching and checking out."
+            git fetch origin release/${{ env.new_version }}
             git checkout release/${{ env.new_version }}
           else
-            echo "Branch release/${{ env.new_version }} does not exist. Creating a new branch."
+            echo "Branch release/${{ env.new_version }} does not exist. Creating from dev."
             git checkout -b release/${{ env.new_version }} dev
           fi
 
@@ -83,6 +83,7 @@ jobs:
 
       - name: Commit Changes and Push Release Branch
         run: |
+          git branch -v
           git add .
           git commit -m "chore: prepare release ${{ env.new_version }}" || echo "No changes to commit."
           git push origin release/${{ env.new_version }}
