@@ -1,4 +1,4 @@
-name: Release Workflow Test
+name: Release Workflow
 
 on:
   workflow_dispatch:
@@ -16,7 +16,7 @@ jobs:
     name: Detect Changes
     uses: ./.github/workflows/detect-changed-images.yaml
 
-  release-pr:
+  create-release-pr:
     needs: changed-images
     name: Create Release PR
     runs-on: ubuntu-latest
@@ -85,25 +85,23 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          # Ensure local changes are staged and committed
           if ! git diff --quiet; then
             echo "Uncommitted changes detected. Staging and committing them."
             git add .
             git commit -m "chore: prepare release ${{ env.new_version }}"
           fi
 
-          # Switch or create the release branch
           if git ls-remote --exit-code --heads origin release/${{ env.new_version }}; then
-            echo "Branch release/${{ env.new_version }} already exists. Pulling latest changes."
+            echo "Branch release/${{ env.new_version }} already exists. Resetting to remote state."
             git fetch origin release/${{ env.new_version }}:release/${{ env.new_version }}
             git checkout release/${{ env.new_version }}
-            git rebase origin/release/${{ env.new_version }}
+            git reset --hard origin/release/${{ env.new_version }}
           else
             echo "Branch release/${{ env.new_version }} does not exist. Creating a new branch."
             git checkout -b release/${{ env.new_version }}
           fi
 
-          # Push changes
+          echo "Pushing changes to remote."
           git push --force origin release/${{ env.new_version }}
 
       - name: Generate Changelog
@@ -117,7 +115,7 @@ jobs:
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "chore: prepare release"
+          commit-message: "chore: prepare release ${{ env.new_version }}"
           base: dev # Specify the base branch for the PR
           branch: release/${{ env.new_version }}
           title: "chore: prepare release ${{ env.new_version }}"
@@ -126,8 +124,8 @@ jobs:
             ${{ steps.generate-changelog.outputs.changelog }}
           labels: release
 
-  create-tag:
-    name: Create Release Tag
+  create-tag-and-build:
+    name: Create Release Tag and Build
     runs-on: ubuntu-latest
     if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release/')
     steps:
@@ -139,7 +137,6 @@ jobs:
       - name: Extract Tag from Branch Name
         id: determine-version
         run: |
-          # Extract version from release branch
           RELEASE_BRANCH="${{ github.event.pull_request.head.ref }}"
           VERSION=${RELEASE_BRANCH#release/}
           echo "New tag: $VERSION"
