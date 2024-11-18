@@ -10,7 +10,8 @@ jobs:
   create-release-pr:
     name: Create or Update Release PR
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && !startsWith(github.event.head_commit.message, 'Merge branch \'release/') # Skip on release branch merges
+    if: github.event_name == 'push' && !startsWith(github.event.ref, 'refs/heads/release/')
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -64,23 +65,22 @@ jobs:
             git checkout -b release/${{ env.new_version }} dev
           fi
 
-          echo "Updating version and changelog."
+      - name: Update Versions in Image Descriptors
+        run: |
+          echo "Updating image descriptors for version ${{ env.new_version }}."
           ./update_version.sh || { echo "Version update failed. Exiting."; exit 1; }
 
-      - name: Generate Changelog
+      - name: Append Changelog
         id: generate-changelog
         run: |
-          ./generate_changelog.sh > CHANGELOG.md
+          chmod +x ./generate_changelog.sh
+          ./generate_changelog.sh >> CHANGELOG.md
+          echo "Generated changelog:"
           cat CHANGELOG.md
-
-          # Save the changelog to output for the PR body
-          echo "changelog<<EOF" >> $GITHUB_ENV
-          cat CHANGELOG.md >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
 
       - name: Commit Changes and Push Release Branch
         run: |
-          git add .
+          git add CHANGELOG.md image-descriptors/
           git commit -m "chore: prepare release ${{ env.new_version }}" || echo "No changes to commit."
           git push --force origin release/${{ env.new_version }}
 
@@ -93,35 +93,7 @@ jobs:
           branch: release/${{ env.new_version }}
           title: "chore: prepare release ${{ env.new_version }}"
           body: |
-            ${{ env.changelog }}
-          labels: "release: pending"
+            ## Changes
 
-  create-tag:
-    name: Tag Release
-    runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release/')
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: "Update PR Label to `release: tagged`"
-        run: |
-          gh pr edit ${{ github.event.pull_request.number }} --add-label "release: tagged"
-
-      - name: Extract Tag from Branch Name
-        id: determine-version
-        run: |
-          # Extract version from release branch
-          RELEASE_BRANCH="${{ github.event.pull_request.head.ref }}"
-          VERSION=${RELEASE_BRANCH#release/}
-          echo "New tag: $VERSION"
-          echo "new_tag=$VERSION" >> $GITHUB_ENV
-
-      - name: Create Git Tag
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git tag -a "${{ env.new_tag }}" -m "Release ${{ env.new_tag }}"
-          git push origin "${{ env.new_tag }}"
+            ${{ steps.generate-changelog.outputs.changelog }}
+          labels: release: pending

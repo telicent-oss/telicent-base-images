@@ -1,8 +1,8 @@
 #!/bin/bash
 
 #====================================================================================================
-# Script to generate a changelog between two git tags or commits using Conventional Commit messages.
-# Extracts from both merge events and commits, there could be bugs
+# Script to generate and append a changelog between two git tags or commits using Conventional Commit messages.
+# Extracts from both merge events and commits, appends to an existing CHANGELOG.md while preserving the current logic.
 #====================================================================================================
 
 . ./git_diff.sh
@@ -26,7 +26,7 @@ declare -A categories=(
 )
 declare -A changes_by_category
 
-# dynamically get the repo url
+# Dynamically get the repo URL
 repo_url=$(git config --get remote.origin.url | sed -E 's/git@github.com:|https:\/\/github.com\///' | sed 's/\.git$//')
 
 function process_commit {
@@ -37,9 +37,9 @@ function process_commit {
   # Match conventional commit prefixes using grep, match fix: or fix(something):
   prefix=$(echo "$commit_message" | grep -oE "^[a-zA-Z]+(\([^)]+\))?:")
   if [[ -n "$prefix" ]]; then
-    prefix=${prefix%%:*} # clear up the prefiz
+    prefix=${prefix%%:*} # Clear up the prefix
     local description="${commit_message#${prefix}: }"
-    local category="${categories[${prefix%%(*)}]:-Others}" # prepare the category
+    local category="${categories[${prefix%%(*)}]:-Others}" # Prepare the category
     local pr_link=""
 
     if [[ -n "$pr_number" ]]; then
@@ -50,7 +50,7 @@ function process_commit {
 
     changes_by_category["$category"]+="- ${description} ${pr_link} ${commit_link}\n"
   else
-    # add non concentional commits in case people are naughty
+    # Add non-conventional commits in case people are naughty
     commit_link="([${commit_hash:0:7}](https://github.com/${repo_url}/commit/${commit_hash}))"
     changes_by_category["Others"]+="- ${commit_message} ${commit_link}\n"
   fi
@@ -61,47 +61,53 @@ while IFS= read -r line; do
   commit_message=$(echo "$line" | cut -d' ' -f2-)
   pr_number=""
 
-  # is it a merge request ?
+  # Is it a merge request?
   if [[ "$commit_message" =~ Merge\ pull\ request\ \#([0-9]+)\ from ]]; then
     pr_number="${BASH_REMATCH[1]}"
     pr_message=$(git show -s --format="%s" "$commit_hash")
 
-    # non conventional pr commit message try get it from the commits in the PR
+    # Non-conventional PR commit message; try getting it from the commits in the PR
     if ! echo "$pr_message" | grep -qE "^[a-zA-Z]+(\([^)]+\))?:"; then
-      # process commits in pr individually
+      # Process commits in PR individually
       git log --pretty=format:"%H %s" "${commit_hash}^2..${commit_hash}^1" | while IFS= read -r pr_commit; do
         pr_commit_hash=$(echo "$pr_commit" | awk '{print $1}')
         pr_commit_message=$(echo "$pr_commit" | cut -d' ' -f2-)
         process_commit "$pr_commit_message" "$pr_commit_hash" "$pr_number"
       done
     else
-      # process the PR message directly
+      # Process the PR message directly
       process_commit "$pr_message" "$commit_hash" "$pr_number"
     fi
   else
-    # process regular commits
+    # Process regular commits
     process_commit "$commit_message" "$commit_hash" ""
   fi
 done <<< "$commit_logs"
 
-echo "# Changelog"
-echo
-echo "## Changes from $START_REF to $END_REF"
-echo
+# Prepare the new changelog content
+new_changelog="# Changelog\n\n"
+new_changelog+="## Changes from $START_REF to $END_REF\n\n"
 
-# print the changes by iterating over categories
+# Print the changes by iterating over categories
 for category in "${!categories[@]}"; do
   category_name="${categories[$category]}"
   if [[ -n "${changes_by_category[$category_name]}" ]]; then
-    echo "### $category_name"
-    printf "%b" "${changes_by_category[$category_name]}"
-    echo
+    new_changelog+="### $category_name\n"
+    new_changelog+=$(printf "%b" "${changes_by_category[$category_name]}")
+    new_changelog+="\n"
   fi
 done
 
-# finally add the uncategorised
+# Finally add the uncategorized
 if [[ -n "${changes_by_category["Others"]}" ]]; then
-  echo "### Others"
-  printf "%b" "${changes_by_category["Others"]}"
-  echo
+  new_changelog+="### Others\n"
+  new_changelog+=$(printf "%b" "${changes_by_category["Others"]}")
+  new_changelog+="\n"
+fi
+
+# Check if CHANGELOG.md exists and append content
+if [[ -f CHANGELOG.md ]]; then
+  echo -e "$new_changelog\n$(cat CHANGELOG.md)" > CHANGELOG.md
+else
+  echo -e "$new_changelog" > CHANGELOG.md
 fi
