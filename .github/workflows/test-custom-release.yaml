@@ -60,10 +60,9 @@ jobs:
 
           # Check if release branch exists
           if git ls-remote --exit-code --heads origin release/${{ env.new_version }}; then
-            echo "Branch release/${{ env.new_version }} already exists. Checking out and merging dev."
+            echo "Branch release/${{ env.new_version }} already exists. Checking out."
             git fetch origin release/${{ env.new_version }}:release/${{ env.new_version }}
             git checkout release/${{ env.new_version }}
-            git merge origin/dev --no-ff
           else
             echo "Branch release/${{ env.new_version }} does not exist. Creating a new branch."
             git checkout -b release/${{ env.new_version }} dev
@@ -72,7 +71,7 @@ jobs:
       - name: Update Versions in Image Descriptors
         run: |
           echo "Updating image descriptors for version ${{ env.new_version }}."
-          echo "Images that need updated: ${{ needs.changed-images.outputs.images }}"
+          echo "Images that need updates: ${{ needs.changed-images.outputs.images }}"
           ./update_version.sh ${{ needs.changed-images.outputs.images }}
 
       - name: Append Changelog
