@@ -83,7 +83,8 @@ jobs:
       - name: Commit Changes and Push Release Branch
         run: |
           git add .
-          git commit -m "chore: prepare release ${{ env.new_version }}" || echo "No changes to commit." 
+          git commit -m "chore: prepare release ${{ env.new_version }}" || echo "No changes to commit."
+          git push origin release/${{ env.new_version }}
 
       - name: Open or Update Release PR
         uses: peter-evans/create-pull-request@v5
