@@ -1,39 +1,81 @@
 #!/bin/bash
 
-LAST_TAG=${LAST_TAG:-$(git describe --tags --abbrev=0 HEAD^ || echo "v0.0.0")}
+#====================================================================================================
+# Script to generate a changelog between two git tags or commits using Conventional Commit messages.
+# It dynamically links to pull requests and categorizes changes into Features, Fixes, and Others.
+#====================================================================================================
 
-COMMITS=$(git log "$LAST_TAG"..HEAD --pretty=format:"%s (%h)")
+. get_diff.sh
+read -r START_REF END_REF < <(get_commit_range)
 
+START_REF=$1
+END_REF=$2
+
+# Fetch commit logs
+commit_logs=$(git log --pretty=format:"%H %s" --merges "$START_REF..$END_REF")
+
+if [[ -z "$commit_logs" ]]; then
+  echo "No commits found between $START_REF and $END_REF."
+  exit 0
+fi
+
+features=()
+fixes=()
+chores=()
+others=()
+
+repo_url=$(git config --get remote.origin.url | sed -E 's/git@github.com:|https:\/\/github.com\///' | sed 's/\.git$//')
+
+# Process each merge commit
+while IFS= read -r line; do
+  commit_hash=$(echo "$line" | awk '{print $1}')
+  commit_message=$(echo "$line" | cut -d' ' -f2-)
+
+  # Extract PR number (if available) and append a link
+  if [[ "$commit_message" =~ \(#([0-9]+)\) ]]; then
+    pr_number="${BASH_REMATCH[1]}"
+    pr_link="([#${pr_number}](https://github.com/${repo_url}/pull/${pr_number}))"
+  else
+    pr_link=""
+  fi
+
+  if [[ "$commit_message" =~ ^feat: ]]; then
+    features+=("- ${commit_message} ${pr_link}")
+  elif [[ "$commit_message" =~ ^fix: ]]; then
+    fixes+=("- ${commit_message} ${pr_link}")
+  elif [[ "$commit_message" =~ ^chore: ]]; then
+    chores+=("- ${commit_message} ${pr_link}")
+  else
+    others+=("- ${commit_message} ${pr_link}")
+  fi
+done <<< "$commit_logs"
+
+# Generate changelog
 echo "# Changelog"
 echo
-echo "## Changes from $LAST_TAG to $(git describe --tags HEAD || echo "unreleased")"
+echo "## Changes from $START_REF to $END_REF"
 echo
 
-FEATURES=$(echo "$COMMITS" | grep -E '^feat:' || true)
-FIXES=$(echo "$COMMITS" | grep -E '^fix:' || true)
-CHORES=$(echo "$COMMITS" | grep -E '^chore:' || true)
-OTHERS=$(echo "$COMMITS" | grep -vE '^(feat:|fix:|chore:)' || true)
-
-if [[ -n "$FEATURES" ]]; then
+if [[ ${#features[@]} -gt 0 ]]; then
   echo "### Features"
-  echo "$FEATURES" | sed -E 's/^feat: /- /'
+  printf "%s\n" "${features[@]}"
   echo
 fi
 
-if [[ -n "$FIXES" ]]; then
+if [[ ${#fixes[@]} -gt 0 ]]; then
   echo "### Fixes"
-  echo "$FIXES" | sed -E 's/^fix: /- /'
+  printf "%s\n" "${fixes[@]}"
   echo
 fi
 
-if [[ -n "$CHORES" ]]; then
+if [[ ${#chores[@]} -gt 0 ]]; then
   echo "### Chores"
-  echo "$CHORES" | sed -E 's/^chore: /- /'
+  printf "%s\n" "${chores[@]}"
   echo
 fi
 
-if [[ -n "$OTHERS" ]]; then
+if [[ ${#others[@]} -gt 0 ]]; then
   echo "### Others"
-  echo "$OTHERS" | sed -E 's/^/- /'
+  printf "%s\n" "${others[@]}"
   echo
 fi

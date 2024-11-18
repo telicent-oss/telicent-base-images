@@ -7,9 +7,17 @@ on:
       - closed
     branches:
       - dev
+  push:
+    branches:
+      - dev
 
 jobs:
+  changed-images:
+    name: Detect Changes
+    uses: ./.github/workflows/detect-changed-images.yaml
+
   release-pr:
+    needs: changed-images
     name: Create Release PR
     runs-on: ubuntu-latest
     steps:
@@ -18,17 +26,18 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Detect Changes
-        id: detect-changes
+      - name: Update Versions in Image Descriptors
         run: |
-          chmod +x ./build_resolver.sh
-          ./build_resolver.sh 
+          chmod +x ./update_version.sh
+          echo "Candidates: ${{ needs.changed-images.outputs.images }}"
+          ./update_version.sh ${{ needs.changed-images.outputs.images }} || { echo "Version update failed. Exiting."; exit 1; }
 
       - name: Generate Changelog
         id: generate-changelog
         run: |
           chmod +x ./generate_changelog.sh
           ./generate_changelog.sh > CHANGELOG.md
+          cat CHANGELOG.md
 
       - name: Determine Next Release Version
         id: determine-version
@@ -78,13 +87,6 @@ jobs:
           # Export the new version as an output for the next steps
           echo "new_version=$NEW_VERSION" >> $GITHUB_ENV
           echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
-
-      - name: Update Versions in Image Descriptors
-        run: |
-          chmod +x ./update_version.sh
-          candidates=$(${{ steps.detect-changes.outputs.changed_images }} | tr ',' ' ')
-          echo "Image verions to update: $candidates
-          ./update_version.sh $candidates
 
       - name: Commit Changes and Create Release Branch
         run: |
