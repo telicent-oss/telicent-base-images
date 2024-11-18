@@ -71,7 +71,8 @@ jobs:
       - name: Update Versions in Image Descriptors
         run: |
           echo "Updating image descriptors for version ${{ env.new_version }}."
-          ./update_version.sh ${{ needs.changed-images.outputs.images }} || { echo "Version update failed. Exiting."; exit 1; }
+          echo "Images that need updated: ${{ needs.changed-images.outputs.images }}"
+          ./update_version.sh ${{ needs.changed-images.outputs.images }}
 
       - name: Append Changelog
         id: generate-changelog
