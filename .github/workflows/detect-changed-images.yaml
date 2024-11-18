@@ -1,7 +1,7 @@
 on:
   workflow_call:
     outputs:
-      version:
+      images:
         description: "Gives back a list of images that need rebuilt based on files changed"
         value: ${{ jobs.changed-images.outputs.images }}
 

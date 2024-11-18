@@ -14,11 +14,11 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        image: ${{ needs.determine-changes.outputs.images }}
+        image: ${{ fromJson(needs.changed-images.outputs.images) }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Build and Deploy Image
         run: |
-          echo "Building image for: ${{ needs.changed-images.outputs.images }}"
+          echo "Building image for: ${{ matrix.image }}"
