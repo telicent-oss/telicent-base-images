@@ -2,16 +2,14 @@
 
 #====================================================================================================
 # Script to generate a changelog between two git tags or commits using Conventional Commit messages.
-# It includes both commits and merge requests that follow the conventional commit format.
+# Extracts from both merge events and commits, there could be bugs
 #====================================================================================================
 
-# Load commit range utility
 . ./git_diff.sh
 read -r START_REF END_REF < <(get_commit_range)
 
 echo "start-ref: ${START_REF} end-ref: ${END_REF}"
 
-# Fetch all relevant logs (commits + merge commits)
 commit_logs=$(git log --pretty=format:"%H %s" "$START_REF..$END_REF")
 
 if [[ -z "$commit_logs" ]]; then
@@ -19,86 +17,91 @@ if [[ -z "$commit_logs" ]]; then
   exit 0
 fi
 
-# Initialize changelog categories
-features=()
-fixes=()
-chores=()
-docs=()
-others=()
+# These are the conventional commits we'd be looking out for
+declare -A categories=(
+  ["feat"]="Features"
+  ["fix"]="Fixes"
+  ["chore"]="Chores"
+  ["docs"]="Documentation"
+)
+declare -A changes_by_category
 
-# Extract repository URL dynamically
+# dynamically get the repo url
 repo_url=$(git config --get remote.origin.url | sed -E 's/git@github.com:|https:\/\/github.com\///' | sed 's/\.git$//')
 
-# Process each commit and merge request
+function process_commit {
+  local commit_message="$1"
+  local commit_hash="$2"
+  local pr_number="$3"
+
+  # Match conventional commit prefixes using grep, match fix: or fix(something):
+  prefix=$(echo "$commit_message" | grep -oE "^[a-zA-Z]+(\([^)]+\))?:")
+  if [[ -n "$prefix" ]]; then
+    prefix=${prefix%%:*} # clear up the prefiz
+    local description="${commit_message#${prefix}: }"
+    local category="${categories[${prefix%%(*)}]:-Others}" # prepare the category
+    local pr_link=""
+
+    if [[ -n "$pr_number" ]]; then
+      pr_link="([#${pr_number}](https://github.com/${repo_url}/pull/${pr_number}))"
+    fi
+
+    commit_link="([${commit_hash:0:7}](https://github.com/${repo_url}/commit/${commit_hash}))"
+
+    changes_by_category["$category"]+="- ${description} ${pr_link} ${commit_link}\n"
+  else
+    # add non concentional commits in case people are naughty
+    commit_link="([${commit_hash:0:7}](https://github.com/${repo_url}/commit/${commit_hash}))"
+    changes_by_category["Others"]+="- ${commit_message} ${commit_link}\n"
+  fi
+}
+
 while IFS= read -r line; do
   commit_hash=$(echo "$line" | awk '{print $1}')
   commit_message=$(echo "$line" | cut -d' ' -f2-)
+  pr_number=""
 
-  # Check if the commit is a merge request and extract its PR number
+  # is it a merge request ?
   if [[ "$commit_message" =~ Merge\ pull\ request\ \#([0-9]+)\ from ]]; then
     pr_number="${BASH_REMATCH[1]}"
     pr_message=$(git show -s --format="%s" "$commit_hash")
 
-    # Use the PR title if it follows conventional commits
-    if [[ "$pr_message" =~ ^feat: ]]; then
-      features+=("- ${pr_message#feat:} ([#${pr_number}](https://github.com/${repo_url}/pull/${pr_number}))")
-    elif [[ "$pr_message" =~ ^fix: ]]; then
-      fixes+=("- ${pr_message#fix:} ([#${pr_number}](https://github.com/${repo_url}/pull/${pr_number}))")
-    elif [[ "$pr_message" =~ ^chore: ]]; then
-      chores+=("- ${pr_message#chore:} ([#${pr_number}](https://github.com/${repo_url}/pull/${pr_number}))")
-    elif [[ "$pr_message" =~ ^docs: ]]; then
-      docs+=("- ${pr_message#docs:} ([#${pr_number}](https://github.com/${repo_url}/pull/${pr_number}))")
+    # non conventional pr commit message try get it from the commits in the PR
+    if ! echo "$pr_message" | grep -qE "^[a-zA-Z]+(\([^)]+\))?:"; then
+      # process commits in pr individually
+      git log --pretty=format:"%H %s" "${commit_hash}^2..${commit_hash}^1" | while IFS= read -r pr_commit; do
+        pr_commit_hash=$(echo "$pr_commit" | awk '{print $1}')
+        pr_commit_message=$(echo "$pr_commit" | cut -d' ' -f2-)
+        process_commit "$pr_commit_message" "$pr_commit_hash" "$pr_number"
+      done
     else
-      others+=("- ${pr_message} ([#${pr_number}](https://github.com/${repo_url}/pull/${pr_number}))")
+      # process the PR message directly
+      process_commit "$pr_message" "$commit_hash" "$pr_number"
     fi
   else
-    # For regular commits, categorize them based on the conventional commit prefixes
-    if [[ "$commit_message" =~ ^feat: ]]; then
-      features+=("- ${commit_message#feat:}")
-    elif [[ "$commit_message" =~ ^fix: ]]; then
-      fixes+=("- ${commit_message#fix:}")
-    elif [[ "$commit_message" =~ ^chore: ]]; then
-      chores+=("- ${commit_message#chore:}")
-    elif [[ "$commit_message" =~ ^docs: ]]; then
-      docs+=("- ${commit_message#docs:}")
-    else
-      others+=("- ${commit_message}")
-    fi
+    # process regular commits
+    process_commit "$commit_message" "$commit_hash" ""
   fi
 done <<< "$commit_logs"
 
-# Generate the changelog
 echo "# Changelog"
 echo
 echo "## Changes from $START_REF to $END_REF"
 echo
 
-if [[ ${#features[@]} -gt 0 ]]; then
-  echo "### Features"
-  printf "%s\n" "${features[@]}"
-  echo
-fi
+# print the changes by iterating over categories
+for category in "${!categories[@]}"; do
+  category_name="${categories[$category]}"
+  if [[ -n "${changes_by_category[$category_name]}" ]]; then
+    echo "### $category_name"
+    printf "%b" "${changes_by_category[$category_name]}"
+    echo
+  fi
+done
 
-if [[ ${#fixes[@]} -gt 0 ]]; then
-  echo "### Fixes"
-  printf "%s\n" "${fixes[@]}"
-  echo
-fi
-
-if [[ ${#chores[@]} -gt 0 ]]; then
-  echo "### Chores"
-  printf "%s\n" "${chores[@]}"
-  echo
-fi
-
-if [[ ${#docs[@]} -gt 0 ]]; then
-  echo "### Documentation"
-  printf "%s\n" "${docs[@]}"
-  echo
-fi
-
-if [[ ${#others[@]} -gt 0 ]]; then
+# finally add the uncategorised
+if [[ -n "${changes_by_category["Others"]}" ]]; then
   echo "### Others"
-  printf "%s\n" "${others[@]}"
+  printf "%b" "${changes_by_category["Others"]}"
   echo
 fi
