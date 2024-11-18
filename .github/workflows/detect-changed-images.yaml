@@ -26,8 +26,7 @@ jobs:
         id: export-images
         run: |
           if [[ -n "$changed_images" ]]; then
-            echo "Changeed images: $changed_images"
-            # Convert the comma-separated list into JSON
+            # Convert the matrix eligable list
             echo "images=$(echo '["'${changed_images//,/\",\"}'"]')" >> $GITHUB_OUTPUT
           else
             echo "images=[]" >> $GITHUB_OUTPUT
