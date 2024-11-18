@@ -1,4 +1,5 @@
 {
+  "release-type": "custom",
   "branches": [
     {
       "branch": "dev",
@@ -8,7 +9,7 @@
       "extra-files": [
         {
           "type": "yaml",
-          "path": "image-descriptors/telicent-base-python313.yaml",
+          "path": "image-descriptors/*.yaml",
           "jsonpath": "$.version"
         }
       ]
