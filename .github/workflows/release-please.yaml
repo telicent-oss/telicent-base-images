@@ -19,9 +19,8 @@ jobs:
         uses: googleapis/release-please-action@v4
         with:
           config-file: .github/release-please-config.json
-          target-branch: dev
+          target-branch: main
           path: .
           manifest-file: .github/release-please-manifest.json
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DEBUG: release-please*
