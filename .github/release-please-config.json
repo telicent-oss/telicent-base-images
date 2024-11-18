@@ -1,6 +1,10 @@
 {
   "release-type": "custom",
-  "updaters": {
-    "image-descriptors/*.yaml": "./yaml-updater.js"
-  }
+  "extra-files": [
+    {
+      "type": "yaml",
+      "path": "image-descriptors/*.yaml",
+      "jsonpath": "$.version"
+    }
+  ]
 }
