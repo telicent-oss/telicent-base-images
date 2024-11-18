@@ -82,7 +82,9 @@ jobs:
       - name: Update Versions in Image Descriptors
         run: |
           chmod +x ./update_version.sh
-          ./update_version.sh $(echo "${{ steps.detect-changes.outputs.changed_images }}" | tr ',' ' ')
+          candidates=$(${{ steps.detect-changes.outputs.changed_images }} | tr ',' ' ')
+          echo "Image verions to update: $candidates
+          ./update_version.sh $candidates
 
       - name: Commit Changes and Create Release Branch
         run: |
