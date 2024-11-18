@@ -13,6 +13,7 @@ jobs:
     uses: ./.github/workflows/detect-changed-images.yaml
 
   create-release-pr:
+    needs: changed-images
     name: Create or Update Release PR
     runs-on: ubuntu-latest
     if: "${{ ! startsWith(github.ref, 'refs/release/') }}"
