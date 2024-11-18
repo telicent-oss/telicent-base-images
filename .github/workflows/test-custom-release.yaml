@@ -28,7 +28,6 @@ jobs:
 
       - name: Update Versions in Image Descriptors
         run: |
-          chmod +x ./update_version.sh
           echo "Candidates: ${{ needs.changed-images.outputs.images }}"
           ./update_version.sh ${{ needs.changed-images.outputs.images }} || { echo "Version update failed. Exiting."; exit 1; }
 
@@ -80,15 +79,19 @@ jobs:
           # Export the new version as an output for the next steps
           echo "new_version=$NEW_VERSION" >> $GITHUB_ENV
           echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
-      
-
 
       - name: Commit Changes and Create Release Branch
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           
-          # Check if the branch exists on the remote
+          # branch protection.... 
+          if ! git diff --quiet; then
+            echo "Uncommitted changes detected. Staging and committing them."
+            git add .
+            git commit -m "chore: intermediate commit to save local changes"
+          fi
+          
           if git ls-remote --exit-code --heads origin release/${{ env.new_version }}; then
             echo "Branch release/${{ env.new_version }} already exists on remote. Resetting to remote state."
             git fetch origin release/${{ env.new_version }}:release/${{ env.new_version }}
@@ -99,12 +102,10 @@ jobs:
             git checkout -b release/${{ env.new_version }}
           fi
           
-          # Apply changes on top of the branch
           echo "Applying changes."
           git add .
           git commit -m "chore: prepare release ${{ env.new_version }}" || echo "No changes to commit."
           
-          # Push changes to the remote branch
           echo "Pushing changes to remote."
           git push --force origin release/${{ env.new_version }}
 

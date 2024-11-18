@@ -8,6 +8,7 @@
 #====================================================================================================
 
 BASE_DIR="image-descriptors"
+
 # Regex to match the version field it is important to always respect &version pointer
 VERSION_REGEX='version: &version\s*\"([0-9]+\.[0-9]+\.[0-9]+)\"'
 
