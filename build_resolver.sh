@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/Users/georgi_nikolov/.homebrew/bin/bash
 
 #====================================================================================================
 # Script to determine which images need to be rebuilt based on changes between the last two merge commits.
@@ -8,8 +8,8 @@
 # Handles nested module dependencies and maintains proper mapping to ensure accurate rebuilds.
 #
 # THIS SCRIPT WOULD NOT RUN ON MACOS
-# In case it is necessary to run on macOS, install gnu grep via homebrew and refactor this code to
-# use ggrep instead. Ensure Bash 4+ is used.
+# In case it is necessary to run on macOS, install gnu ggrep via homebrew and refactor this code to
+# use gggrep instead. Ensure Bash 4+ is used.
 #====================================================================================================
 
 DEBUG=${DEBUG:-0}
@@ -28,15 +28,32 @@ function debug_print() {
 # Holds the data produced by `build_module_map`
 declare -A module_map
 
-# Determine the range of commits to diff
-function get_last_two_merge_commits() {
-  git log --merges --pretty=format:"%H" | head -n 2
+function get_commit_range() {
+  # Get the most recent tag
+  local last_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+
+  if [[ -z "$last_tag" ]]; then
+    # No tags exist; compare from the first commit to HEAD
+    echo "$(git rev-list --max-parents=0 HEAD) HEAD"
+    return
+  fi
+
+  # Get the previous tag
+  local previous_tag=$(git describe --tags --abbrev=0 "${last_tag}^" 2>/dev/null || echo "")
+
+  if [[ -z "$previous_tag" ]]; then
+    # No previous tag; compare from the last tag to HEAD
+    echo "$last_tag HEAD"
+  else
+    # Compare between the previous and the last tag
+    echo "$previous_tag $last_tag"
+  fi
 }
 
 # Build a map of all the names and modules e.g. telicent.container.java => modules/jdk
 function build_module_map() {
   while IFS= read -r module_yaml; do
-    local module_name=$(grep -m 1 'name:' "$module_yaml" | sed -E 's/^name: *"?([^"]*)"?/\1/' | tr -d ' ' | tr -d '\n')
+    local module_name=$(ggrep -m 1 'name:' "$module_yaml" | sed -E 's/^name: *"?([^"]*)"?/\1/' | tr -d ' ' | tr -d '\n')
 
     debug_print "Extracted module_name: '$module_name' from $module_yaml"
 
@@ -79,7 +96,7 @@ function extract_modules_from_install_section() {
     fi
 
     if $in_install_section && [[ "$line" =~ ^[[:space:]]*-?[[:space:]]*name: ]]; then
-      local module_name=$(echo "$line" | grep -oP '(?<=name: )\S+')
+      local module_name=$(echo "$line" | ggrep -oP '(?<=name: )\S+')
       module_name=$(echo "$module_name" | tr -d ' ' | tr -d '\n')
 
       if [[ -n "$module_name" ]]; then
@@ -101,7 +118,7 @@ function track_module_dependencies() {
     return 1
   fi
 
-  if git diff --name-only "$PREVIOUS_MERGE" "$LAST_MERGE" | grep -q "^$module_path/"; then
+  if git diff --name-only "$PREVIOUS_MERGE" "$LAST_MERGE" | ggrep -q "^$module_path/"; then
     echo "Module $module_name in $module_path has changed."
     return 0
   fi
@@ -141,10 +158,12 @@ function check_modules_in_image_descriptor() {
 # Function to detect changes in images based on modules
 function detect_image_changes() {
   local base_dir=$1
+  echo "Base dir: ${base_dir}"
   local affected_images=()
 
   # Get the last two merge commits
-  read -r LAST_MERGE PREVIOUS_MERGE < <(get_last_two_merge_commits)
+  read -r LAST_MERGE PREVIOUS_MERGE < <(get_commit_range)
+  echo "Last tag sha:${LAST_MERGE} - Previous tag sha: $PREVIOUS_MERGE"
   if [[ -z "$LAST_MERGE" || -z "$PREVIOUS_MERGE" ]]; then
     echo "Error: Unable to find two merge commits. Ensure there is enough merge history."
     exit 1
@@ -162,7 +181,7 @@ function detect_image_changes() {
   for descriptor in $(find "$base_dir" -name "*.yaml"); do
     debug_print "Checking image descriptor: $descriptor"
 
-    if git diff --name-only "$PREVIOUS_MERGE" "$LAST_MERGE" | grep -q "$descriptor"; then
+    if git diff --name-only "$PREVIOUS_MERGE" "$LAST_MERGE" | ggrep -q "$descriptor"; then
       echo "Image descriptor $descriptor has changed. Rebuild required."
       local image_name=$(basename "$descriptor" | awk -F'.' '{print $1}')
       affected_images+=("$image_name")
@@ -190,4 +209,4 @@ function detect_image_changes() {
   fi
 }
 
-detect_image_changes "image-descriptors/"
+detect_image_changes "image-descriptors"
