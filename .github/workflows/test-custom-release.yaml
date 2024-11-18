@@ -54,6 +54,8 @@ jobs:
           echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
 
       - name: Prepare or Update Release Branch
+        id: prep-branch
+        needs: determine-version
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -69,12 +71,15 @@ jobs:
           fi
 
       - name: Update Versions in Image Descriptors
+        id: update-versions
+        needs: prep-branch
         run: |
           echo "Updating image descriptors for version ${{ env.new_version }}."
           echo "Images that need updates: ${{ needs.changed-images.outputs.images }}"
           ./update_version.sh ${{ needs.changed-images.outputs.images }}
 
       - name: Append Changelog
+        needs: update-versions
         id: generate-changelog
         run: |
           ./generate_changelog.sh >> CHANGELOG.md
@@ -82,6 +87,7 @@ jobs:
           cat CHANGELOG.md
 
       - name: Commit Changes and Push Release Branch
+        needs: generate-changelog
         run: |
           git branch -v
           git add .
@@ -89,6 +95,7 @@ jobs:
           git push origin release/${{ env.new_version }}
 
       - name: Open or Update Release PR
+        needs: generate-changelog
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
