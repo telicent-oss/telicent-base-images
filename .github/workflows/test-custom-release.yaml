@@ -6,38 +6,35 @@ on:
     branches:
       - dev
 
-  jobs:
-    create-tag:
-      name: Create Release Tag
-      runs-on: ubuntu-latest
-      if: ${{ contains(github.ref_name, 'release/') }}
-      steps:
-        - name: Checkout Repository
-          uses: actions/checkout@v4
-          with:
-            fetch-depth: 0
-
-        - name: Extract Tag from Branch Name
-          id: determine-version
-          run: |
-            # Extract the branch name
-            RELEASE_BRANCH="${{ github.event.head_commit.ref }}"
-            if [[ $RELEASE_BRANCH != refs/heads/release/* ]]; then
-              echo "Not a release branch. Exiting."
-              exit 1
-            fi
-
-            # Extract version from the branch name
-            VERSION="${RELEASE_BRANCH#refs/heads/release/}"
-            echo "New tag: $VERSION"
-            echo "new_tag=$VERSION" >> $GITHUB_ENV
-
-        - name: Create Git Tag
-          run: |
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git tag -a "${{ env.new_tag }}" -m "Release ${{ env.new_tag }}"
-            git push origin "${{ env.new_tag }}"
+jobs:
+  create-tag:
+    name: Create Release Tag
+    runs-on: ubuntu-latest
+    if: ${{ contains(github.ref_name, 'release/') }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Extract Tag from Branch Name
+        id: determine-version
+        run: |
+          # Extract the branch name
+          RELEASE_BRANCH="${{ github.event.head_commit.ref }}"
+          if [[ $RELEASE_BRANCH != refs/heads/release/* ]]; then
+            echo "Not a release branch. Exiting."
+            exit 1
+          fi
+          # Extract version from the branch name
+          VERSION="${RELEASE_BRANCH#refs/heads/release/}"
+          echo "New tag: $VERSION"
+          echo "new_tag=$VERSION" >> $GITHUB_ENV
+      - name: Create Git Tag
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "${{ env.new_tag }}" -m "Release ${{ env.new_tag }}"
+          git push origin "${{ env.new_tag }}"
 
   changed-images:
     if: "github.event_name == 'push' && ${{ !contains(github.ref_name, 'release/') }}"
@@ -48,7 +45,6 @@ on:
     name: Create or Update Release PR
     runs-on: ubuntu-latest
     if: "github.event_name == 'push' && ${{ !contains(github.ref_name, 'release/') }}"
-
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -61,13 +57,11 @@ on:
           # Extract the last release tag
           LAST_TAG=$(git describe --tags --abbrev=0 HEAD^ || echo "v0.0.0")
           echo "Last tag: $LAST_TAG"
-
           # Extract version numbers
           VERSION_PARTS=($(echo "${LAST_TAG}" | sed 's/v//' | tr '.' ' '))
           MAJOR=${VERSION_PARTS[0]:-0}
           MINOR=${VERSION_PARTS[1]:-0}
           PATCH=${VERSION_PARTS[2]:-0}
-
           # Determine bump type based on commit messages
           if git log "$LAST_TAG"..HEAD --oneline | grep -q "BREAKING CHANGE:"; then
             MAJOR=$((MAJOR + 1))
@@ -79,10 +73,8 @@ on:
           elif git log "$LAST_TAG"..HEAD --oneline | grep -q -E "fix:|chore:"; then
             PATCH=$((PATCH + 1))
           fi
-
           NEW_VERSION="v${MAJOR}.${MINOR}.${PATCH}"
           echo "New version: $NEW_VERSION"
-
           echo "new_version=$NEW_VERSION" >> $GITHUB_ENV
           echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
 
@@ -90,7 +82,6 @@ on:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
           # Check if release branch exists
           if git ls-remote --exit-code --heads origin release/${{ env.new_version }}; then
             echo "Branch release/${{ env.new_version }} already exists. Checking out and rebasing."
@@ -130,6 +121,5 @@ on:
           title: "chore: prepare release ${{ env.new_version }}"
           body: |
             ## Changes
-
             ${{ steps.generate-changelog.outputs.changelog }}
           labels: "release: pending"

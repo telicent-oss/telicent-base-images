@@ -84,9 +84,9 @@ while IFS= read -r line; do
   fi
 done <<< "$commit_logs"
 
-# Prepare the new changelog content
+# Prepare the new changelog content, $new_version comes from gh action env
 new_changelog="# Changelog\n\n"
-new_changelog+="## Changes from $START_REF to $END_REF\n\n"
+new_changelog+="## Changes from $START_REF to $new_version \n\n"
 
 # Print the changes by iterating over categories
 for category in "${!categories[@]}"; do
