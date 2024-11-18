@@ -1,5 +1,5 @@
 {
-  "release-type": "custom",
+  "release-type": "yaml",
   "branch": "dev",
   "bump-minor-pre-major": true,
   "changelog-path": "CHANGELOG.md",
