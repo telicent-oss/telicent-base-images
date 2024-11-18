@@ -3,7 +3,7 @@ name: Build Images
 on:
   push:
     branches:
-      - dev
+      - main
 
 jobs:
   changed-images:
