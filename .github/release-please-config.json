@@ -1,18 +1,13 @@
 {
   "release-type": "custom",
-  "branches": [
+  "branch": "dev",
+  "bump-minor-pre-major": true,
+  "changelog-path": "CHANGELOG.md",
+  "extra-files": [
     {
-      "branch": "dev",
-      "release-type": "custom",
-      "bump-minor-pre-major": true,
-      "changelog-path": "CHANGELOG.md",
-      "extra-files": [
-        {
-          "type": "yaml",
-          "path": "image-descriptors/*.yaml",
-          "jsonpath": "$.version"
-        }
-      ]
+      "type": "yaml",
+      "path": "image-descriptors/*.yaml",
+      "jsonpath": "$.version"
     }
   ]
 }

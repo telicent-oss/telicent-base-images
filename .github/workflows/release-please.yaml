@@ -18,8 +18,8 @@ jobs:
       - name: Run Release Please
         uses: googleapis/release-please-action@v4
         with:
+          target-branch: dev
           config-file: .github/release-please-config.json
-          target-branch: main
           path: .
           manifest-file: .github/release-please-manifest.json
         env:
