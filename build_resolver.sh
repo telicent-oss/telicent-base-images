@@ -143,7 +143,7 @@ function detect_image_changes() {
 
   # Get the last two merge commits
   read -r START_REF END_REF < <(get_commit_range)
-  echo "Last tag sha:${START_REF} - Previous tag sha: $END_REF"
+  echo "Start sha:${START_REF} - End: $END_REF"
   if [[ -z "$START_REF" || -z "$END_REF" ]]; then
     echo "Error: Unable to find two merge commits. Ensure there is enough merge history."
     exit 1
