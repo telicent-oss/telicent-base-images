@@ -94,7 +94,7 @@ jobs:
           title: "chore: prepare release ${{ env.new_version }}"
           body: |
             ${{ env.changelog }}
-          labels: release: pending
+          labels: "release: pending"
 
   create-tag:
     name: Tag Release
