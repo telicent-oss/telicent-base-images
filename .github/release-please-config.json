@@ -6,7 +6,7 @@
   "extra-files": [
     {
       "type": "yaml",
-      "path": "image-descriptors/*.yaml",
+      "path": "image-descriptors/telicent-base-java.yaml",
       "jsonpath": "$.version"
     }
   ]
