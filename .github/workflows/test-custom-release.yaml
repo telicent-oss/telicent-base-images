@@ -36,14 +36,14 @@ jobs:
           PATCH=${VERSION_PARTS[2]:-0}
 
           # Determine bump type based on commit messages
-          if git log "$LAST_TAG"..HEAD --oneline | grep -q "BREAKING CHANGE:"; then
+          if git log "$LAST_TAG"..HEAD --oneline | grep -q "BREAKING CHANGE"; then
             MAJOR=$((MAJOR + 1))
             MINOR=0
             PATCH=0
-          elif git log "$LAST_TAG"..HEAD --oneline | grep -q "feat:"; then
+          elif git log "$LAST_TAG"..HEAD --oneline | grep -q "feat"; then
             MINOR=$((MINOR + 1))
             PATCH=0
-          elif git log "$LAST_TAG"..HEAD --oneline | grep -q -E "fix:|chore:"; then
+          elif git log "$LAST_TAG"..HEAD --oneline | grep -q -E "fix|chore"; then
             PATCH=$((PATCH + 1))
           fi
 
