@@ -1,0 +1,106 @@
+name: Custom Release Workflow
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - dev
+  push:
+    branches:
+      - dev
+
+jobs:
+  release-pr:
+    name: Prepare Release PR
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect Changes
+        id: detect-changes
+        run: |
+          chmod +x ./build_resolver.sh
+          ./build_resolver.sh
+        env:
+          GITHUB_ENV: $GITHUB_ENV
+
+      - name: Generate Markdown Changelog
+        id: generate-changelog
+        run: |
+          chmod +x ./generate_changelog.sh
+          ./generate_changelog.sh > CHANGELOG.md
+        env:
+          LAST_TAG=$(git describe --tags --abbrev=0 HEAD^ || echo "v0.0.0")
+
+      - name: Update Versions
+        id: version-bump
+        run: |
+          chmod +x ./update_version.sh
+          ./update_version.sh $(echo "${{ steps.detect-changes.outputs.changed_images }}" | tr ',' ' ')
+
+      - name: Commit Updated Versions and Changelog
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b release/v${{ github.run_id }}
+          git add .
+          git commit -m "chore: prepare release v${{ github.run_id }}"
+          git push origin release/v${{ github.run_id }}
+
+      - name: Open Release Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: chore: prepare release
+          branch: release/v${{ github.run_id }}
+          title: "chore: prepare release"
+          body: |
+            ## Changes
+            ${{ steps.generate-changelog.outputs.changelog }}
+          labels: release
+
+  create-tag:
+    name: Create Independent Release Tag
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Determine Next Release Version
+        id: determine-version
+        run: |
+          # Extract the last release tag
+          LAST_TAG=$(git describe --tags --abbrev=0 HEAD^ || echo "v0.0.0")
+          echo "Last tag: $LAST_TAG"
+
+          # Extract version numbers
+          VERSION_PARTS=($(echo "${LAST_TAG}" | sed 's/v//' | tr '.' ' '))
+          MAJOR=${VERSION_PARTS[0]:-0}
+          MINOR=${VERSION_PARTS[1]:-0}
+          PATCH=${VERSION_PARTS[2]:-0}
+
+          # Determine the bump type from commit messages
+          if git log "$LAST_TAG"..HEAD --oneline | grep -q "feat:"; then
+            MINOR=$((MINOR + 1))
+            PATCH=0
+          elif git log "$LAST_TAG"..HEAD --oneline | grep -q "fix:"; then
+            PATCH=$((PATCH + 1))
+          else
+            echo "No 'feat' or 'fix' commits found. Skipping tag creation."
+            exit 0
+          fi
+
+          NEW_TAG="v${MAJOR}.${MINOR}.${PATCH}"
+          echo "New tag: $NEW_TAG"
+          echo "new_tag=$NEW_TAG" >> $GITHUB_ENV
+
+      - name: Create Git Tag
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "${{ env.new_tag }}" -m "Release ${{ env.new_tag }}"
+          git push origin "${{ env.new_tag }}
