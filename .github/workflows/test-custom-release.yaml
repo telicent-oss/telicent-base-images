@@ -1,35 +1,21 @@
-name: Release Workflow
+name: Create or Update Release Branch
 
 on:
-  workflow_dispatch:
-  pull_request:
-    types:
-      - closed
-    branches:
-      - dev
   push:
     branches:
       - dev
+  workflow_dispatch:
 
 jobs:
-  changed-images:
-    name: Detect Changes
-    uses: ./.github/workflows/detect-changed-images.yaml
-
   create-release-pr:
-    needs: changed-images
-    name: Create Release PR
+    name: Create or Update Release PR
     runs-on: ubuntu-latest
+    if: github.event_name == 'push' && !startsWith(github.event.head_commit.message, 'Merge branch \'release/') # Skip on release branch merges
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
-      - name: Update Versions in Image Descriptors
-        run: |
-          echo "Candidates: ${{ needs.changed-images.outputs.images }}"
-          ./update_version.sh ${{ needs.changed-images.outputs.images }} || { echo "Version update failed. Exiting."; exit 1; }
 
       - name: Determine Next Release Version
         id: determine-version
@@ -44,73 +30,61 @@ jobs:
           MINOR=${VERSION_PARTS[1]:-0}
           PATCH=${VERSION_PARTS[2]:-0}
 
-          # Initialize bump flags
-          BUMP_MAJOR=false
-          BUMP_MINOR=false
-          BUMP_PATCH=false
-
-          # Determine the bump type based on commit messages
+          # Determine bump type based on commit messages
           if git log "$LAST_TAG"..HEAD --oneline | grep -q "BREAKING CHANGE:"; then
-            BUMP_MAJOR=true
-          elif git log "$LAST_TAG"..HEAD --oneline | grep -q "feat:"; then
-            BUMP_MINOR=true
-          elif git log "$LAST_TAG"..HEAD --oneline | grep -q -E "fix:|chore:"; then
-            BUMP_PATCH=true
-          else
-            echo "No relevant commits found. Skipping release."
-            exit 0
-          fi
-
-          # Apply the bump with priority (major > minor > patch)
-          if [ "$BUMP_MAJOR" = true ]; then
             MAJOR=$((MAJOR + 1))
             MINOR=0
             PATCH=0
-          elif [ "$BUMP_MINOR" = true ]; then
+          elif git log "$LAST_TAG"..HEAD --oneline | grep -q "feat:"; then
             MINOR=$((MINOR + 1))
             PATCH=0
-          elif [ "$BUMP_PATCH" = true ]; then
+          elif git log "$LAST_TAG"..HEAD --oneline | grep -q -E "fix:|chore:"; then
             PATCH=$((PATCH + 1))
           fi
 
           NEW_VERSION="v${MAJOR}.${MINOR}.${PATCH}"
           echo "New version: $NEW_VERSION"
 
-          # Export the new version as an output for the next steps
           echo "new_version=$NEW_VERSION" >> $GITHUB_ENV
           echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
 
-      - name: Commit Changes and Create Release Branch and changelog
+      - name: Prepare or Update Release Branch
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          if ! git diff --quiet; then
-            echo "Uncommitted changes detected. Staging and committing them."
-            git add .
-            git commit -m "chore: prepare release ${{ env.new_version }}"
-          fi
-
+          # Check if release branch exists
           if git ls-remote --exit-code --heads origin release/${{ env.new_version }}; then
-            echo "Branch release/${{ env.new_version }} already exists. Resetting to remote state."
+            echo "Branch release/${{ env.new_version }} already exists. Checking out and rebasing."
             git fetch origin release/${{ env.new_version }}:release/${{ env.new_version }}
             git checkout release/${{ env.new_version }}
-            git reset --hard origin/release/${{ env.new_version }}
+            git rebase dev
           else
             echo "Branch release/${{ env.new_version }} does not exist. Creating a new branch."
-            git checkout -b release/${{ env.new_version }}
+            git checkout -b release/${{ env.new_version }} dev
           fi
 
-          echo "Pushing changes to remote."
-          git push --force origin release/${{ env.new_version }}
+          echo "Updating version and changelog."
+          ./update_version.sh || { echo "Version update failed. Exiting."; exit 1; }
 
       - name: Generate Changelog
         id: generate-changelog
         run: |
-          ./generate_changelog.sh >> CHANGELOG.md
+          ./generate_changelog.sh > CHANGELOG.md
           cat CHANGELOG.md
 
-      - name: Open Release Pull Request
+          # Save the changelog to output for the PR body
+          echo "changelog<<EOF" >> $GITHUB_ENV
+          cat CHANGELOG.md >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Commit Changes and Push Release Branch
+        run: |
+          git add .
+          git commit -m "chore: prepare release ${{ env.new_version }}" || echo "No changes to commit."
+          git push --force origin release/${{ env.new_version }}
+
+      - name: Open or Update Release PR
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -119,12 +93,11 @@ jobs:
           branch: release/${{ env.new_version }}
           title: "chore: prepare release ${{ env.new_version }}"
           body: |
-            ## Changes
-            ${{ steps.generate-changelog.outputs.changelog }}
-          labels: release
+            ${{ env.changelog }}
+          labels: release: pending
 
-  create-tag-and-build:
-    name: Create Release Tag and Build
+  create-tag:
+    name: Tag Release
     runs-on: ubuntu-latest
     if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release/')
     steps:
@@ -133,9 +106,14 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: "Update PR Label to `release: tagged`"
+        run: |
+          gh pr edit ${{ github.event.pull_request.number }} --add-label "release: tagged"
+
       - name: Extract Tag from Branch Name
         id: determine-version
         run: |
+          # Extract version from release branch
           RELEASE_BRANCH="${{ github.event.pull_request.head.ref }}"
           VERSION=${RELEASE_BRANCH#release/}
           echo "New tag: $VERSION"
