@@ -5,7 +5,7 @@
 # It dynamically links to pull requests and categorizes changes into Features, Fixes, and Others.
 #====================================================================================================
 
-. get_diff.sh
+. ./get_diff.sh
 read -r START_REF END_REF < <(get_commit_range)
 
 START_REF=$1
