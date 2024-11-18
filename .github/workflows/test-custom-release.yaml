@@ -22,9 +22,7 @@ jobs:
         id: detect-changes
         run: |
           chmod +x ./build_resolver.sh
-          ./build_resolver.sh
-        env:
-          GITHUB_ENV: $GITHUB_ENV
+          ./build_resolver.sh 
 
       - name: Generate Changelog
         id: generate-changelog
