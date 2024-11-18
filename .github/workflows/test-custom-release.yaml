@@ -54,7 +54,7 @@ jobs:
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: chore: prepare release
+          commit-message: "chore: prepare release"
           branch: release/v${{ github.run_id }}
           title: "chore: prepare release"
           body: |
