@@ -1,17 +1,16 @@
-name: Custom Release Workflow
+name: Release Workflow
 
 on:
   workflow_dispatch:
   pull_request:
-    branches:
-      - dev
-  push:
+    types:
+      - closed
     branches:
       - dev
 
 jobs:
   release-pr:
-    name: Prepare Release PR
+    name: Create Release PR
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -27,48 +26,11 @@ jobs:
         env:
           GITHUB_ENV: $GITHUB_ENV
 
-      - name: Generate Markdown Changelog
+      - name: Generate Changelog
         id: generate-changelog
         run: |
           chmod +x ./generate_changelog.sh
           ./generate_changelog.sh > CHANGELOG.md
-        env:
-          LAST_TAG=$(git describe --tags --abbrev=0 HEAD^ || echo "v0.0.0")
-
-      - name: Update Versions
-        id: version-bump
-        run: |
-          chmod +x ./update_version.sh
-          ./update_version.sh $(echo "${{ steps.detect-changes.outputs.changed_images }}" | tr ',' ' ')
-
-      - name: Commit Updated Versions and Changelog
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git checkout -b release/v${{ github.run_id }}
-          git add .
-          git commit -m "chore: prepare release v${{ github.run_id }}"
-          git push origin release/v${{ github.run_id }}
-
-      - name: Open Release Pull Request
-        uses: peter-evans/create-pull-request@v5
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "chore: prepare release"
-          branch: release/v${{ github.run_id }}
-          title: "chore: prepare release"
-          body: |
-            ## Changes
-            ${{ steps.generate-changelog.outputs.changelog }}
-          labels: release
-
-  create-tag:
-    name: Create Independent Release Tag
-    runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
 
       - name: Determine Next Release Version
         id: determine-version
@@ -83,24 +45,90 @@ jobs:
           MINOR=${VERSION_PARTS[1]:-0}
           PATCH=${VERSION_PARTS[2]:-0}
 
-          # Determine the bump type from commit messages
-          if git log "$LAST_TAG"..HEAD --oneline | grep -q "feat:"; then
-            MINOR=$((MINOR + 1))
-            PATCH=0
-          elif git log "$LAST_TAG"..HEAD --oneline | grep -q "fix:"; then
-            PATCH=$((PATCH + 1))
+          # Initialize bump flags
+          BUMP_MAJOR=false
+          BUMP_MINOR=false
+          BUMP_PATCH=false
+
+          # Determine the bump type based on commit messages
+          if git log "$LAST_TAG"..HEAD --oneline | grep -q "BREAKING CHANGE:"; then
+            BUMP_MAJOR=true
+          elif git log "$LAST_TAG"..HEAD --oneline | grep -q "feat:"; then
+            BUMP_MINOR=true
+          elif git log "$LAST_TAG"..HEAD --oneline | grep -q -E "fix:|chore:"; then
+            BUMP_PATCH=true
           else
-            echo "No 'feat' or 'fix' commits found. Skipping tag creation."
+            echo "No relevant commits found. Skipping release."
             exit 0
           fi
 
-          NEW_TAG="v${MAJOR}.${MINOR}.${PATCH}"
-          echo "New tag: $NEW_TAG"
-          echo "new_tag=$NEW_TAG" >> $GITHUB_ENV
+          # Apply the bump with priority (major > minor > patch)
+          if [ "$BUMP_MAJOR" = true ]; then
+            MAJOR=$((MAJOR + 1))
+            MINOR=0
+            PATCH=0
+          elif [ "$BUMP_MINOR" = true ]; then
+            MINOR=$((MINOR + 1))
+            PATCH=0
+          elif [ "$BUMP_PATCH" = true ]; then
+            PATCH=$((PATCH + 1))
+          fi
+
+          NEW_VERSION="v${MAJOR}.${MINOR}.${PATCH}"
+          echo "New version: $NEW_VERSION"
+
+          # Export the new version as an output for the next steps
+          echo "new_version=$NEW_VERSION" >> $GITHUB_ENV
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Update Versions in Image Descriptors
+        run: |
+          chmod +x ./update_version.sh
+          ./update_version.sh $(echo "${{ steps.detect-changes.outputs.changed_images }}" | tr ',' ' ')
+
+      - name: Commit Changes and Create Release Branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b release/${{ env.new_version }}
+          git add .
+          git commit -m "chore: prepare release ${{ env.new_version }}"
+          git push origin release/${{ env.new_version }}
+
+      - name: Open Release Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore: prepare release"
+          branch: release/${{ env.new_version }}
+          title: "chore: prepare release ${{ env.new_version }}"
+          body: |
+            ## Changes
+            ${{ steps.generate-changelog.outputs.changelog }}
+          labels: release
+
+  create-tag:
+    name: Create Release Tag
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release/')
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Extract Tag from Branch Name
+        id: determine-version
+        run: |
+          # Extract version from release branch
+          RELEASE_BRANCH="${{ github.event.pull_request.head.ref }}"
+          VERSION=${RELEASE_BRANCH#release/}
+          echo "New tag: $VERSION"
+          echo "new_tag=$VERSION" >> $GITHUB_ENV
 
       - name: Create Git Tag
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git tag -a "${{ env.new_tag }}" -m "Release ${{ env.new_tag }}"
-          git push origin "${{ env.new_tag }}
+          git push origin "${{ env.new_tag }}"
