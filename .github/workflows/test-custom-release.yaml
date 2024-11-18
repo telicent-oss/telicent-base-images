@@ -88,18 +88,25 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           
+          # Check if the branch exists on the remote
           if git ls-remote --exit-code --heads origin release/${{ env.new_version }}; then
-              echo "Branch release/${{ env.new_version }} already exists. Pulling the latest changes."
-              git fetch origin release/${{ env.new_version }}:release/${{ env.new_version }}
-              git checkout release/${{ env.new_version }}
-            else
-              echo "Branch release/${{ env.new_version }} does not exist. Creating a new branch."
-              git checkout -b release/${{ env.new_version }}
-            fi
+            echo "Branch release/${{ env.new_version }} already exists on remote. Resetting to remote state."
+            git fetch origin release/${{ env.new_version }}:release/${{ env.new_version }}
+            git checkout release/${{ env.new_version }}
+            git reset --hard origin/release/${{ env.new_version }}
+          else
+            echo "Branch release/${{ env.new_version }} does not exist. Creating a new branch."
+            git checkout -b release/${{ env.new_version }}
+          fi
           
+          # Apply changes on top of the branch
+          echo "Applying changes."
           git add .
-          git commit -m "chore: prepare release ${{ env.new_version }}"
-          git push origin release/${{ env.new_version }}
+          git commit -m "chore: prepare release ${{ env.new_version }}" || echo "No changes to commit."
+          
+          # Push changes to the remote branch
+          echo "Pushing changes to remote."
+          git push --force origin release/${{ env.new_version }}
 
       - name: Generate Changelog
         id: generate-changelog
