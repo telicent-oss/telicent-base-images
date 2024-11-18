@@ -32,13 +32,6 @@ jobs:
           echo "Candidates: ${{ needs.changed-images.outputs.images }}"
           ./update_version.sh ${{ needs.changed-images.outputs.images }} || { echo "Version update failed. Exiting."; exit 1; }
 
-      - name: Generate Changelog
-        id: generate-changelog
-        run: |
-          chmod +x ./generate_changelog.sh
-          ./generate_changelog.sh > CHANGELOG.md
-          cat CHANGELOG.md
-
       - name: Determine Next Release Version
         id: determine-version
         run: |
@@ -87,6 +80,7 @@ jobs:
           # Export the new version as an output for the next steps
           echo "new_version=$NEW_VERSION" >> $GITHUB_ENV
           echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+      
 
       - name: Commit Changes and Create Release Branch
         run: |
@@ -96,6 +90,13 @@ jobs:
           git add .
           git commit -m "chore: prepare release ${{ env.new_version }}"
           git push origin release/${{ env.new_version }}
+
+      - name: Generate Changelog
+        id: generate-changelog
+        run: |
+          chmod +x ./generate_changelog.sh
+          ./generate_changelog.sh > CHANGELOG.md
+          cat CHANGELOG.md
 
       - name: Open Release Pull Request
         uses: peter-evans/create-pull-request@v5
