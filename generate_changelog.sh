@@ -8,8 +8,6 @@
 . ./git_diff.sh
 read -r START_REF END_REF < <(get_commit_range)
 
-echo "start-ref: ${START_REF} end-ref: ${END_REF}"
-
 commit_logs=$(git log --pretty=format:"%H %s" "$START_REF..$END_REF")
 
 if [[ -z "$commit_logs" ]]; then
