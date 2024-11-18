@@ -6,42 +6,19 @@ on:
       - dev
 
 jobs:
-  determine-changes:
-    runs-on: ubuntu-latest
-    outputs:
-      images: ${{ steps.export-images.outputs.images }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
-
-      - name: Run build_resolver.sh
-        id: resolve-changes
-        run: |
-          chmod +x build_resolver.sh
-          ./build_resolver.sh
-
-      - name: Export Changed Images
-        id: export-images
-        run: |
-          if [[ -n "$changed_images" ]]; then
-            # Convert the comma-separated list into JSON
-            echo "images=$(echo '[\"'${changed_images//,/\",\"}'\"]')" >> $GITHUB_OUTPUT
-          else
-            echo "images=[]" >> $GITHUB_OUTPUT
-          fi 
+  changed-images:
+    uses: ./.github/workflows/detect-changed-images.yaml
 
   build-images:
-    needs: determine-changes
+    needs: changed-images
     runs-on: ubuntu-latest
     strategy:
       matrix:
         image: ${{ fromJson(needs.determine-changes.outputs.images) }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Build and Deploy Image
         run: |
-          echo "Building image for: ${{ matrix.image }}"
+          echo "Building image for: ${{ needs.changed-images.outputs.images }}"

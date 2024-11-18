@@ -1,0 +1,34 @@
+on:
+  workflow_call:
+    outputs:
+      version:
+        description: "Gives back a list of images that need rebuilt based on files changed"
+        value: ${{ jobs.changed-images.outputs.images }}
+
+jobs:
+  changed-images:
+    runs-on: ubuntu-latest
+    outputs:
+      images: ${{ steps.export-images.outputs.images }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Run build_resolver.sh
+        id: resolve-changes
+        run: |
+          chmod +x build_resolver.sh
+          ./build_resolver.sh
+
+      - name: Export Changed Images
+        id: export-images
+        run: |
+          if [[ -n "$changed_images" ]]; then
+            echo "Changeed images: $changed_images"
+            # Convert the comma-separated list into JSON
+            echo "images=$(echo '["'${changed_images//,/\",\"}'"]')" >> $GITHUB_OUTPUT
+          else
+            echo "images=[]" >> $GITHUB_OUTPUT
+          fi
