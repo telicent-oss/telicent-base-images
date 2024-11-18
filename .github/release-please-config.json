@@ -9,7 +9,7 @@
       "extra-files": [
         {
           "type": "yaml",
-          "path": "image-descriptors/*.yaml",
+          "path": "image-descriptors/telicent-base-python312.yaml",
           "jsonpath": "$.version"
         }
       ]
