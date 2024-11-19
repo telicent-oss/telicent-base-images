@@ -14,56 +14,51 @@ permissions:
   pull-requests: write
 
 jobs:
-  detect-release-merge:
-    name: Detect if Merge is from a Release Branch
-    runs-on: ubuntu-latest
-    outputs:
-      is_release_merge: ${{ steps.detect.outputs.is_release_merge }}
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Check for Release Branch Merge
-        id: detect
-        run: |
-          echo "Event name: ${{ github.event_name }}"
-          echo "Base branch: ${{ github.event.pull_request.base.ref }}"
-          echo "Head branch: ${{ github.event.pull_request.head.ref }}"
-          echo "Before SHA: ${{ github.event.before }}"
-          echo "After SHA: ${{ github.event.after }}"
-
-          IS_RELEASE_MERGE="false"
-
-          if [[ "${{ github.event_name }}" == "push" ]]; then
-            # Check commit range for release branch commits
-            git log ${{ github.event.before }}..${{ github.event.after }} --pretty=format:"%H %s"
-            if [[ $? -eq 0 ]]; then
-              IS_RELEASE_MERGE="true"
-            fi
-          elif [[ "${{ github.event_name }}" == "pull_request" ]]; then
-            # Check PR source branch
-            if [[ "${{ github.event.pull_request.head.ref }}" =~ ^release/ ]]; then
-              IS_RELEASE_MERGE="true"
-            fi
-          fi
-
-          echo "is_release_merge=${IS_RELEASE_MERGE}" >> $GITHUB_OUTPUT
+#  detect-release-merge:
+#    name: Detect if Merge is from a Release Branch
+#    runs-on: ubuntu-latest
+#    outputs:
+#      is_release_merge: ${{ steps.detect.outputs.is_release_merge }}
+#    steps:
+#      - name: Checkout Repository
+#        uses: actions/checkout@v4
+#        with:
+#          fetch-depth: 0
+#
+#      - name: Check for Release Branch Merge
+#        id: detect
+#        run: |
+#          echo "Event name: ${{ github.event_name }}"
+#          echo "Base branch: ${{ github.event.pull_request.base.ref }}"
+#          echo "Head branch: ${{ github.event.pull_request.head.ref }}"
+#          echo "Before SHA: ${{ github.event.before }}"
+#          echo "After SHA: ${{ github.event.after }}"
+#
+#          IS_RELEASE_MERGE="false"
+#
+#          if [[ "${{ github.event_name }}" == "push" ]]; then
+#            # Check commit range for release branch commits
+#            git log ${{ github.event.before }}..${{ github.event.after }} --pretty=format:"%H %s"
+#            if [[ $? -eq 0 ]]; then
+#              IS_RELEASE_MERGE="true"
+#            fi
+#          elif [[ "${{ github.event_name }}" == "pull_request" ]]; then
+#            # Check PR source branch
+#            if [[ "${{ github.event.pull_request.head.ref }}" =~ ^release/ ]]; then
+#              IS_RELEASE_MERGE="true"
+#            fi
+#          fi
+#
+#          echo "is_release_merge=${IS_RELEASE_MERGE}" >> $GITHUB_OUTPUT
 
   changed-images:
-    needs: detect-release-merge
-    if: ${{ needs.detect-release-merge.outputs.is_release_merge == 'false' }}
     name: Detect Changes
     uses: ./.github/workflows/detect-changed-images.yaml
 
   create-release-pr:
-    needs:
-      - detect-release-merge
-      - changed-images
+    needs: [changed-images]
     name: Create or Update Release PR
     runs-on: ubuntu-latest
-    if: ${{ needs.detect-release-merge.outputs.is_release_merge == 'false' }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
