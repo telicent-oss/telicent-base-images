@@ -9,9 +9,7 @@ jobs:
   handle-release-pr:
     name: Handle Release PR
     runs-on: ubuntu-latest
-    if: >
-      github.event.pull_request.base.ref == 'dev' &&
-      startsWith(github.event.pull_request.head.ref, 'release/')
+    if:  ${{ github.event.head_commit.author.name == 'github-actions[bot]' && !contains(github.event.head_commit.message, 'release')}}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -22,11 +20,17 @@ jobs:
         if: ${{ github.event.pull_request.merged }}
         run: |
           echo "PR merged. Proceeding to tag release."
+          echo "Head ref is: ${{ github.event.pull_request.head.ref }}"
           # Extract version from the branch name
-          RELEASE_BRANCH="${{ github.event.pull_request.head.ref }}"
-          VERSION="${RELEASE_BRANCH#release/}"
-          echo "Version extracted: $VERSION"
-          echo "release_version=$VERSION" >> $GITHUB_ENV
+          RELEASE_BRANCH="${GITHUB_HEAD_REF:-${{ github.event.pull_request.head.ref }}}"
+          if [[ "$RELEASE_BRANCH" == release/* ]]; then
+            VERSION="${RELEASE_BRANCH#release/}"
+            echo "Version extracted: $VERSION"
+            echo "release_version=$VERSION" >> $GITHUB_ENV
+          else
+            echo "Branch name does not follow the 'release/' pattern. Exiting."
+            exit 1
+          fi
 
       - name: Tag and Push Release
         if: ${{ github.event.pull_request.merged }}
