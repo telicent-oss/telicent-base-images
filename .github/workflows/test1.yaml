@@ -112,6 +112,7 @@ jobs:
           uses: actions/download-artifact@v4
           with:
             name: target-${{ matrix.image }}
+            path: ${{ github.workspace }}
 
         - name: List Available Artifacts
           run: |
