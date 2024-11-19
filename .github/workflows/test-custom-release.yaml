@@ -5,6 +5,10 @@ on:
   push:
     branches:
       - dev
+      -
+permissions:
+  contents: write
+  pull-requests: write
 
 jobs:
   changed-images:
@@ -20,8 +24,6 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Determine Next Release Version
         id: determine-version
@@ -86,12 +88,12 @@ jobs:
 
       - name: Commit Changes and Create Release Branch
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git checkout -b release/${{ env.new_version }}
+#          git config user.name "github-actions[bot]"
+#          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+#          git checkout -b release/${{ env.new_version }}
           git add .
           git commit -m "chore: prepare release ${{ env.new_version }}"
-          git push origin release/${{ env.new_version }}
+#          git push origin release/${{ env.new_version }}
 
 #      - name: Commit Changes and Push Release Branch
 #        run: |
@@ -100,7 +102,7 @@ jobs:
 #          git push origin release/${{ env.new_version }}
 
       - name: Open or Update Release PR
-        uses: peter-evans/create-pull-request@v5
+        uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "chore: prepare release ${{ env.new_version }}"
