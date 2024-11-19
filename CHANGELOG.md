@@ -1,5 +1,13 @@
 # Changelog
 
+## Changes from v1.0.4 to v1.0.6
+
+### Chores
+- test  ([0b33f09](https://github.com/telicent-oss/telicent-base-images/commit/0b33f09990179a8dd2c7f567affb59ee13111c91))
+- test  ([ae6fb95](https://github.com/telicent-oss/telicent-base-images/commit/ae6fb951dccbe5f5213b429c409483982a3f9e95))
+- test  ([3383ccc](https://github.com/telicent-oss/telicent-base-images/commit/3383ccc6dea4d349de848373e3687205db8e3575))
+- test  ([812c1be](https://github.com/telicent-oss/telicent-base-images/commit/812c1be9a0193ba8e5e23f663d6cf6a9e5386d8c))
+
 ## Changes from v1.0.3 to v1.0.5
 
 ### Chores
