@@ -113,6 +113,11 @@ jobs:
           with:
             name: target-${{ matrix.image }}
 
+        - name: List Available Artifacts
+          run: |
+            echo "Available artifacts:"
+            ls -1
+
         - name: Verify Correct Context
           run: |
             if [[ ! -f "target-${{ matrix.image }}/image/Containerfile" || ! -f "target-${{ matrix.image }}/image.yaml" ]]; then
@@ -120,11 +125,6 @@ jobs:
               exit 1
             fi
         
-
-        - name: List Available Artifacts
-          run: |
-            echo "Available artifacts:"
-            ls -1
 
         - name: Set up QEMU
           uses: docker/setup-qemu-action@v3
