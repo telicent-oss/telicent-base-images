@@ -53,16 +53,13 @@ jobs:
 
   changed-images:
     name: Detect Changes
-    if: >
-      ${{ !contains(github.event.head_commit.message, 'release') }} && 
-      ${{ !contains(github.event.head_commit.author.name, 'github-actions[bot]')}}"
+    if: "${{ !contains(github.event.head_commit.message, 'release') }} && ${{ !contains(github.event.head_commit.author.name, 'github-actions[bot]')}}"
     uses: ./.github/workflows/detect-changed-images.yaml
 
   create-release-pr:
     needs: [changed-images]
-    if: >
-      ${{ !contains(github.event.head_commit.message, 'release') }} && 
-      {{ !contains(github.event.head_commit.author.name, 'github-actions[bot]')}}
+    if: "${{ !contains(github.event.head_commit.message, 'release') }} && ${{ !contains(github.event.head_commit.author.name, 'github-actions[bot]')}}"
+    
     name: Create or Update Release PR
     runs-on: ubuntu-latest
     steps:
@@ -73,7 +70,8 @@ jobs:
 
       - name: Determine Next Release Version
         id: determine-version
-        run: | 
+        run: |
+          echo "Head commit author: ${{ github.event.head_commit.author.name }}
           # Extract the last release tag
           LAST_TAG=$(git describe --tags --abbrev=0 || echo "v0.0.0")
           echo "Last tag: $LAST_TAG"
