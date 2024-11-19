@@ -38,7 +38,7 @@ jobs:
 
           if [[ "${{ github.event_name }}" == "push" ]]; then
             # Check commit range for release branch commits
-            git log ${{ github.event.before }}..${{ github.event.after }} --pretty=format:"%H %s" 
+            git log ${{ github.event.before }}..${{ github.event.after }} --pretty=format:"%H %s"
             if [[ $? -eq 0 ]]; then
               IS_RELEASE_MERGE="true"
             fi
@@ -53,6 +53,7 @@ jobs:
 
   changed-images:
     needs: detect-release-merge
+    if: ${{ needs.detect-release-merge.outputs.is_release_merge == 'false' }}
     name: Detect Changes
     uses: ./.github/workflows/detect-changed-images.yaml
 
@@ -74,6 +75,7 @@ jobs:
         run: |
           echo "GH REF: ${{ github.ref }}"
           echo "pull event ref: ${{ github.event.pull_request.head.ref }}"
+          echo "commit msg: $ {{ github.event.head_commit.message }}"
           # Extract the last release tag
           LAST_TAG=$(git describe --tags --abbrev=0 || echo "v0.0.0")
           echo "Last tag: $LAST_TAG"
@@ -111,7 +113,7 @@ jobs:
       - name: Append Changelog
         id: generate-changelog
         run: |
-          ./generate_changelog.sh 
+          ./generate_changelog.sh
           echo "Generated changelog:"
           cat CHANGELOG.md
 
