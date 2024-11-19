@@ -1,5 +1,13 @@
 # Changelog
 
+## Changes from v1.0.10 to v1.1.0
+
+### Features
+- release build  ([654acc6](https://github.com/telicent-oss/telicent-base-images/commit/654acc6454f544271bf8ae639d6b96a72db353a5))
+- release build  ([d3b9242](https://github.com/telicent-oss/telicent-base-images/commit/d3b9242b2967b99ac5b8d9f4f01c414633482527))
+### Chores
+- test  ([0c10099](https://github.com/telicent-oss/telicent-base-images/commit/0c10099ca0290cbc43ce59682a14ec32c64f545f))
+
 ## Changes from v1.0.9 to v1.0.11
 
 ### Chores
