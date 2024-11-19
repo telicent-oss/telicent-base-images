@@ -63,10 +63,7 @@ jobs:
 
         - name: Generate Dockerfile
           run: |
-            cekit --descriptor image-descriptors/${{ matrix.image }}.yaml build --dry-run docker
-            echo "Alooooooooooooooooo"
-            echo "$(pwd)"
-            ls
+            cekit --descriptor image-descriptors/${{ matrix.image }}.yaml build --dry-run docker 
 
         - name: Install yq
           run: |
@@ -116,7 +113,7 @@ jobs:
 
         - name: Verify Correct Context
           run: |
-            if [[ ! -f "target/image/Containerfile" || ! -f "target/image.yaml" ]]; then
+            if [[ ! -f "target-${{ matrix.image }}/image/Containerfile" || ! -f "target-${{ matrix.image }}/image.yaml" ]]; then
               echo "Error: Missing Containerfile or image.yaml in target directory for image ${{ matrix.image }}"
               exit 1
             fi
