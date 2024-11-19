@@ -1,25 +1,161 @@
-name: Build Images
+name: Build and Push Multi-Platform Images
 
 on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Specify the tag to build (must exist in the format v<major>.<minor>.<patch>)"
+        required: true
+        type: string
+        default: "v1.0.3"
   push:
-    branches:
-      - main
+    tags:
+      - "v*.*.*"
 
 jobs:
-  changed-images:
+  validate-tag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate Tag
+        id: validate
+        run: |
+          echo "tag - ${{ github.event.inputs.tag }} ref = ${{ github.ref_name }}"
+          TAG="${{ github.event.inputs.tag || github.ref_name }}"
+          if [[ ! "$TAG" =~ ^v[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
+            echo "Error: The tag must be in the format v<major>.<minor>.<patch>, where each part is 1-3 digits."
+            exit 1
+          fi
+          if ! git fetch --tags && git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "Error: The specified tag ($TAG) does not exist in the repository."
+            exit 1
+          fi
+
+          echo "Tag validated: $TAG"
+          echo "tag=$TAG" >> $GITHUB_ENV
+
+  detect-changed-images:
+    needs: validate-tag
     uses: ./.github/workflows/detect-changed-images.yaml
 
-  build-images:
-    needs: changed-images
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        image: ${{ fromJson(needs.changed-images.outputs.images) }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+  generate-dockerfile:
+      needs: detect-changed-images
+      runs-on: ubuntu-latest
+      strategy:
+        matrix:
+          #image: ${{ fromJson(needs.detect-changed-images.outputs.images) }}
+          image: [telicent-base-nginx127]
+      outputs:
+        image_name: ${{ steps.extract.outputs.image_name }}
+        version: ${{ steps.extract.outputs.image_version }}
+      steps:
+        - name: Checkout Repository
+          uses: actions/checkout@v4
 
-      - name: Build and Deploy Image
-        run: |
-          echo "Building image for: ${{ matrix.image }}"
-          
+        - name: Install Python and PIP
+          run: |
+            sudo apt-get update
+            sudo apt-get install -y python3 python3-pip
+
+        - name: Install Cekit
+          run: |
+            python3 -m pip install --upgrade pip
+            python3 -m pip install cekit
+
+        - name: Generate Dockerfile
+          run: |
+            cekit --descriptor image-descriptors/${{ matrix.image }}.yaml build --dry-run docker
+            echo "Alooooooooooooooooo"
+            echo "$(pwd)"
+            ls
+
+        - name: Install yq
+          run: |
+            sudo add-apt-repository -y "ppa:rmescandon/yq"
+            sudo apt update
+            sudo apt install yq -y
+
+        - name: Extract Image Version and Name
+          id: extract
+          run: |
+            descriptor_path="target/image.yaml"
+
+            # Extract version using yq
+            current_version=$(yq eval '.version' "$descriptor_path" | sed 's/^[ \t]*//;s/[ \t]*$//')
+
+            # Extract image name using yq
+            image_name=$(yq eval '.labels[] | select(.name == "name") | .value' "$descriptor_path")
+
+            echo "Extracted version: $current_version"
+            echo "Extracted image name: $image_name"
+            
+            echo "image_version=$current_version" >> $GITHUB_OUTPUT
+            echo "image_name=$image_name" >> $GITHUB_OUTPUT
+
+        - name: Save Target Directory
+          uses: actions/upload-artifact@v4
+          with:
+            name: target-${{ matrix.image }}
+            path: ./target
+
+  build-and-push:
+      needs: generate-dockerfile
+      runs-on: ubuntu-latest
+      strategy:
+        matrix:
+          #image: ${{ fromJson(needs.detect-changed-images.outputs.images) }}
+          image: [ telicent-base-nginx127 ]
+          os: [linux/amd64, linux/arm64]
+      steps:
+        - name: Checkout Repository
+          uses: actions/checkout@v4
+
+        - name: Download Target Directory
+          uses: actions/download-artifact@v4
+          with:
+            name: target-${{ matrix.image }}
+
+        - name: Verify Correct Context
+          run: |
+            if [[ ! -f "target/image/Containerfile" || ! -f "target/image.yaml" ]]; then
+              echo "Error: Missing Containerfile or image.yaml in target directory for image ${{ matrix.image }}"
+              exit 1
+            fi
+
+        - name: Set up QEMU
+          uses: docker/setup-qemu-action@v3
+
+        - name: Set up Docker Buildx
+          uses: docker/setup-buildx-action@v3
+
+        - name: Login to Docker Hub
+          uses: docker/login-action@v3
+          with:
+            username: "${{ secrets.DOCKERHUB_USERNAME }}"
+            password: "${{ secrets.DOCKERHUB_TOKEN }}"
+
+        - name: Build and Push Image
+          uses: docker/build-push-action@v5
+          with:
+            context: "target/image"
+            file: "target/image/Containerfile"
+            platforms: ${{ matrix.os }}
+            push: true
+            tags: |
+              "${{ needs.generate-dockerfile.outputs.image_name }}:latest"
+              "${{ needs.generate-dockerfile.outputs.image_name }}:${{ needs.generate-dockerfile.outputs.version }}"
+
+  trivy-scan-image:
+    needs: build-and-push
+    uses: telicent-oss/shared-workflows/.github/workflows/trivy-image-scan.yml@main
+    secrets: inherit
+    with:
+      IMAGE_REF: gnikolov95/${{ needs.generate-dockerfile.outputs.image_name }}:${{ needs.generate-dockerfile.outputs.version }}
+      SCAN_NAME: ${{ needs.generate-dockerfile.outputs.image_name }}
+
+  grype-scan-image:
+    needs: build-and-push
+    uses: telicent-oss/shared-workflows/.github/workflows/grype-image-scan.yml@main
+    secrets: inherit
+    with:
+      IMAGE_REF: gnikolov95/${{ needs.generate-dockerfile.outputs.image_name }}:${{ needs.generate-dockerfile.outputs.version }}
+      SCAN_NAME: ${{ needs.generate-dockerfile.outputs.image_name }}
