@@ -47,7 +47,7 @@ jobs:
           fi
           echo "Last tag or commit for comparison: $LAST_TAG"
           
-          # Extract version numbers from the tag, default to 0.0.0 if no tag
+          # Extract version numbers from the tag, default to 0.0.1 if no tag
           if [[ "$LAST_TAG" =~ ^v ]]; then
             VERSION_PARTS=($(echo "${LAST_TAG}" | sed 's/v//' | tr '.' ' '))
           else
@@ -63,13 +63,15 @@ jobs:
           BUMP_PATCH=false
           
           # Analyze commit messages from HEAD to determine the next version
-          if git log "$LAST_TAG"..HEAD --oneline | grep -q -E "BREAKING CHANGE|!:"; then
-            BUMP_MAJOR=true
-          elif git log "$LAST_TAG"..HEAD --oneline | grep -q "^feat"; then
-            BUMP_MINOR=true
-          elif git log "$LAST_TAG"..HEAD --oneline | grep -q -E "^fix|^chore"; then
-            BUMP_PATCH=true
-          fi
+          git log "$LAST_TAG"..HEAD --pretty=format:"%s" | while read -r line; do
+            if echo "$line" | grep -q -E "BREAKING CHANGE|!:|^feat.*!:"; then
+              BUMP_MAJOR=true
+            elif echo "$line" | grep -q "^feat"; then
+              BUMP_MINOR=true
+            elif echo "$line" | grep -q -E "^fix|^chore"; then
+              BUMP_PATCH=true
+            fi
+          done
           
           # Apply the version bump with priority: major > minor > patch
           if $BUMP_MAJOR; then
