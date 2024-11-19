@@ -54,9 +54,9 @@ jobs:
           PR_NUMBER=${{ github.event.pull_request.number }}
           REPO=${{ github.repository }}
           
-          LABELS=$(gh issue view "$PR_NUMBER" --repo "$REPO" --json labels -q ".labels[].name")
+          LABELS=$(gh issue view "$PR_NUMBER" --repo "$REPO" --json labels -q ".labels[].name" | paste -sd "," -)
           
-          if echo "$LABELS" | grep -q "release: tagged"; then
+          if echo "$LABELS" | grep -q "release: pending"; then
           gh issue edit "$PR_NUMBER" --repo "$REPO" --remove-label "release: pending"
           fi
           
@@ -70,9 +70,9 @@ jobs:
           PR_NUMBER=${{ github.event.pull_request.number }}
           REPO=${{ github.repository }}
           
-          LABELS=$(gh issue view "$PR_NUMBER" --repo "$REPO" --json labels -q ".labels[].name")
+          LABELS=$(gh issue view "$PR_NUMBER" --repo "$REPO" --json labels -q ".labels[].name" | paste -sd "," -)
           
-          if echo "$LABELS" | grep -q "release: tagged"; then
+          if echo "$LABELS" | grep -q "release: pending"; then
             gh issue edit "$PR_NUMBER" --repo "$REPO" --remove-label "release: pending"
           fi
           
