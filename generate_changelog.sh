@@ -4,6 +4,7 @@
 # Script to generate and append a changelog between two git tags or commits using Conventional Commit messages.
 # Detects BREAKING CHANGES from the "!" in commit prefixes (e.g., fix!:, feat(sth)!:).
 # Avoids appending multiple "Changelog" headers while preserving the file format.
+# Filters out previous release PRs to keep the changelog clean.
 #====================================================================================================
 
 . ./git_diff.sh
@@ -16,7 +17,6 @@ if [[ -z "$commit_logs" ]]; then
   exit 0
 fi
 
-# Define commit categories
 declare -A categories=(
   ["feat"]="Features"
   ["fix"]="Fixes"
@@ -26,14 +26,18 @@ declare -A categories=(
 )
 declare -A changes_by_category
 
-# Get the repo URL dynamically
 repo_url=$(git config --get remote.origin.url | sed -E 's/git@github.com:|https:\/\/github.com\///' | sed 's/\.git$//')
 
-# Function to process each commit
 function process_commit {
   local commit_message="$1"
   local commit_hash="$2"
   local pr_number="$3"
+
+  # Skip release PRs based on commit messages
+  if [[ "$commit_message" =~ ^chore:\ prepare\ release\ v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+    echo "Skipping release PR commit: $commit_message"
+    return
+  fi
 
   # Match commit prefixes (e.g., feat:, fix!:)
   prefix=$(echo "$commit_message" | grep -oE "^[a-zA-Z]+(\([^)]+\))?!?:")
@@ -91,16 +95,13 @@ while IFS= read -r line; do
         process_commit "$pr_commit_message" "$pr_commit_hash" "$pr_number"
       done
     else
-      # Process the PR message
       process_commit "$pr_message" "$commit_hash" "$pr_number"
     fi
   else
-    # Process regular commits
     process_commit "$commit_message" "$commit_hash" ""
   fi
 done <<< "$commit_logs"
 
-# Generate new changelog content
 new_changelog="## Changes from $START_REF to $new_version\n\n"
 for category in "${!categories[@]}"; do
   category_name="${categories[$category]}"
@@ -111,7 +112,6 @@ for category in "${!categories[@]}"; do
   fi
 done
 
-# Add uncategorized commits
 if [[ -n "${changes_by_category["Others"]}" ]]; then
   new_changelog+="### Others\n"
   new_changelog+=$(printf "%b" "${changes_by_category["Others"]}")
