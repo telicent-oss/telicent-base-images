@@ -15,7 +15,9 @@ permissions:
 
 jobs:
   changed-images:
-    if: "${{ !startsWith(github.event.pull_request.head.ref, 'release/')}}"
+    if: >
+      github.event_name == 'push' && !startsWith(github.ref, 'refs/heads/release/') ||
+      github.event_name == 'pull_request' && !startsWith(github.event.pull_request.head.ref, 'release/')
     name: Detect Changes
     uses: ./.github/workflows/detect-changed-images.yaml
 
@@ -23,7 +25,9 @@ jobs:
     needs: changed-images
     name: Create or Update Release PR
     runs-on: ubuntu-latest
-    if: "${{ !startsWith(github.event.pull_request.head.ref, 'release/')}}"
+    if: >
+      github.event_name == 'push' && !startsWith(github.ref, 'refs/heads/release/') ||
+      github.event_name == 'pull_request' && !startsWith(github.event.pull_request.head.ref, 'release/')
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
