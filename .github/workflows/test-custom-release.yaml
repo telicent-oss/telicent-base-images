@@ -38,7 +38,7 @@ jobs:
 
           if [[ "${{ github.event_name }}" == "push" ]]; then
             # Check commit range for release branch commits
-            git log ${{ github.event.before }}..${{ github.event.after }} --pretty=format:"%H %s" | grep -qE "Merge branch 'release/"
+            git log ${{ github.event.before }}..${{ github.event.after }} --pretty=format:"%H %s" 
             if [[ $? -eq 0 ]]; then
               IS_RELEASE_MERGE="true"
             fi
