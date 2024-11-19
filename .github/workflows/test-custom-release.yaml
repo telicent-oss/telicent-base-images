@@ -20,7 +20,7 @@ jobs:
     needs: changed-images
     name: Create or Update Release PR
     runs-on: ubuntu-latest
-    if: "${{ ! startsWith(github.ref, 'refs/release/') }}"
+    if: "${{ ! startsWith(github.ref_name, 'release') }}"
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
