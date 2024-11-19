@@ -1,14 +1,12 @@
-#!/bin/bash
-
 function get_commit_range() {
-  local last_tag=$(git describe --tags --abbrev=0 HEAD 2>/dev/null || echo "")
-  local last_tag_sha=$(git rev-list -n 1 "$last_tag" 2>/dev/null || echo "")
+  # Get the most recent tag in the repository, sorted by creation date
+  local last_tag=$(git tag --sort=-creatordate | head -n 1)
 
-  if [[ -z "$last_tag_sha" ]]; then
+  if [[ -z "$last_tag" ]]; then
+    # No tags exist; use the first commit as the start point
     echo "$(git rev-list --max-parents=0 HEAD) HEAD"
-    return
+  else
+    # Use the last tag as the start point
+    echo "$last_tag HEAD"
   fi
-
-  # Compare the last tag with the current HEAD
-  echo "$last_tag HEAD"
 }
