@@ -120,5 +120,5 @@ jobs:
           title: "chore: prepare release ${{ env.new_version }}"
           body: |
             ## Changes 
-            "${{ env.new_changelog }}"
+            ${{ env.new_changelog }}
           labels: "release: pending"
