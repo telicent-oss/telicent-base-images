@@ -101,7 +101,7 @@ while IFS= read -r line; do
 done <<< "$commit_logs"
 
 # Generate new changelog content
-new_changelog="## Changes from $START_REF to $new_version\n----\n"
+new_changelog="## Changes from $START_REF to $new_version\n\n"
 for category in "${!categories[@]}"; do
   category_name="${categories[$category]}"
   if [[ -n "${changes_by_category[$category_name]}" ]]; then

@@ -101,8 +101,7 @@ jobs:
         id: generate-changelog
         run: |
           ./generate_changelog.sh
-          echo "Generated changelog:"
-          cat CHANGELOG.md
+          echo "Generated changelog....."
 
       - name: Commit Changes and Create Release Branch
         run: |
@@ -121,5 +120,5 @@ jobs:
           title: "chore: prepare release ${{ env.new_version }}"
           body: |
             ## Changes 
-            ${{ steps.generate-changelog.outputs.new_changelog }}
+            echo "${{ env.new_changelog }}"
           labels: "release: pending"
