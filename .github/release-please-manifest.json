@@ -1,8 +1,0 @@
-{
-  "image-descriptors/telicent-base-python313.yaml": "1.0.0",
-  "image-descriptors/telicent-base-python312.yaml": "1.0.0",
-  "image-descriptors/telicent-base-java.yaml": "1.0.0",
-  "image-descriptors/telicent-base-nodejs20.yaml": "1.0.0",
-  "image-descriptors/telicent-base-nginx127.yaml": "1.0.0",
-  "image-descriptors/telicent-base-python311.yaml": "1.0.0"
-}
