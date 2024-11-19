@@ -11,6 +11,10 @@ on:
   push:
     tags:
       - "v*.*.*"
+  on:
+    push:
+      branches:
+        - dev
 
 jobs:
   validate-tag:
