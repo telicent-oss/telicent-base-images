@@ -1,7 +1,5 @@
 # Changelog
 
-----
-
 ## Changes from v0.1.0 to v0.2.0
 
 ### Fixes
