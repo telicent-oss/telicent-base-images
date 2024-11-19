@@ -120,8 +120,8 @@ jobs:
 
         - name: Verify Correct Context
           run: |
-            if [[ ! -f "target-${{ matrix.image }}/image/Containerfile" || ! -f "target-${{ matrix.image }}/image.yaml" ]]; then
-              echo "Error: Missing Containerfile or image.yaml in target directory for image ${{ matrix.image }}"
+            if [[ ! -f "target-${{ matrix.image }}/image/Dockerfile" || ! -f "target-${{ matrix.image }}/image.yaml" ]]; then
+              echo "Error: Missing Docerfile or image.yaml in target directory for image ${{ matrix.image }}"
               exit 1
             fi
         
@@ -141,8 +141,8 @@ jobs:
         - name: Build and Push Image
           uses: docker/build-push-action@v5
           with:
-            context: "target/image"
-            file: "target/image/Containerfile"
+            context: "target-${{matrix.image}}/image"
+            file: "Dockerfile"
             platforms: ${{ matrix.os }}
             push: true
             tags: |
