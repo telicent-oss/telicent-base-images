@@ -1,9 +1,0 @@
-labels:
-  - name: "maintainer"
-    value: "Telicent OSS <opensource@telicent.io>"
-  - name: "vendor"
-    value: "Telicent OSS"
-  - name: "org.opencontainers.image.authors"
-    value: "Telicent OSS <opensource@telicent.io>"
-  - name: "org.opencontainers.image.vendor"
-    value: "Telicent OSS"
