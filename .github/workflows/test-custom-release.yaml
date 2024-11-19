@@ -53,10 +53,12 @@ jobs:
 
   changed-images:
     name: Detect Changes
+    if: ${{ !contains(github.event.head_commit.message, 'release') }}
     uses: ./.github/workflows/detect-changed-images.yaml
 
   create-release-pr:
     needs: [changed-images]
+    if: ${{ !contains(github.event.head_commit.message, 'release') }}
     name: Create or Update Release PR
     runs-on: ubuntu-latest
     steps:
