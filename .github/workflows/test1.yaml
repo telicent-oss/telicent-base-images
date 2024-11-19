@@ -119,6 +119,12 @@ jobs:
               echo "Error: Missing Containerfile or image.yaml in target directory for image ${{ matrix.image }}"
               exit 1
             fi
+        
+
+        - name: List Available Artifacts
+          run: |
+            echo "Available artifacts:"
+            ls -1
 
         - name: Set up QEMU
           uses: docker/setup-qemu-action@v3
