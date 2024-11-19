@@ -33,6 +33,7 @@ jobs:
       - name: Determine Next Release Version
         id: determine-version
         run: |
+           echo "GH REF: ${{ github.ref	}}
           # Extract the last release tag
           LAST_TAG=$(git describe --tags --abbrev=0 || echo "v0.0.0")
           echo "Last tag: $LAST_TAG"
