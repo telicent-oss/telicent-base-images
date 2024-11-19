@@ -1,17 +1,26 @@
 const { Updater } = require('release-please');
 
-class CekitYamlUpdater extends Updater {
-  /**
+class YamlUpdater extends Updater {
+   /**
    * Updates the version in the YAML descriptor file.
    */
   updateContent(content) {
-    const versionAnchorRegex = /version:\s*&version\s*["'](\d+\.\d+\.\d+)["']/;
+    console.log('YamlUpdater called with content:');
+    console.log(content);
 
-    return content.replace(
-      versionAnchorRegex,
-      `version: &version "${this.version}"`
-    );
+    const versionRegex = /version:\s*["'](\d+\.\d+\.\d+)["']/;
+    const updatedContent = content.replace(versionRegex, `version: "${this.version}"`);
+
+    console.log('Updated content:');
+    console.log(updatedContent);
+
+    return updatedContent;
   }
 }
 
-module.exports = { CekitYamlUpdater };
+module.exports = { YamlUpdater };
+
+
+
+
+

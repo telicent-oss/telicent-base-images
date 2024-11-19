@@ -1,6 +1,0 @@
-{
-  "release-type": "custom",
-  "updaters": {
-    "image-descriptors/*.yaml": "./yaml-updater.js"
-  }
-}
