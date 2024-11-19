@@ -43,27 +43,37 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git tag -a "${{ env.release_version }}" -m "Release ${{ env.release_version }}"
           git push origin "$VERSION"
+      
+
 
       - name: Label PR as Released
         if: ${{ github.event.pull_request.merged }}
-        uses: actions/github-script@v6
-        with:
-          script: |
-            github.rest.issues.addLabels({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.payload.pull_request.number,
-              labels: ['release: tagged']
-            })
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          PR_NUMBER=${{ github.event.pull_request.number }}
+          REPO=${{ github.repository }}
+          
+          LABELS=$(gh issue view "$PR_NUMBER" --repo "$REPO" --json labels -q ".labels[].name")
+          
+          if echo "$LABELS" | grep -q "release: tagged"; then
+          gh issue edit "$PR_NUMBER" --repo "$REPO" --remove-label "release: pending"
+          fi
+          
+          gh issue edit "$PR_NUMBER" --repo "$REPO" --add-label "release: tagged"
 
       - name: Label PR as Cancelled
         if: ${{ !github.event.pull_request.merged }}
-        uses: actions/github-script@v6
-        with:
-          script: |
-            github.rest.issues.addLabels({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.payload.pull_request.number,
-              labels: ['release: cancelled']
-            })
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          PR_NUMBER=${{ github.event.pull_request.number }}
+          REPO=${{ github.repository }}
+          
+          LABELS=$(gh issue view "$PR_NUMBER" --repo "$REPO" --json labels -q ".labels[].name")
+          
+          if echo "$LABELS" | grep -q "release: tagged"; then
+            gh issue edit "$PR_NUMBER" --repo "$REPO" --remove-label "release: pending"
+          fi
+          
+          gh issue edit "$PR_NUMBER" --repo "$REPO" --add-label "release: cancelled"
