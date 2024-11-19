@@ -73,7 +73,7 @@ jobs:
           echo "GH REF: ${{ github.ref }}"
           echo "pull event ref: ${{ github.event.pull_request.head.ref }}"
           echo "commit msg: ${{ github.event.head_commit.message }}"
-          echo: "GH actor: ${{ github.actor}} gh head commit auth name: ${{github.event.head_commit.author.name}}"
+          echo "GH actor: ${{ github.actor}} gh head commit auth name: ${{github.event.head_commit.author.name}}"
 
           # Extract the last release tag
           LAST_TAG=$(git describe --tags --abbrev=0 || echo "v0.0.0")
