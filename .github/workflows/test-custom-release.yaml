@@ -70,7 +70,7 @@ jobs:
         run: |
           echo "GH REF: ${{ github.ref }}"
           echo "pull event ref: ${{ github.event.pull_request.head.ref }}"
-          echo "commit msg: $ {{ github.event.head_commit.message }}"
+          echo "commit msg: ${{ github.event.head_commit.message }}"
           # Extract the last release tag
           LAST_TAG=$(git describe --tags --abbrev=0 || echo "v0.0.0")
           echo "Last tag: $LAST_TAG"
