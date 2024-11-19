@@ -21,6 +21,7 @@ jobs:
         run: |
           echo "PR merged. Proceeding to tag release."
           echo "Head ref is: ${{ github.event.pull_request.head.ref }}"
+          echo "Event commit msg: ${{ github.event.head_commit.message }}"
           # Extract version from the branch name
           RELEASE_BRANCH="${GITHUB_HEAD_REF:-${{ github.event.pull_request.head.ref }}}"
           if [[ "$RELEASE_BRANCH" == release/* ]]; then
