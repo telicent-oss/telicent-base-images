@@ -88,11 +88,12 @@ jobs:
 
       - name: Commit Changes and Create Release Branch
         run: |
+          git add .
+          git commit -m "chore: prepare release ${{ env.new_version }}"
 #          git config user.name "github-actions[bot]"
 #          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 #          git checkout -b release/${{ env.new_version }}
-          git add .
-          git commit -m "chore: prepare release ${{ env.new_version }}"
+           #add back here
 #          git push origin release/${{ env.new_version }}
 
 #      - name: Commit Changes and Push Release Branch
