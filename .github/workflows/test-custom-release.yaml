@@ -1,0 +1,124 @@
+name: Create or Update Release Branch
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - dev
+  pull_request:
+    branches:
+      - dev
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+
+  changed-images:
+    name: Detect Changes
+    if: ${{ github.event.head_commit.author.name != 'github-actions[bot]' && !contains(github.event.head_commit.message, 'release')}}
+    uses: ./.github/workflows/detect-changed-images.yaml
+
+  create-release-pr:
+    needs: [changed-images]
+    if: ${{ github.event.head_commit.author.name != 'github-actions[bot]' && !contains(github.event.head_commit.message, 'release')}}
+
+    
+    name: Create or Update Release PR
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Determine Next Release Version
+        id: determine-version
+        run: |
+          echo "Head commit author: ${{ github.event.head_commit.author.name }}"
+          
+          # Get the last tag or fallback to the first commit if no tags exist
+          if git describe --tags --abbrev=0 2>/dev/null; then
+            LAST_TAG=$(git describe --tags --abbrev=0)
+          else
+            echo "No tags found. Using the first commit in the branch."
+            LAST_TAG=$(git rev-list --max-parents=0 HEAD)
+          fi
+          echo "Last tag or commit for comparison: $LAST_TAG"
+          
+          # Extract version numbers from the tag, default to 0.0.1 if no tag
+          if [[ "$LAST_TAG" =~ ^v ]]; then
+            VERSION_PARTS=($(echo "${LAST_TAG}" | sed 's/v//' | tr '.' ' '))
+          else
+            VERSION_PARTS=(0 0 0)
+          fi
+          MAJOR=${VERSION_PARTS[0]:-0}
+          MINOR=${VERSION_PARTS[1]:-0}
+          PATCH=${VERSION_PARTS[2]:-0}
+          
+          # Default bump flags
+          BUMP_MAJOR=false
+          BUMP_MINOR=false
+          BUMP_PATCH=false
+          
+          # Analyze commit messages from HEAD to determine the next version
+          git log "$LAST_TAG"..HEAD --pretty=format:"%s" | while read -r line; do
+            if echo "$line" | grep -q -E "BREAKING CHANGE|!:|^feat.*!:"; then
+              BUMP_MAJOR=true
+            elif echo "$line" | grep -q "^feat"; then
+              BUMP_MINOR=true
+            elif echo "$line" | grep -q -E "^fix|^chore"; then
+              BUMP_PATCH=true
+            fi
+          done
+          
+          # Apply the version bump with priority: major > minor > patch
+          if $BUMP_MAJOR; then
+            MAJOR=$((MAJOR + 1))
+            MINOR=0
+            PATCH=0
+          elif $BUMP_MINOR; then
+            MINOR=$((MINOR + 1))
+            PATCH=0
+          elif $BUMP_PATCH; then
+            PATCH=$((PATCH + 1))
+          fi
+          
+          NEW_VERSION="v${MAJOR}.${MINOR}.${PATCH}"
+          echo "New version: $NEW_VERSION"
+          echo "new_version=$NEW_VERSION" >> $GITHUB_ENV
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Update Versions in Image Descriptors
+        id: update-versions
+        run: |
+          echo "Updating image descriptors for version ${{ env.new_version }}."
+          echo "Images that need updates: ${{ needs.changed-images.outputs.images }}"
+          ./update_version.sh ${{ needs.changed-images.outputs.images }}
+
+      - name: Append Changelog
+        id: generate-changelog
+        run: |
+          ./generate_changelog.sh
+          echo "Generated changelog....."
+
+      - name: Commit Changes and Create Release Branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "chore: prepare release ${{ env.new_version }}" || echo "No changes to commit."
+
+      - name: Open or Update Release PR
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore: prepare release ${{ env.new_version }}"
+          base: dev
+          branch: release/${{ env.new_version }}
+          title: "chore: prepare release ${{ env.new_version }}"
+          body: |
+            ## Changes 
+            "${{ env.new_changelog }}"
+          labels: "release: pending"

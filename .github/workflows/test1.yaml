@@ -1,0 +1,24 @@
+name: Build Images
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  changed-images:
+    uses: ./.github/workflows/detect-changed-images.yaml
+
+  build-images:
+    needs: changed-images
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        image: ${{ fromJson(needs.changed-images.outputs.images) }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build and Deploy Image
+        run: |
+          echo "Building image for: ${{ matrix.image }}"

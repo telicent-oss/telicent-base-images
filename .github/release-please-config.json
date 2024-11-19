@@ -1,0 +1,13 @@
+{
+  "release-type": "yaml",
+  "branch": "dev",
+  "bump-minor-pre-major": true,
+  "changelog-path": "CHANGELOG.md",
+  "extra-files": [
+    {
+      "type": "yaml",
+      "path": "image-descriptors/telicent-base-java.yaml",
+      "jsonpath": "$.version"
+    }
+  ]
+}
