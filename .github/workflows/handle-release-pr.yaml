@@ -9,7 +9,9 @@ jobs:
   handle-release-pr:
     name: Handle Release PR
     runs-on: ubuntu-latest
-    if:  ${{ github.event.head_commit.author.name == 'github-actions[bot]' && contains(github.event.head_commit.message, 'release')}}
+    if: >
+      github.event.pull_request.base.ref == 'dev' &&
+      startsWith(github.event.pull_request.head.ref, 'release/')
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
