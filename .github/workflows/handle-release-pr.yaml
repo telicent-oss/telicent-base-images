@@ -38,7 +38,7 @@ jobs:
       - name: Tag and Push Release
         if: ${{ github.event.pull_request.merged }}
         run: |
-          echo "Release version: ${{ env.release_version }}
+          echo "Release version: ${{ env.release_version }}"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git tag -a "${{ env.release_version }}" -m "Release ${{ env.release_version }}"
