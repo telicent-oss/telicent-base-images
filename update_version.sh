@@ -43,6 +43,7 @@ for image_name in $candidates; do
 
     IFS='.' read -r major minor patch <<<"$current_version"
 
+    # todo proper increments
     patch=$((patch + 1))
 
     new_version="${major}.${minor}.${patch}"
