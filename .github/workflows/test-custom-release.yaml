@@ -5,6 +5,9 @@ on:
   push:
     branches:
       - dev
+  pull_request:
+    branches:
+      - dev
 
 permissions:
   contents: write
@@ -12,7 +15,7 @@ permissions:
 
 jobs:
   changed-images:
-    if: "${{github.event_name != 'pull_request' || !startsWith(github.event.pull_request.head.ref, 'release') }}"
+    if: ${{ github.event_name != 'pull_request' && !startsWith(github.ref_name, 'release/') }}
     name: Detect Changes
     uses: ./.github/workflows/detect-changed-images.yaml
 
@@ -20,7 +23,9 @@ jobs:
     needs: changed-images
     name: Create or Update Release PR
     runs-on: ubuntu-latest
-    if: "${{github.event_name != 'pull_request' || !startsWith(github.event.pull_request.head.ref, 'release') }}"
+    if: >-
+      github.event_name != 'pull_request' || 
+      (github.event.pull_request.head.ref != startsWith('release/') && github.event.pull_request.base.ref == 'dev')
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -30,7 +35,6 @@ jobs:
       - name: Determine Next Release Version
         id: determine-version
         run: |
-          echo "ALOOOOOOOOOOO ${{ github.ref_name }} ---- ${{github.event.pull_request.head.ref}}"
           # Extract the last release tag
           LAST_TAG=$(git describe --tags --abbrev=0 || echo "v0.0.0")
           echo "Last tag: $LAST_TAG"
@@ -77,8 +81,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add .
-          git commit -m "chore: prepare release ${{ env.new_version }}"
-
+          git commit -m "chore: prepare release ${{ env.new_version }}" || echo "No changes to commit."
 
       - name: Open or Update Release PR
         uses: peter-evans/create-pull-request@v7
