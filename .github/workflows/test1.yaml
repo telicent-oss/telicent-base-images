@@ -11,6 +11,8 @@ on:
   push:
     tags:
       - '*'
+    branch:
+      - dev
 
 jobs:
   validate-tag:
