@@ -59,7 +59,7 @@ jobs:
   create-release-pr:
     needs:
       - detect-release-merge
-      - changed-items
+      - changed-images
     name: Create or Update Release PR
     runs-on: ubuntu-latest
     if: ${{ needs.detect-release-merge.outputs.is_release_merge == 'false' }}
