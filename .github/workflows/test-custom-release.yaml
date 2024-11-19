@@ -37,28 +37,52 @@ jobs:
         id: determine-version
         run: |
           echo "Head commit author: ${{ github.event.head_commit.author.name }}"
-          # Extract the last release tag
-          LAST_TAG=$(git describe --tags --abbrev=0 || echo "v0.0.0")
-          echo "Last tag: $LAST_TAG"
-
-          # Extract version numbers
-          VERSION_PARTS=($(echo "${LAST_TAG}" | sed 's/v//' | tr '.' ' '))
+          
+          # Get the last tag or fallback to the first commit if no tags exist
+          if git describe --tags --abbrev=0 2>/dev/null; then
+            LAST_TAG=$(git describe --tags --abbrev=0)
+          else
+            echo "No tags found. Using the first commit in the branch."
+            LAST_TAG=$(git rev-list --max-parents=0 HEAD)
+          fi
+          echo "Last tag or commit for comparison: $LAST_TAG"
+          
+          # Extract version numbers from the tag, default to 0.0.0 if no tag
+          if [[ "$LAST_TAG" =~ ^v ]]; then
+            VERSION_PARTS=($(echo "${LAST_TAG}" | sed 's/v//' | tr '.' ' '))
+          else
+            VERSION_PARTS=(0 0 0)
+          fi
           MAJOR=${VERSION_PARTS[0]:-0}
           MINOR=${VERSION_PARTS[1]:-0}
           PATCH=${VERSION_PARTS[2]:-0}
-
-          # Determine bump type based on commit messages
-          if git log "$LAST_TAG"..HEAD --oneline | grep -q "BREAKING CHANGE"; then
+          
+          # Default bump flags
+          BUMP_MAJOR=false
+          BUMP_MINOR=false
+          BUMP_PATCH=false
+          
+          # Analyze commit messages from HEAD to determine the next version
+          if git log "$LAST_TAG"..HEAD --oneline | grep -q -E "BREAKING CHANGE|!:"; then
+            BUMP_MAJOR=true
+          elif git log "$LAST_TAG"..HEAD --oneline | grep -q "^feat"; then
+            BUMP_MINOR=true
+          elif git log "$LAST_TAG"..HEAD --oneline | grep -q -E "^fix|^chore"; then
+            BUMP_PATCH=true
+          fi
+          
+          # Apply the version bump with priority: major > minor > patch
+          if $BUMP_MAJOR; then
             MAJOR=$((MAJOR + 1))
             MINOR=0
             PATCH=0
-          elif git log "$LAST_TAG"..HEAD --oneline | grep -q "feat"; then
+          elif $BUMP_MINOR; then
             MINOR=$((MINOR + 1))
             PATCH=0
-          elif git log "$LAST_TAG"..HEAD --oneline | grep -q -E "fix|chore"; then
+          elif $BUMP_PATCH; then
             PATCH=$((PATCH + 1))
           fi
-
+          
           NEW_VERSION="v${MAJOR}.${MINOR}.${PATCH}"
           echo "New version: $NEW_VERSION"
           echo "new_version=$NEW_VERSION" >> $GITHUB_ENV
