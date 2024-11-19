@@ -10,7 +10,7 @@ on:
         default: "v1.0.3"
   push:
     tags:
-      - "v*.*.*"
+      - '*'
 
 jobs:
   validate-tag:
