@@ -1,0 +1,11 @@
+schema_version: 1
+name: telicent.container.util.pkg-update
+version: '1.0'
+description: "Perform a system update via the package manager."
+
+# a bit tedious it needs to be a module but better in long term
+# if the base image tzdata version is not available on the RPM mirrors (such as
+# when it has been updated), the re-install action will fail. To prevent this,
+# run pkg-update first. - source jboss images
+execute:
+- script: exec.sh

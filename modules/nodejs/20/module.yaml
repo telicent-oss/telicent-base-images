@@ -1,0 +1,30 @@
+schema_version: 1
+
+name: "telicent.container.nodejs"
+description: "Installs specified NodeJS version."
+version: &nodever "3.13.0"
+
+labels:
+- name: "org.telicent.product"
+  value: "nodejs"
+- name: "org.telicent.product.version"
+  value: *nodever
+- name: "org.telicent.product.nodejs.version"
+  value: *nodever
+
+modules:
+  install:
+    - name: telicent.container.util.pkg-nodejs
+    - name: telicent.container.user
+    - name: telicent.container.util.pkg-update
+    - name: telicent.container.util.tzdata
+    - name: telicent.container.tar-gzip
+
+packages:
+  install:
+    - nodejs
+    - nodejs-nodemon
+    - nodejs-full-i18n
+    - npm
+    - findutils
+    - which

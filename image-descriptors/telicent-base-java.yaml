@@ -1,0 +1,54 @@
+schema_version: 1
+
+from: "registry.access.redhat.com/ubi9-minimal:9.4-1227"  # User versioned image to allow dependabot updates
+
+name: &name "telicent-java21"
+version: &version "1.0.0"
+description: "Telicent's java base image built on Red Hat UBI9 minimal."
+
+# Ensure compliance with Red Hat UBI EULA
+labels:
+  - name: "name"
+    value: *name
+  - name: "version"
+    value: *version
+  - name: "description"
+    value: "Telicent's base image built on Red Hat UBI9 minimal with added Temurin OpenJDK and Tini"
+  - name: "com.redhat.license_terms"
+    value: "https://www.redhat.com/en/about-red-hat-end-user-license-agreements#UBI" # DO NOT REMOVE
+  - name: "io.k8s.display-name"
+    value: "Telicent UBI Java Base"
+  - name: "io.openshift.tags"
+    value: "base ubi9 telicent-java21"
+  - name: "org.opencontainers.image.source"
+    value: "https://github.com/telicent-oss/telicent-base-images"
+  - name: "summary"
+    value: "Telicent Base Java Image built from Red Hat Universal Base Image 9 with added non root default user"
+  - name: "maintainer"
+    value: "Telicent OSS <opensource@telicent.io>"
+  - name: "vendor"
+    value: "Telicent OSS"
+  - name: "org.opencontainers.image.authors"
+    value: "Telicent OSS <opensource@telicent.io>"
+  - name: "org.opencontainers.image.vendor"
+    value: "Telicent OSS"
+
+envs:
+  - name: "LANG"
+    value: "C.utf8"  # might not be needed
+
+packages:
+  manager: microdnf
+
+modules:
+  repositories:
+   - path: ../modules
+  install:
+    - name: telicent.container.util.pkg-update
+    - name: telicent.container.util.tzdata
+    - name: telicent.container.tar-gzip
+    - name: telicent.container.openjdk
+      version: "21"
+    - name: telicent.container.dumb-init
+      version: "1.2.5"
+    - name: telicent.container.utils.cleanup.tar-gzip

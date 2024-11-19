@@ -1,0 +1,96 @@
+#!/bin/bash
+
+#===========================================================================================
+# Helper script to install specific python version and setup venv while optimizing image size.
+#===========================================================================================
+
+set -e
+
+log() {
+    echo "[INFO] $1"
+}
+
+error_exit() {
+    echo -e "${RED} [ERROR] $1 ${END}" >&2
+    exit 1
+}
+
+command -v tar >/dev/null 2>&1 || error_exit "tar is missing. Please install it."
+command -v curl >/dev/null 2>&1 || error_exit "curl is missing. Please install it."
+
+export PYENV_ROOT="/opt/pyenv"
+PYTHON_INSTALL_VERSION=${PYTHON_INSTALL_VERSION:-"3.12.7"}
+
+RED="\033[31m"
+END="\033[0m"
+
+if [ $# -ge 1 ]; then
+    PYTHON_INSTALL_VERSION=$1
+fi
+
+log "Installing git command"
+microdnf install -y git
+
+log "Installing pyenv..."
+curl https://pyenv.run | bash
+
+log "Setting up pyenv environment in /etc/profile.d"
+cat <<'EOF' > /etc/profile.d/pyenv.sh
+#!/bin/bash
+
+# pyenv configuration
+export PYENV_ROOT="/opt/pyenv"
+if [[ -d $PYENV_ROOT/bin ]]; then
+    export PATH="$PYENV_ROOT/bin:$PATH"
+fi
+
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
+
+EOF
+
+chmod +x /etc/profile.d/pyenv.sh
+source /etc/profile.d/pyenv.sh
+
+log "Installing Python $PYTHON_INSTALL_VERSION using pyenv"
+
+PYENV_CFLAGS="-I/usr/local/include -L/usr/local/lib" \
+PYTHON_CONFIGURE_OPTS="--enable-shared" \
+LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH" \
+CFLAGS="-I/usr/local/include -L/usr/local/lib" \
+pyenv install "$PYTHON_INSTALL_VERSION"
+
+pyenv global "$PYTHON_INSTALL_VERSION"
+
+log "Setting up virtualenv for Python $PYTHON_INSTALL_VERSION"
+
+pyenv virtualenv "$PYTHON_INSTALL_VERSION" app
+pyenv activate app
+pip install --upgrade pip
+
+log "Cleaning up unnecessary files for Python $PYTHON_INSTALL_VERSION..."
+
+# Target cleanup to the specific Python version directory
+TARGET_DIR="$PYENV_ROOT/versions/${PYTHON_INSTALL_VERSION}"
+
+# Remove test directories, .pyc/.pyo files, and static libraries
+find "$TARGET_DIR" -depth \
+    \( \
+        \( -type d -a \( -name test -o -name tests -o -name idle_test \) \) \
+        -o \( -type f -a \( -name '*.pyc' -o -name '*.pyo' -o -name 'libpython*.a' \) \) \
+    \) -exec rm -rf '{}' +
+
+# Remove headers and other development-related files
+find "$TARGET_DIR/include" -type f -delete
+find "$TARGET_DIR/lib" -type f -name "*.a" -delete
+
+# Remove cached files for this version
+rm -rf "$TARGET_DIR/lib/python*/__pycache__"
+rm -rf "$TARGET_DIR/lib/python*/site-packages/__pycache__"
+
+# General cleanup
+rm -rf "$PYENV_ROOT"/cache/*
+microdnf remove -y git || true
+microdnf clean all || true
+
+log "Python $PYTHON_INSTALL_VERSION setup complete."

@@ -1,0 +1,61 @@
+name: Handle Release PR Closure
+
+on:
+  pull_request:
+    types:
+      - closed
+
+jobs:
+  handle-release-pr:
+    name: Handle Release PR
+    runs-on: ubuntu-latest
+    if: >
+      github.event.pull_request.base.ref == 'dev' &&
+      startsWith(github.event.pull_request.head.ref, 'release/')
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Determine Action on PR Closure
+        if: ${{ github.event.pull_request.merged }}
+        run: |
+          echo "PR merged. Proceeding to tag release."
+          # Extract version from the branch name
+          RELEASE_BRANCH="${{ github.event.pull_request.head.ref }}"
+          VERSION="${RELEASE_BRANCH#release/}"
+          echo "Version extracted: $VERSION"
+          echo "release_version=$VERSION" >> $GITHUB_ENV
+
+      - name: Tag and Push Release
+        if: ${{ github.event.pull_request.merged }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "$VERSION" -m "Release $VERSION"
+          git push origin "$VERSION"
+
+      - name: Label PR as Released
+        if: ${{ github.event.pull_request.merged }}
+        uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.pull_request.number,
+              labels: ['release: tagged']
+            })
+
+      - name: Label PR as Cancelled
+        if: ${{ !github.event.pull_request.merged }}
+        uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.pull_request.number,
+              labels: ['release: cancelled']
+            })

@@ -1,0 +1,11 @@
+schema_version: 1
+name: telicent.container.util.pyenv-perms
+version: 1.0
+description: "Sets user groups for pyenv"
+
+envs:
+  - name: CURRENT_USER
+    value: "user"
+
+execute:
+- script: configure.sh

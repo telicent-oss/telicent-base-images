@@ -1,0 +1,24 @@
+#!/bin/bash
+
+PROFILE_SCRIPT="/etc/profile.d/virtualenv_prompt.sh"
+
+cat <<'EOF' > $PROFILE_SCRIPT
+#!/bin/bash
+
+update_ps1_for_virtualenv() {
+    if [[ -n "$VIRTUAL_ENV" ]]; then
+        VENV_NAME=$(basename "$VIRTUAL_ENV")
+        export PS1="(${VENV_NAME}) \u@\h:\w\$ "
+    fi
+}
+
+update_ps1_for_virtualenv
+
+PROMPT_COMMAND="update_ps1_for_virtualenv; $PROMPT_COMMAND"
+EOF
+
+chmod +x $PROFILE_SCRIPT
+
+source $PROFILE_SCRIPT
+
+echo "[INFO] PS1 has been updated to reflect the active Python virtual environment."

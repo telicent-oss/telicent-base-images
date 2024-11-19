@@ -1,0 +1,20 @@
+schema_version: 1
+
+name: telicent.container.dumb-init
+description: "Installs the dumb-init on Java images."
+version: &initver "1.2.5"
+
+labels:
+- name: "org.telicent.product"
+  value: "openjdk"
+- name: "org.telicent.product.version"
+  value: *initver
+- name: "org.telicent.product.openjdk.version"
+  value: *initver
+
+envs:
+- name: "INIT_VERSION"
+  value: *initver
+
+execute:
+- script: execute.sh
