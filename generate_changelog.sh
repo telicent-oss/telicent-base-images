@@ -34,7 +34,7 @@ function process_commit {
   local pr_number="$3"
 
   # Skip release PRs based on commit messages
-  if [[ "$commit_message" =~ ^chore:\ prepare\ release\ v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+  if echo "$commit_message" | grep -qE 'chore: prepare release v.* \(.*\)$'; then
     echo "Skipping release PR commit: $commit_message"
     return
   fi
