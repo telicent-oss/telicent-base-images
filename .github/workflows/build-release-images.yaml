@@ -42,7 +42,8 @@ jobs:
       runs-on: ubuntu-latest
       strategy:
         matrix:
-          image: ${{ fromJson(needs.detect-changed-images.outputs.images) }}
+          #image: ${{ fromJson(needs.detect-changed-images.outputs.images) }}
+          image: ["telicent-base-java", "telicent-base-nodejs20"]
       outputs:
         image_name: ${{ steps.extract.outputs.image_name }}
         version: ${{ steps.extract.outputs.image_version }}
@@ -110,7 +111,8 @@ jobs:
       runs-on: ubuntu-latest
       strategy:
         matrix:
-          image: ${{ fromJson(needs.detect-changed-images.outputs.images) }}
+          #image: ${{ fromJson(needs.detect-changed-images.outputs.images) }}
+          image: [ "telicent-base-java", "telicent-base-nodejs20" ]
       steps:
         - name: Checkout Repository
           uses: actions/checkout@v4
@@ -171,7 +173,8 @@ jobs:
       - build-and-push
     strategy:
       matrix:
-        image: ${{ fromJson(needs.detect-changed-images.outputs.images) }}
+        #image: ${{ fromJson(needs.detect-changed-images.outputs.images) }}
+        image: [ "telicent-base-java", "telicent-base-nodejs20" ]
     uses: telicent-oss/shared-workflows/.github/workflows/trivy-image-scan.yml@main
     secrets: inherit
     with:
