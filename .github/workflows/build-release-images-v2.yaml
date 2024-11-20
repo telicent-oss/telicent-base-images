@@ -1,5 +1,9 @@
 name: Build and Push Multi-Platform Images V2
 
+# Use this workflow to build and publish images, ideally we should find a way to
+# be able to run the original one as it gives us access to more reusable workflows
+# unfortunately github actions become really tricky for more complex use cases.
+
 on:
   workflow_dispatch:
     inputs:
@@ -54,11 +58,8 @@ jobs:
     needs:
       - validat-tag
       - detect-changed-images
-    strategy:
-      matrix:
-      image: ${{ fromJson(needs.detect-changed-images.outputs.images) }}
     uses: ./.github/workflows/reusable-image-builder.yaml
     with:
-      IMAGE_DESCRIPTOR: {{ matrix.image }}
+      IMAGE_DESCRIPTORS: ${{ fromJson(needs.detect-changed-images.outputs.images) }}
       TAG: ${{ needs.validate-tag.outputs.tag }}
 

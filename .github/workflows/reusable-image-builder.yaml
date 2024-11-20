@@ -1,10 +1,10 @@
 on:
   workflow_call:
     inputs:
-      IMAGE-DESCRIPTOR:
-        description: "Specify the image descriptor to build"
+      IMAGE-DESCRIPTORS:
+        description: "List of images to build"
         required: true
-        type: string
+        type: object
       TAG:
         description: "Specify the tag to build (must exist in the format v<major>.<minor>.<patch>)"
         required: true
@@ -13,9 +13,9 @@ on:
 jobs:
   build-push-image:
       runs-on: ubuntu-latest
-      outputs:
-        image_name: ${{ steps.extract.outputs.image_name }}
-        version: ${{ steps.extract.outputs.image_version }}
+      strategy:
+        matrix:
+          image: {{inputs.IMAGE-DESCRIPTORS}}
       steps:
         - name: Checkout Repository
           uses: actions/checkout@v4
@@ -35,7 +35,7 @@ jobs:
 
         - name: Generate Dockerfile
           run: |
-            cekit --descriptor image-descriptors/${{ inputs.IMAGE-DESCRIPTOR }}.yaml build --dry-run docker 
+            cekit --descriptor image-descriptors/${{${{ matrix.image }} }}.yaml build --dry-run docker 
 
         - name: Install yq
           run: |
@@ -88,22 +88,125 @@ jobs:
             platforms: linux/amd64,linux/arm64
             push: true
             tags: |
-              "gnikolov95${{ steps.extract.outputs.image_name }}:latest"
-              "gnikolov95${{ steps.extract.outputs.image_name }}:$${{ steps.extract.outputs.image_version }}"
+              "gnikolov95/${{ steps.extract.outputs.image_name }}:latest"
+              "gnikolov95/${{ steps.extract.outputs.image_name }}:${{ steps.extract.outputs.image_version }}"
 
-  trivy-scan-image:
-      needs: build-push-image
-      uses: telicent-oss/shared-workflows/.github/workflows/trivy-image-scan.yml@main
-      secrets: inherit
-      with:
-        IMAGE_REF: gnikolov95/${{ needs.build-push-image.outputs.image_name }}:${{ needs.build-push-image.outputs.version }}
-        SCAN_NAME: ${{ needs.build-push-image.outputs.image_name }}-scan-trivy
+        - name: Grype Container Vulnerability Scan
+          id: grype-scan
+          uses: anchore/scan-action@v4.1.2
+          with:
+            image: gnikolov95/${{ steps.extract.outputs.image_name }}:${{ steps.extract.outputs.image_version }}
+            output-format: json
+            fail-build: false
 
-  grype-scan-image:
-    needs:
-      needs: build-push-image
-    uses: telicent-oss/shared-workflows/.github/workflows/grype-image-scan.yml@main
-    secrets: inherit
-    with:
-      IMAGE_REF: gnikolov95/${{ needs.build-push-image.outputs.image_name }}:${{ needs.build-push-image.outputs.version }}
-      SCAN_NAME: ${{ needs.build-push-image.outputs.image_name }}-scan-grype
+        - name: Upload Vulnerability Scan Results
+          uses: actions/upload-artifact@v4.4.3
+          with:
+            name: grype-docker-report-gnikolov95/${{ steps.extract.outputs.image_name }}-${{ steps.extract.outputs.image_version }}
+            path: ${{ steps.grype-scan.outputs.json }}
+            retention-days: 30
+
+        - name: Fail Build on High/Critical Vulnerabilities
+          uses: anchore/scan-action@v4.1.2
+          with:
+            image: gnikolov95/${{ steps.extract.outputs.image_name }}:${{ steps.extract.outputs.image_version }}
+            output-format: table
+            severity-cutoff: high
+            fail-build: true
+
+        - name: Trivy Cache
+          id: trivy-cache
+          uses: yogeshlonkar/trivy-cache-action@v0.1.8
+          with:
+            gh-token: ${{ secrets.GITHUB_TOKEN }}
+            prefix: ${{ github.repository_id }}
+
+        - name: Download Trivy Java DB
+          if: ${{ steps.trivy-cache.outputs.cache-hit == '' || steps.trivy-cache.outputs.cache-hit == 'false' }}
+          uses: aquasecurity/trivy-action@master
+          env:
+            TRIVY_DOWNLOAD_JAVA_DB_ONLY: true
+            TRIVY_JAVA_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-java-db,ghcr.io/aquasecurity/trivy-java-db:1
+          with:
+            scan-type: image
+            timeout: 10m0s
+            cache-dir: .trivy
+            # Counter-intuitive BUT trivy-action has its own cache which duplicates our own but in a less flexible way
+            cache: false
+
+        - name: Download Trivy Vulnerability DB
+          if: ${{ steps.trivy-cache.outputs.cache-hit == '' || steps.trivy-cache.outputs.cache-hit == 'false' }}
+          uses: aquasecurity/trivy-action@master
+          env:
+            TRIVY_DOWNLOAD_DB_ONLY: true
+            TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db,ghcr.io/aquasecurity/trivy-db:2
+          with:
+            scan-type: image
+            timeout: 10m0s
+            cache-dir: .trivy
+            # Counter-intuitive BUT trivy-action has its own cache which duplicates our own but in a less flexible way
+            cache: false
+
+        - name: Trivy Vulnerability Scan
+          uses: aquasecurity/trivy-action@master
+          env:
+            TRIVY_SKIP_DB_UPDATE: true
+            TRIVY_SKIP_JAVA_DB_UPDATE: true
+          with:
+            scan-type: "image"
+            image-ref: gnikolov95/${{ steps.extract.outputs.image_name }}:${{ steps.extract.outputs.image_version }}
+            output: trivy-docker-report.json
+            format: json
+            exit-code: 0
+            cache-dir: .trivy
+            # Counter-intuitive BUT trivy-action has its own cache which duplicates our own but in a less flexible way
+            cache: false
+            trivyignores: ${{ inputs.PATH_TO_TRIVY_IGNORES_ONLY_FOR_BUILD_IMAGE }}
+
+        - name: Upload Vulnerability Scan Results
+          uses: actions/upload-artifact@v4.4.3
+          with:
+            name: trivy-docker-report- gnikolov95/${{ steps.extract.outputs.image_name }}-${{ steps.extract.outputs.image_version }}
+            path: trivy-docker-report.json
+            retention-days: 30
+
+        - name: Generate SBOM for image (IF has tags for release)
+          uses: aquasecurity/trivy-action@master
+          with:
+            scan-type: 'image'
+            format: 'cyclonedx'
+            output: trivy-image-scan-sbom-gnikolov95/${{ steps.extract.outputs.image_name }}-${{ steps.extract.outputs.image_version }}.json
+            image-ref: ${{ inputs.IMAGE_REF }}
+            cache-dir: .trivy
+            # Counter-intuitive BUT trivy-action has its own cache which duplicates our own but in a less flexible way
+            cache: false
+
+        - name: Release SBOM for image (IF has tags for release)
+          if: startsWith(github.ref, 'refs/tags/')
+          uses: softprops/action-gh-release@v2.0.8
+          with:
+            files: |
+              trivy-image-scan-sbom-gnikolov95/${{ steps.extract.outputs.image_name }}-${{ steps.extract.outputs.image_version }}.json
+
+        - name: Release report on docker sbom (IF has tags for release)
+          if: startsWith(github.ref, 'refs/tags/')
+          uses: softprops/action-gh-release@v2.0.8
+          with:
+            files: |
+              trivy-docker-report.json
+
+        - name: Fail Build on High/Critical Vulnerabilities
+          uses: aquasecurity/trivy-action@master
+          env:
+            TRIVY_SKIP_DB_UPDATE: true
+            TRIVY_SKIP_JAVA_DB_UPDATE: true
+          with:
+            scan-type: "image"
+            image-ref:  gnikolov95/${{ steps.extract.outputs.image_name }}:${{ steps.extract.outputs.image_version }}
+            format: table
+            severity: HIGH,CRITICAL
+            ignore-unfixed: true
+            exit-code: 1
+            cache-dir: .trivy
+            # Counter-intuitive BUT trivy-action has its own cache which duplicates our own but in a less flexible way
+            cache: false
