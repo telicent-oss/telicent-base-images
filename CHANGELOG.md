@@ -1,5 +1,10 @@
 # Changelog
 
+## Changes from v1.2.15 to v1.2.16
+
+### Chores
+- debug  ([eef26bc](https://github.com/telicent-oss/telicent-base-images/commit/eef26bcd0ee8506435924a2b33b8d0fe3120e221))
+
 ## Changes from v1.2.14 to v1.2.15
 
 ### Chores
