@@ -1,5 +1,28 @@
 # Changelog
 
+## Changes from v1.2.13 to v1.2.14
+
+### Chores
+- debug  ([ca888ae](https://github.com/telicent-oss/telicent-base-images/commit/ca888ae6682ebb632872365313abb81fa2ad1969))
+- debug  ([0b3203c](https://github.com/telicent-oss/telicent-base-images/commit/0b3203c163e3261226b315fc6502598d26e185a8))
+### Fixes
+- bug in build6  ([66a0e11](https://github.com/telicent-oss/telicent-base-images/commit/66a0e11943a477069962a763386dc30e7bf3fcc9))
+- bug in build6  ([b4df16b](https://github.com/telicent-oss/telicent-base-images/commit/b4df16b03bc99bb2dfa5720f5885a19582c6c126))
+- bug in build6  ([a142833](https://github.com/telicent-oss/telicent-base-images/commit/a1428336901d361accfc7bb9698c7fcc6d2127da))
+- bug in build6  ([a967c83](https://github.com/telicent-oss/telicent-base-images/commit/a967c83ab0092c41c39bc437660f8ff60ee5ada6))
+- bug in build6  ([7430a6b](https://github.com/telicent-oss/telicent-base-images/commit/7430a6b749a216173a8c07747464f4137174fdf7))
+- bug in build6  ([6ae62cc](https://github.com/telicent-oss/telicent-base-images/commit/6ae62cc5daeca5ef262b738fa71c79bddf71e2a9))
+- bug in build6  ([d00acf5](https://github.com/telicent-oss/telicent-base-images/commit/d00acf50f5267ef7e4c3f33e4077df47aac17fad))
+- bug in build6  ([c23c61a](https://github.com/telicent-oss/telicent-base-images/commit/c23c61a11c90c3ab7f6ce35a1ad5c423757df8c7))
+- bug in build6  ([b00bb4b](https://github.com/telicent-oss/telicent-base-images/commit/b00bb4bad02f79053edfbecef4753a580c943646))
+- bug in build5  ([8a399bf](https://github.com/telicent-oss/telicent-base-images/commit/8a399bfd64a6c76380a840f94d7bc63ab037e77c))
+- bug in build5  ([de1f44a](https://github.com/telicent-oss/telicent-base-images/commit/de1f44a9fab3f42ec613256c76ffe3baebc96630))
+- bug in build5  ([d2306f7](https://github.com/telicent-oss/telicent-base-images/commit/d2306f7dfed1bb886f7162255ad0ec8325a4f820))
+- bug in build4  ([9e692c1](https://github.com/telicent-oss/telicent-base-images/commit/9e692c1e6693b66bbbc1af27f9f45109ed5c49e9))
+- bug in build4  ([d74fb4f](https://github.com/telicent-oss/telicent-base-images/commit/d74fb4f05107af06ef31a26e637fb3fa9054a335))
+- bug in build3  ([85f056a](https://github.com/telicent-oss/telicent-base-images/commit/85f056afc801fd4fe308c0d76b6add8b8f062755))
+- bug in build2  ([bbd40b3](https://github.com/telicent-oss/telicent-base-images/commit/bbd40b34a595648c6fbe6dc0c5d3009a45baa774))
+
 ## Changes from v1.2.12 to v1.2.13
 
 ### Fixes
