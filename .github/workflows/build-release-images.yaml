@@ -146,8 +146,8 @@ jobs:
         - name: Build and Push Image
           uses: docker/build-push-action@v5
           with:
-            context: "./target-${{matrix.image}}/image"
-            file: "./Dockerfile"
+            context: .
+            file: target-${{ matrix.image }}/image/Dockerfile
             platforms: ${{ matrix.os }}
             push: true
             tags: |
