@@ -19,6 +19,8 @@ jobs:
     name: Detect Changes
     if: ${{ github.event.head_commit.author.name != 'github-actions[bot]'}}
     uses: ./.github/workflows/detect-changed-images.yaml
+    with:
+      TAG: {{ github.ref }}
   #&& !contains(github.event.head_commit.message, 'release')
   create-release-pr:
     needs: [changed-images]
