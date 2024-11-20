@@ -38,14 +38,13 @@ function get_commit_range() {
   else
     # Generally, everything else compare from base of the repo, as soon
     # there are 2 tags this will never execute anyway
+    echo "No last tag found comparing with HEAD."
     echo "$(git rev-list --max-parents=0 HEAD) HEAD"
   fi
 }
 
 # Holds the data produced by `build_module_map`
 declare -A module_map
-
-source ./git_diff.sh
 
 # Build a map of all the names and modules e.g. telicent.container.java => modules/jdk
 function build_module_map() {
