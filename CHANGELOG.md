@@ -1,5 +1,10 @@
 # Changelog
 
+## Changes from v1.2.16 to v1.3.0
+
+### Features
+- various improvements  ([95c2c81](https://github.com/telicent-oss/telicent-base-images/commit/95c2c8183c4ecc2af43fdc113ae50bdd6e6bb070))
+
 ## Changes from v1.2.15 to v1.2.16
 
 ### Chores
