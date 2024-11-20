@@ -3,7 +3,7 @@ schema_version: 1
 from: "registry.access.redhat.com/ubi9-minimal:9.4-1227"  # User versioned image to allow dependabot updates
 
 name: &name "telicent-nodejs20"
-version: &version "1.0.5"
+version: &version "1.0.6"
 description: "Telicent's NodeJS base image built on Red Hat UBI9 minimal."
 
 # Ensure compliance with Red Hat UBI EULA

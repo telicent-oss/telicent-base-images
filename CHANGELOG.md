@@ -2,6 +2,14 @@
 
 ## Changes from v1.2.3 to v1.2.4
 
+### Chores
+- prepare release v1.2.4  ([9cf17b6](https://github.com/telicent-oss/telicent-base-images/commit/9cf17b655c8827941f22895b48b5be58cfa15fbd))
+### Fixes
+- bug in handling changes6  ([72f15ca](https://github.com/telicent-oss/telicent-base-images/commit/72f15ca8e48d0de3235b6b8b0c3af7e9f6c25cde))
+- bug in handling changes5  ([005b8ea](https://github.com/telicent-oss/telicent-base-images/commit/005b8ea8ae449ea55a4c8d80cc5ddc724fb0de55))
+
+## Changes from v1.2.3 to v1.2.4
+
 ### Fixes
 - bug in handling changes6  ([72f15ca](https://github.com/telicent-oss/telicent-base-images/commit/72f15ca8e48d0de3235b6b8b0c3af7e9f6c25cde))
 - bug in handling changes5  ([005b8ea](https://github.com/telicent-oss/telicent-base-images/commit/005b8ea8ae449ea55a4c8d80cc5ddc724fb0de55))
