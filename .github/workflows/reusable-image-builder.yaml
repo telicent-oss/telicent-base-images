@@ -185,7 +185,7 @@ jobs:
             scan-type: 'image'
             format: 'cyclonedx'
             output: trivy-image-scan-sbom-${{ steps.extract.outputs.image_name }}-${{ steps.extract.outputs.image_version }}.json
-            image-ref: ${{ inputs.IMAGE_REF }}
+            image-ref: gnikolov95/${{ steps.extract.outputs.image_name }}:${{ steps.extract.outputs.image_version }}
             cache-dir: .trivy
             # Counter-intuitive BUT trivy-action has its own cache which duplicates our own but in a less flexible way
             cache: false
