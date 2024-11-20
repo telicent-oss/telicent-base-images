@@ -16,10 +16,12 @@ permissions:
 jobs:
 
   test:
+    runs-on: ubuntu-latest
     name: Test refs
     steps:
       - name: Refs
         run: echo "GH REF ${{ github.ref }}"
+
   changed-images:
     name: Detect Changes
     if: ${{ github.event.head_commit.author.name != 'github-actions[bot]'}}
