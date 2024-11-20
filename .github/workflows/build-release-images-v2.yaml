@@ -61,5 +61,5 @@ jobs:
       - detect-changed-images
     uses: ./.github/workflows/reusable-image-builder.yaml
     with:
-      IMAGE_DESCRIPTORS: ${{ fromJson(needs.detect-changed-images.outputs.images) }}
+      IMAGE_DESCRIPTORS: ${{ needs.detect-changed-images.outputs.images }}
       TAG: ${{ needs.validate-tag.outputs.tag }}

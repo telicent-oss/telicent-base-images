@@ -4,22 +4,31 @@ on:
       IMAGE-DESCRIPTORS:
         description: "List of images to build"
         required: true
-        type: object
+        type: string
       TAG:
         description: "Specify the tag to build (must exist in the format v<major>.<minor>.<patch>)"
         required: true
         type: string
 
 jobs:
+  test_inputs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check inputs
+        run: |
+          echo "Raw inputs: ${{ inputs.IMAGE-DESCRIPTORS }}
+          echo "Parsed inputs: ${{ fromJson( ${{inputs.IMAGE-DESCRIPTORS}} )}}
+
   build-push-image:
+      needs: test_inputs
       runs-on: ubuntu-latest
       strategy:
         matrix:
-          image: {{inputs.IMAGE-DESCRIPTORS}}
+          image: ${{ fromJson( ${{inputs.IMAGE-DESCRIPTORS}} )}}
       steps:
         - name: Checkout Repository
           uses: actions/checkout@v4
-          ref: {{ inputs.TAG }}
+          ref: ${{ inputs.TAG }}
           fetch-depth: 0
 
 
