@@ -151,8 +151,8 @@ jobs:
             platforms: ${{ matrix.os }}
             push: true
             tags: |
-              "${{ needs.generate-dockerfile.outputs.image_name }}:latest"
-              "${{ needs.generate-dockerfile.outputs.image_name }}:${{ needs.generate-dockerfile.outputs.version }}"
+              "gnikolov95/${{ needs.generate-dockerfile.outputs.image_name }}:latest"
+              "gnikolov95/${{ needs.generate-dockerfile.outputs.image_name }}:${{ needs.generate-dockerfile.outputs.version }}"
 
   trivy-scan-image:
     needs: build-and-push
