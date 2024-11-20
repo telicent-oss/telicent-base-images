@@ -175,7 +175,7 @@ jobs:
         - name: Upload Vulnerability Scan Results
           uses: actions/upload-artifact@v4.4.3
           with:
-            name: trivy-docker-report-{{ steps.extract.outputs.image_name }}-${{ steps.extract.outputs.image_version }}
+            name: trivy-docker-report-${{ steps.extract.outputs.image_name }}-${{ steps.extract.outputs.image_version }}
             path: trivy-docker-report.json
             retention-days: 30
 
