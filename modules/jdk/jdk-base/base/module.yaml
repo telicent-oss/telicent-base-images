@@ -11,5 +11,9 @@ envs:
   - name: DESTINATION_SCRIPTS
     value: "/tmp/scripts/telicent.container.openjdk"
 
+packages:
+  install:
+    - glibc-langpack-en
+
 execute:
   - script: configure.sh

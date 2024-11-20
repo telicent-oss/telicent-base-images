@@ -22,9 +22,7 @@ modules:
 
 packages:
   install:
+    - glibc-langpack-en
     - nodejs
-    - nodejs-nodemon
-    - nodejs-full-i18n
-    - npm
     - findutils
     - which

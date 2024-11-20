@@ -1,0 +1,24 @@
+#!/bin/bash
+set -e
+
+log() {
+    echo "[INFO] $1"
+}
+
+log "Starting entrypoint script..."
+
+VENV_DIR="/app"
+
+if [ -d "$VENV_DIR" ] && [ -f "$VENV_DIR/bin/activate" ]; then
+    log "Activating virtual environment '$VENV_DIR'..."
+    # Activate the virtual environment
+    source "$VENV_DIR/bin/activate" || {
+        echo "[ERROR] Failed to activate virtual environment '$VENV_DIR'. Exiting."
+        exit 1
+    }
+else
+    log "Virtual environment '$VENV_DIR' not found. Skipping activation."
+fi
+
+log "Executing the provided command or starting a shell..."
+exec "$@"

@@ -48,6 +48,7 @@ envs:
 
 packages:
   manager: microdnf
+  manager_flags: --setopt=tsflags=nodocs --setopt=install_weak_deps=0 --enablerepo=ubi-9-appstream-rpms
 
 modules:
   repositories:
@@ -55,13 +56,17 @@ modules:
   install:
     - name: telicent.container.util.pkg-update
     - name: telicent.container.util.tzdata
-    - name: telicent.container.tar-gzip
-    - name: telicent.container.python
-      version: "3.12.7"
-    - name: telicent.container.util.cleanup.gcc
+    - name: telicent.container.python312-microdnf
+    - name: telicent.container.util.python-entrypoint-virtualenv
+#    - name: telicent.container.tar-gzip
+#    - name: telicent.container.python
+#      version: "3.12.7"
+#    - name: telicent.container.util.pyenv-perms
+#    - name: telicent.container.util.python-entrypoint
+#    - name: telicent.container.util.cleanup.gcc
+#    - name: telicent.container.util.cleanup.pkg-python
     - name: telicent.container.util.cleanup
-    - name: telicent.container.util.pyenv-perms
-    - name: telicent.container.util.python-entrypoint
+
 
 run:
   entrypoint:

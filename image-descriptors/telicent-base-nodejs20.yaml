@@ -43,15 +43,15 @@ envs:
     value: "en_US.UTF-8"
   - name: "NODEJS_VERSION"
     value: "20"
-  - name: "NPM_RUN"
-    value: "start"
 
 packages:
   manager: microdnf
+  manager_flags: --setopt=tsflags=nodocs --setopt=install_weak_deps=0 --enablerepo=ubi-9-appstream-rpms
 
 modules:
   repositories:
    - path: ../modules
   install:
     - name: telicent.container.nodejs
+    #- name: telicent.container.util.cleanup.npm
     - name: telicent.container.util.cleanup

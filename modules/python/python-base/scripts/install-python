@@ -28,8 +28,8 @@ if [ $# -ge 1 ]; then
     PYTHON_INSTALL_VERSION=$1
 fi
 
-log "Installing git command"
-microdnf install -y git
+#TODO this would download pam and hit a CVE
+micrond install -y git
 
 log "Installing pyenv..."
 curl https://pyenv.run | bash
@@ -64,8 +64,13 @@ pyenv global "$PYTHON_INSTALL_VERSION"
 
 log "Setting up virtualenv for Python $PYTHON_INSTALL_VERSION"
 
+python3 -m pip install --upgrade setuptools
+pip install --upgrade pip
+
 pyenv virtualenv "$PYTHON_INSTALL_VERSION" app
 pyenv activate app
+
+python3 -m pip install --upgrade setuptools
 pip install --upgrade pip
 
 log "Cleaning up unnecessary files for Python $PYTHON_INSTALL_VERSION..."

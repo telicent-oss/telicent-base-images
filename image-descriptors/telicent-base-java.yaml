@@ -35,10 +35,13 @@ labels:
 
 envs:
   - name: "LANG"
-    value: "C.utf8"  # might not be needed
+    value: "en_US.UTF-8"
+  - name: "LC_ALL"
+    value: "en_US.UTF-8"
 
 packages:
   manager: microdnf
+  manager_flags: --setopt=tsflags=nodocs --setopt=install_weak_deps=0 --enablerepo=ubi-9-appstream-rpms
 
 modules:
   repositories:
