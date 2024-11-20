@@ -149,7 +149,9 @@ jobs:
               "gnikolov95/${{ needs.generate-dockerfile.outputs.image_name }}:${{ needs.generate-dockerfile.outputs.version }}"
 
   trivy-scan-image:
-    needs: build-and-push
+    needs:
+      - generate-dockerfile
+      - build-and-push
     uses: telicent-oss/shared-workflows/.github/workflows/trivy-image-scan.yml@main
     secrets: inherit
     with:
@@ -157,7 +159,9 @@ jobs:
       SCAN_NAME: ${{ needs.generate-dockerfile.outputs.image_name }}
 
   grype-scan-image:
-    needs: build-and-push
+    needs:
+      - generate-dockerfile
+      - build-and-push
     uses: telicent-oss/shared-workflows/.github/workflows/grype-image-scan.yml@main
     secrets: inherit
     with:
