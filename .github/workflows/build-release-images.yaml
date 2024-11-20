@@ -166,4 +166,4 @@ jobs:
     secrets: inherit
     with:
       IMAGE_REF: gnikolov95/${{ needs.generate-dockerfile.outputs.image_name }}:${{ needs.generate-dockerfile.outputs.version }}
-      SCAN_NAME: ${{ needs.generate-dockerfile.outputs.image_name }}
+      SCAN_NAME: ${{ needs.generate-dockerfile.outputs.image_name }}-scan
