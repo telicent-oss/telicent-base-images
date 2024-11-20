@@ -151,7 +151,7 @@ jobs:
 
   trivy-scan-image:
     needs:
-      - detect-changes
+      - detect-changed-images
       - generate-dockerfile
       - build-and-push
     strategy:
@@ -166,7 +166,7 @@ jobs:
 
   grype-scan-image:
     needs:
-      - detect-changes
+      - detect-changed-images
       - generate-dockerfile
       - build-and-push
     strategy:
