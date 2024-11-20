@@ -20,7 +20,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          ref: {{ inputs.TAG_VERSION }}
+          ref: ${{ inputs.TAG_VERSION }}
           fetch-depth: 0
 
       - name: Run build_resolver.sh
