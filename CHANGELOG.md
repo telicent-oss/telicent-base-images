@@ -1,5 +1,10 @@
 # Changelog
 
+## Changes from v1.2.9 to v1.2.10
+
+### Fixes
+- bug in build  ([ce7d3c0](https://github.com/telicent-oss/telicent-base-images/commit/ce7d3c07d309f0a4e64daa053abc6a6be576a927))
+
 ## Changes from v1.2.8 to v1.2.9
 
 ### Fixes
