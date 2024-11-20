@@ -94,7 +94,9 @@ jobs:
             path: ./target
 
   build-and-push:
-      needs: generate-dockerfile
+      needs:
+        - detect-changed-images
+        - generate-dockerfile
       runs-on: ubuntu-latest
       strategy:
         matrix:
