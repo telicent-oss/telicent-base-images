@@ -100,7 +100,8 @@ jobs:
       runs-on: ubuntu-latest
       strategy:
         matrix:
-          image: ${{ fromJson(needs.detect-changed-images.outputs.images) }}
+          #image: ${{ fromJson(needs.detect-changed-images.outputs.images) }}
+          image: [ "telicent-base-java" ]
       steps:
         - name: Checkout Repository
           uses: actions/checkout@v4
@@ -150,8 +151,13 @@ jobs:
 
   trivy-scan-image:
     needs:
+      - detect-changes
       - generate-dockerfile
       - build-and-push
+    strategy:
+      matrix:
+        #image: ${{ fromJson(needs.detect-changed-images.outputs.images) }}
+        image: [ "telicent-base-java" ]
     uses: telicent-oss/shared-workflows/.github/workflows/trivy-image-scan.yml@main
     secrets: inherit
     with:
@@ -160,8 +166,13 @@ jobs:
 
   grype-scan-image:
     needs:
+      - detect-changes
       - generate-dockerfile
       - build-and-push
+    strategy:
+      matrix:
+        #image: ${{ fromJson(needs.detect-changed-images.outputs.images) }}
+        image: [ "telicent-base-java" ]
     uses: telicent-oss/shared-workflows/.github/workflows/grype-image-scan.yml@main
     secrets: inherit
     with:
