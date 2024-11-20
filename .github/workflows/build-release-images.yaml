@@ -99,7 +99,6 @@ jobs:
       strategy:
         matrix:
           image: ${{ fromJson(needs.detect-changed-images.outputs.images) }}
-          os: [linux/amd64, linux/arm64]
       steps:
         - name: Checkout Repository
           uses: actions/checkout@v4
@@ -111,14 +110,9 @@ jobs:
             path: target-${{ matrix.image }}
 
 
-        - name: List Available Artifacts
+        - name: Unzip Available Artifacts
           run: |
-            echo "Available artifacts:"
-            ls -1
-            echo "`pwd`"
             zip -r target-${{ matrix.image }}.zip target-${{ matrix.image }}
-            ls -l
-            ls target-${{ matrix.image }}
             
 
         - name: Verify Correct Context
@@ -146,7 +140,7 @@ jobs:
           with:
             context: ./target-${{ matrix.image }}/image
             file: ./target-${{ matrix.image }}/image/Dockerfile
-            platforms: ${{ matrix.os }}
+            platforms: linux/amd64,linux/arm64
             push: true
             tags: |
               "gnikolov95/${{ needs.generate-dockerfile.outputs.image_name }}:latest"
