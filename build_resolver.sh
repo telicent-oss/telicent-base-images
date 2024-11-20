@@ -34,6 +34,8 @@ function get_commit_range() {
   # compare it to head which can be a tag or a repo
   if [[ ${#tags[@]} -ge 2 ]]; then
     last_tag="${tags[1]}" # Pick the second most recent tag
+    last_tag=$(git log --oneline  HEAD..$last_tag | tail -1 | awk \{'print $1'\})
+
     echo "$last_tag HEAD"
   else
     # Generally, everything else compare from base of the repo, as soon
