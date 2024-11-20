@@ -1,5 +1,12 @@
 # Changelog
 
+## Changes from v1.2.7 to v1.2.8
+
+### Chores
+- descriptors  ([d862256](https://github.com/telicent-oss/telicent-base-images/commit/d86225684db6063e3e99a34320e5e5cfc77e013a))
+### Fixes
+- bug in build  ([664ada7](https://github.com/telicent-oss/telicent-base-images/commit/664ada7e78f1810cbf8fe425bd51c4c8fca3eb3a))
+
 ## Changes from v1.2.6 to v1.2.7
 
 ### Fixes
