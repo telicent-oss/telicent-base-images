@@ -55,7 +55,7 @@ jobs:
     needs: validate-tag
     uses: ./.github/workflows/detect-changed-images.yaml
     with:
-      TAG: ${{ needs.validate-tag.outputs.tag }}
+      TAG_VERSION: ${{ needs.validate-tag.outputs.tag }}
 
 
   build-images-with-reusable-workflow:
