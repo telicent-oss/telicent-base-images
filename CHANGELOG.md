@@ -1,5 +1,10 @@
 # Changelog
 
+## Changes from v1.2.1 to v1.2.2
+
+### Fixes
+- paths in workflow  ([e6605d5](https://github.com/telicent-oss/telicent-base-images/commit/e6605d5bf7cd428e47691be3cf8c5b5a11b108b1))
+
 ## Changes from v1.2.0 to v1.2.1
 
 ### Chores
