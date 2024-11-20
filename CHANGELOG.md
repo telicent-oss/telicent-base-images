@@ -1,5 +1,10 @@
 # Changelog
 
+## Changes from v1.2.5 to v1.2.6
+
+### Fixes
+- bug in handling changes7  ([c9efaf9](https://github.com/telicent-oss/telicent-base-images/commit/c9efaf9f61d9866ee678492d1e27b86e1e4c57a4))
+
 ## Changes from v1.2.4 to v1.2.5
 
 ### Fixes
