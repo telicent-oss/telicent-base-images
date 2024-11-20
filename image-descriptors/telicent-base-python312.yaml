@@ -3,7 +3,7 @@ schema_version: 1
 from: "registry.access.redhat.com/ubi9-minimal:9.4-1227"  # User versioned image to allow dependabot updates
 
 name: &name "telicent-python3.12"
-version: &version "1.0.9"
+version: &version "1.0.0"
 description: "Telicent's base python 3.12 image built on Red Hat UBI9 minimal"
 
 # Ensure compliance with Red Hat UBI EULA
@@ -51,7 +51,6 @@ packages:
 
 modules:
   repositories:
-   - name: python_modules
    - path: ../modules
   install:
     - name: telicent.container.util.pkg-update
