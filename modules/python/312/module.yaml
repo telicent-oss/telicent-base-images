@@ -16,7 +16,6 @@ envs:
 - name: "PYTHON_INSTALL_VERSION"
   value: *pythonver
 
-
 modules:
   install:
     - name: telicent.container.util.python-packages

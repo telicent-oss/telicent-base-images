@@ -24,10 +24,3 @@ Those packages may not be legally run on non-RHEL systems without a valid RHEL s
 For more information, see the following link:
 https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/9/html-single/building_running_and_managing_containers/index/#add_software_to_a_running_ubi_container
 
-
-This project includes the following third-party libraries when building python images:
-
-1. librdkafka
-   - License: 2-Clause BSD License
-   - Copyright (c) 2012-2021, Magnus Edenhill
-   - Licensed under the BSD 2-Clause License.

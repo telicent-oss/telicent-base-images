@@ -1,0 +1,26 @@
+schema_version: 1
+
+name: "telicent.container.python311-microdnf"
+description: "Installs specified python version via ubi9 repos"
+version: &pythonver "3.11"
+
+labels:
+- name: "org.telicent.product"
+  value: "python"
+- name: "org.telicent.product.version"
+  value: *pythonver
+- name: "org.telicent.product.python.version"
+  value: *pythonver
+
+packages:
+  install:
+    - glibc-langpack-en
+    - python3.11
+    - python3.11-pip
+
+modules:
+  install:
+    - name: telicent.container.user
+
+execute:
+- script: envsetup

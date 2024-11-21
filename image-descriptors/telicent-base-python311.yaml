@@ -1,10 +1,10 @@
 schema_version: 1
 
-from: "registry.access.redhat.com/ubi9-minimal:9.4-1227"  # User versioned image to allow dependabot updates
+from: "registry.access.redhat.com/ubi9-minimal:9.5-1731593028"  # User versioned image to allow dependabot updates
 
 name: &name "telicent-python3.11"
-version: &version "1.0.0"
-description: "Telicent's java base image built on Red Hat UBI9 minimal."
+version: &version "1.0.8"
+description: "Telicent's base python3.11 image built on Red Hat UBI9 minimal."
 
 # Ensure compliance with Red Hat UBI EULA
 labels:
@@ -48,6 +48,7 @@ envs:
 
 packages:
   manager: microdnf
+  manager_flags: --setopt=tsflags=nodocs --setopt=install_weak_deps=0 --enablerepo=ubi-9-appstream-rpms
 
 modules:
   repositories:
@@ -55,13 +56,17 @@ modules:
   install:
     - name: telicent.container.util.pkg-update
     - name: telicent.container.util.tzdata
-    - name: telicent.container.tar-gzip
-    - name: telicent.container.python
-      version: "3.11.10"
-    - name: telicent.container.util.cleanup.gcc
+    - name: telicent.container.python311-microdnf
+    - name: telicent.container.util.python-entrypoint-virtualenv
+#    - name: telicent.container.tar-gzip
+#    - name: telicent.container.python
+#      version: "3.11.10"
+#    - name: telicent.container.util.pyenv-perms
+#    - name: telicent.container.util.python-entrypoint
+#    - name: telicent.container.util.cleanup.gcc
+#    - name: telicent.container.util.cleanup.pkg-python
     - name: telicent.container.util.cleanup
-    - name: telicent.container.util.pyenv-perms
-    - name: telicent.container.util.python-entrypoint
+
 
 run:
   entrypoint:

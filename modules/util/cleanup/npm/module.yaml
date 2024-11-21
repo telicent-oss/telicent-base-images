@@ -1,0 +1,10 @@
+schema_version: 1
+
+name: "telicent.container.util.cleanup.npm"
+version: "1.0.0"
+
+description: "Removes npm cli from OS"
+
+packages:
+  remove:
+    - npm

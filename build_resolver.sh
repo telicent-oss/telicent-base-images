@@ -9,8 +9,9 @@
 #
 # THIS SCRIPT WOULD NOT RUN ON MACOS
 # In case it is necessary to run on macOS, install gnu grep via homebrew and refactor this code to
-# use gggrep instead. Ensure Bash 4+ is used.
+# use ggrep instead. Ensure Bash 4+ is used.
 #====================================================================================================
+
 
 DEBUG=${DEBUG:-0}
 
@@ -25,10 +26,27 @@ function debug_print() {
   fi
 }
 
+function get_commit_range() {
+  # Get the most recent tag in the repository, sorted by creation date
+  tags=($(git tag --sort=-creatordate | head -n 2))
+
+  # In case where there are many tags pick the second last one and
+  # compare it to head which can be a tag or a repo
+  if [[ ${#tags[@]} -ge 2 ]]; then
+    last_tag="${tags[1]}" # Pick the second most recent tag
+    last_tag=$(git log --oneline $last_tag..HEAD | tail -1 | awk '{print $1}')
+
+    echo "$last_tag HEAD"
+  else
+    # Generally, everything else compare from base of the repo, as soon
+    # there are 2 tags this will never execute anyway
+    echo "No last tag found comparing with HEAD."
+    echo "$(git rev-list --max-parents=0 HEAD) HEAD"
+  fi
+}
+
 # Holds the data produced by `build_module_map`
 declare -A module_map
-
-source ./git_diff.sh
 
 # Build a map of all the names and modules e.g. telicent.container.java => modules/jdk
 function build_module_map() {

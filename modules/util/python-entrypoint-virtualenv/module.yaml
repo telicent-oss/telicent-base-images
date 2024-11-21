@@ -1,6 +1,6 @@
 schema_version: 1
 
-name: "telicent.container.util.python-entrypoint"
+name: "telicent.container.util.python-entrypoint-virtualenv"
 version: "1.0"
 
 description: "Creates the entrypoint script for Python environment activation."
@@ -10,3 +10,6 @@ artifacts:
     path: files/python-entrypoint
     target: entrypoint
     dest: /usr/local/bin/
+
+execute:
+- script: perms

@@ -1,10 +1,10 @@
 schema_version: 1
 
-from: "registry.access.redhat.com/ubi9-minimal:9.4-1227"  # User versioned image to allow dependabot updates
+from: "registry.access.redhat.com/ubi9-minimal:9.5-1731593028"  # User versioned image to allow dependabot updates
 
 name: &name "telicent-python3.13"
-version: &version "1.0.0"
-description: "Telicent's java base image built on Red Hat UBI9 minimal."
+version: &version "1.0.4"
+description: "Telicent's base python3.13 image built on Red Hat UBI9 minimal."
 
 # Ensure compliance with Red Hat UBI EULA
 labels:
@@ -48,6 +48,7 @@ envs:
 
 packages:
   manager: microdnf
+  manager_flags: --setopt=tsflags=nodocs --setopt=install_weak_deps=0 --enablerepo=ubi-9-appstream-rpms
 
 modules:
   repositories:
@@ -58,10 +59,11 @@ modules:
     - name: telicent.container.tar-gzip
     - name: telicent.container.python
       version: "3.13.0"
-    - name: telicent.container.util.cleanup.gcc
-    - name: telicent.container.util.cleanup
     - name: telicent.container.util.pyenv-perms
     - name: telicent.container.util.python-entrypoint
+    - name: telicent.container.util.cleanup.gcc
+    - name: telicent.container.util.cleanup
+
 
 run:
   entrypoint:

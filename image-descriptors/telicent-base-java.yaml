@@ -1,9 +1,9 @@
 schema_version: 1
 
-from: "registry.access.redhat.com/ubi9-minimal:9.4-1227"  # User versioned image to allow dependabot updates
+from: "registry.access.redhat.com/ubi9-minimal:9.5-1731593028"  # User versioned image to allow dependabot updates
 
 name: &name "telicent-java21"
-version: &version "1.0.0"
+version: &version "1.0.7"
 description: "Telicent's java base image built on Red Hat UBI9 minimal."
 
 # Ensure compliance with Red Hat UBI EULA
@@ -35,10 +35,13 @@ labels:
 
 envs:
   - name: "LANG"
-    value: "C.utf8"  # might not be needed
+    value: "en_US.UTF-8"
+  - name: "LC_ALL"
+    value: "en_US.UTF-8"
 
 packages:
   manager: microdnf
+  manager_flags: --setopt=tsflags=nodocs --setopt=install_weak_deps=0 --enablerepo=ubi-9-appstream-rpms
 
 modules:
   repositories:

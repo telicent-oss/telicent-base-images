@@ -5,13 +5,14 @@ description: A collection of packages needed for python images
 
 packages:
   install:
+    - libuuid-devel
     - gcc
     - gcc-c++
     - make
+    - wget
     - zlib-devel
     - bzip2
     - bzip2-devel
-    - sqlite
     - sqlite-devel
     - openssl-devel
     - libffi-devel

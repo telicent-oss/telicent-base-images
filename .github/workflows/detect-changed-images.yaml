@@ -4,16 +4,23 @@ on:
       images:
         description: "Gives back a list of images that need rebuilt based on files changed"
         value: ${{ jobs.changed-images.outputs.images }}
+    inputs:
+      TAG_VERSION:
+        description: "Specify the tag to build (must exist in the format v<major>.<minor>.<patch>)"
+        required: true
+        type: string
 
 jobs:
   changed-images:
     runs-on: ubuntu-latest
     outputs:
       images: ${{ steps.export-images.outputs.images }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
+          ref: ${{ inputs.TAG_VERSION }}
           fetch-depth: 0
 
       - name: Run build_resolver.sh
