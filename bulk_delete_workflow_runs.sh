@@ -1,4 +1,4 @@
-#!/bin/basg
+#!/bin/bash
 
 gh_bulk_delete_workflow_runs() {
   repo='telicent-oss/telicent-base-images'
