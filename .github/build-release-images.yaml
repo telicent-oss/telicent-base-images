@@ -163,7 +163,7 @@ jobs:
             platforms: linux/amd64,linux/arm64
             push: true
             tags: |
-              "gnikolov95{{steps.read.outputs.image_name}}:latest"
+              "telicent-oss{{steps.read.outputs.image_name}}:latest"
               "gnikolov95/{{steps.read.outputs.image_name}}:${{ needs.generate-dockerfile.outputs.version }}"
 
   trivy-scan-image:
