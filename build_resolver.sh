@@ -35,12 +35,10 @@ function get_commit_range() {
   if [[ ${#tags[@]} -ge 2 ]]; then
     last_tag="${tags[1]}" # Pick the second most recent tag
     last_tag=$(git log --oneline $last_tag..HEAD | tail -1 | awk '{print $1}')
-
     echo "$last_tag HEAD"
   else
     # Generally, everything else compare from base of the repo, as soon
     # there are 2 tags this will never execute anyway
-    echo "No last tag found comparing with HEAD."
     echo "$(git rev-list --max-parents=0 HEAD) HEAD"
   fi
 }
