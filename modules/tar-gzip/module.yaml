@@ -1,0 +1,10 @@
+schema_version: 1
+name: telicent.container.tar-gzip
+version: '1.0'
+description: Installs the Tar RPM and Gzip RPMs to enable JDK installation
+
+
+packages:
+  install:
+    - gzip
+    - tar

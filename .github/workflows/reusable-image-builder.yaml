@@ -1,0 +1,221 @@
+name: resusable-image-builder.yaml
+
+on:
+  workflow_call:
+    inputs:
+      IMAGE-DESCRIPTORS:
+        description: "List of images to build"
+        required: true
+        type: string
+      TAG:
+        description: "Specify the tag to build (must exist in the format v<major>.<minor>.<patch>)"
+        required: true
+        type: string
+
+jobs:
+  test_inputs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check inputs
+        run: |
+          echo "Raw inputs: ${{ inputs.IMAGE-DESCRIPTORS }}
+          echo "Parsed inputs: ${{ fromJson(inputs.IMAGE-DESCRIPTORS)}}
+
+  build-push-image:
+      needs: test_inputs
+      runs-on: ubuntu-latest
+      strategy:
+        matrix:
+          image: ${{ fromJson(inputs.IMAGE-DESCRIPTORS)}}
+      steps:
+        - name: Checkout Repository
+          uses: actions/checkout@v4
+          with:
+            ref: ${{ inputs.TAG }}
+            fetch-depth: 0
+
+
+        - name: Install Python and PIP
+          run: |
+            sudo apt-get update
+            sudo apt-get install -y python3 python3-pip
+
+        - name: Install Cekit
+          run: |
+            python3 -m pip install --upgrade pip
+            python3 -m pip install cekit
+
+        - name: Generate Dockerfile
+          run: |
+            cekit --descriptor image-descriptors/${{ matrix.image }}.yaml build --dry-run docker 
+
+        - name: Install yq
+          run: |
+            sudo add-apt-repository -y "ppa:rmescandon/yq"
+            sudo apt update
+            sudo apt install yq -y
+
+        - name: Extract Image Version and Name
+          id: extract
+          run: |
+            descriptor_path="target/image.yaml"
+
+            # Extract version using yq - input: version: &version "1.0.7" output - 1.0.7
+            current_version=$(yq eval '.version' "$descriptor_path" | sed 's/^[ \t]*//;s/[ \t]*$//')
+
+            # Extract image name using yq 
+            image_name=$(yq eval '.labels[] | select(.name == "name") | .value' "$descriptor_path")
+
+            echo "Extracted version: $current_version"
+            echo "Extracted image name: $image_name"
+            
+            echo "image_version=$current_version" >> $GITHUB_OUTPUT
+            echo "image_name=$image_name" >> $GITHUB_OUTPUT
+
+
+        - name: Verify Correct Context
+          run: |
+            [[ ! -d "target-${{ matrix.image }}/image" ]] && echo "Missing image dir" && exit 1 
+            [[ ! -f "target-${{ matrix.image }}/image/Dockerfile" ]] && echo "Missing dockerfile" && exit 1
+
+        - name: Set up QEMU
+          uses: docker/setup-qemu-action@v3
+
+        - name: Set up Docker Buildx
+          uses: docker/setup-buildx-action@v3
+
+        - name: Login to Docker Hub
+          uses: docker/login-action@v3
+          with:
+            username: "${{ secrets.DOCKER_USERNAME }}"
+            password: "${{ secrets.DOCKER_PASSWORD }}"
+
+        - name: Build and Push Image
+          uses: docker/build-push-action@v5
+          with:
+            context: ./target/image
+            file: ./target/image/Dockerfile
+            platforms: linux/amd64,linux/arm64
+            push: true
+            tags: |
+              "telicent/${{ steps.extract.outputs.image_name }}:latest"
+              "telicent/${{ steps.extract.outputs.image_name }}:${{ steps.extract.outputs.image_version }}"
+
+        - name: Grype Container Vulnerability Scan
+          id: grype-scan
+          uses: anchore/scan-action@v4.1.2
+          with:
+            image: telicent/${{ steps.extract.outputs.image_name }}:${{ steps.extract.outputs.image_version }}
+            output-format: json
+            fail-build: false
+
+        - name: Upload Vulnerability Scan Results
+          uses: actions/upload-artifact@v4.4.3
+          with:
+            name: grype-docker-report-${{ steps.extract.outputs.image_name }}-${{ steps.extract.outputs.image_version }}
+            path: ${{ steps.grype-scan.outputs.json }}
+            retention-days: 30
+
+        - name: Fail Build on High/Critical Vulnerabilities
+          uses: anchore/scan-action@v4.1.2
+          with:
+            image: telicent/${{ steps.extract.outputs.image_name }}:${{ steps.extract.outputs.image_version }}
+            output-format: table
+            severity-cutoff: high
+            fail-build: true
+
+        - name: Trivy Cache
+          id: trivy-cache
+          uses: yogeshlonkar/trivy-cache-action@v0.1.8
+          with:
+            gh-token: ${{ secrets.GITHUB_TOKEN }}
+            prefix: ${{ github.repository_id }}
+
+        - name: Download Trivy Java DB
+          if: ${{ steps.trivy-cache.outputs.cache-hit == '' || steps.trivy-cache.outputs.cache-hit == 'false' }}
+          uses: aquasecurity/trivy-action@master
+          env:
+            TRIVY_DOWNLOAD_JAVA_DB_ONLY: true
+            TRIVY_JAVA_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-java-db,ghcr.io/aquasecurity/trivy-java-db:1
+          with:
+            scan-type: image
+            timeout: 10m0s
+            cache-dir: .trivy
+            # Counter-intuitive BUT trivy-action has its own cache which duplicates our own but in a less flexible way
+            cache: false
+
+        - name: Download Trivy Vulnerability DB
+          if: ${{ steps.trivy-cache.outputs.cache-hit == '' || steps.trivy-cache.outputs.cache-hit == 'false' }}
+          uses: aquasecurity/trivy-action@master
+          env:
+            TRIVY_DOWNLOAD_DB_ONLY: true
+            TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db,ghcr.io/aquasecurity/trivy-db:2
+          with:
+            scan-type: image
+            timeout: 10m0s
+            cache-dir: .trivy
+            # Counter-intuitive BUT trivy-action has its own cache which duplicates our own but in a less flexible way
+            cache: false
+
+        - name: Trivy Vulnerability Scan
+          uses: aquasecurity/trivy-action@master
+          env:
+            TRIVY_SKIP_DB_UPDATE: true
+            TRIVY_SKIP_JAVA_DB_UPDATE: true
+          with:
+            scan-type: "image"
+            image-ref: telicent/${{ steps.extract.outputs.image_name }}:${{ steps.extract.outputs.image_version }}
+            output: trivy-docker-report.json
+            format: json
+            exit-code: 0
+            cache-dir: .trivy
+            # Counter-intuitive BUT trivy-action has its own cache which duplicates our own but in a less flexible way
+            cache: false
+
+        - name: Upload Vulnerability Scan Results
+          uses: actions/upload-artifact@v4.4.3
+          with:
+            name: trivy-docker-report-${{ steps.extract.outputs.image_name }}-${{ steps.extract.outputs.image_version }}
+            path: trivy-docker-report.json
+            retention-days: 30
+
+        - name: Generate SBOM for image
+          uses: aquasecurity/trivy-action@master
+          with:
+            scan-type: 'image'
+            format: 'cyclonedx'
+            output: trivy-image-scan-sbom-${{ steps.extract.outputs.image_name }}-${{ steps.extract.outputs.image_version }}.json
+            image-ref: telicent/${{ steps.extract.outputs.image_name }}:${{ steps.extract.outputs.image_version }}
+            cache-dir: .trivy
+            # Counter-intuitive BUT trivy-action has its own cache which duplicates our own but in a less flexible way
+            cache: false
+
+        - name: Release SBOM for image (IF has tags for release)
+          if: startsWith(github.ref, 'refs/tags/')
+          uses: softprops/action-gh-release@v2.0.8
+          with:
+            files: |
+              trivy-image-scan-sbom-${{ steps.extract.outputs.image_name }}-${{ steps.extract.outputs.image_version }}.json
+
+        - name: Release report on docker sbom (IF has tags for release)
+          if: startsWith(github.ref, 'refs/tags/')
+          uses: softprops/action-gh-release@v2.0.8
+          with:
+            files: |
+              trivy-docker-report.json
+
+        - name: Fail Build on High/Critical Vulnerabilities
+          uses: aquasecurity/trivy-action@master
+          env:
+            TRIVY_SKIP_DB_UPDATE: true
+            TRIVY_SKIP_JAVA_DB_UPDATE: true
+          with:
+            scan-type: "image"
+            image-ref:  telicent/${{ steps.extract.outputs.image_name }}:${{ steps.extract.outputs.image_version }}
+            format: table
+            severity: HIGH,CRITICAL
+            ignore-unfixed: true
+            exit-code: 1
+            cache-dir: .trivy
+            # Counter-intuitive BUT trivy-action has its own cache which duplicates our own but in a less flexible way
+            cache: false

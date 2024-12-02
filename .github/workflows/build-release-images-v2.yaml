@@ -1,0 +1,64 @@
+name: build-release-images.yaml
+
+# Use this workflow to build and publish images, ideally we should find a way to
+# be able to run the original one as it gives us access to more reusable workflows
+# unfortunately GitHub actions become really tricky for more complex use cases.
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_matrix:
+        type: string
+        description: |
+          A list of images descriptors to be used as a matrix e.g telicent-base-java - from image descriptors.
+          File extensions need to be omitted.
+      tag:
+        description: "Specify the tag to build (must exist in the format v<major>.<minor>.<patch>)"
+        required: true
+        type: string
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  validate-tag:
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.validate.outputs.tag }}
+    steps:
+      - name: Validate Tag
+        id: validate
+        run: |
+          echo "tag - ${{ github.event.inputs.tag }} ref = ${{ github.ref_name }}"
+          TAG="${{ github.event.inputs.tag || github.ref_name || inputs.tag }}"
+          if [[ ! "$TAG" =~ ^v[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
+            echo "Error: The tag must be in the format v<major>.<minor>.<patch>, where each part is 1-3 digits."
+            exit 1
+          fi
+          if ! git fetch --tags && git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "Error: The specified tag ($TAG) does not exist in the repository."
+            exit 1
+          fi
+
+          echo "Tag validated: $TAG"
+          echo "tag=$TAG" >> $GITHUB_ENV
+
+  detect-changed-images:
+    needs: validate-tag
+    uses: ./.github/workflows/detect-changed-images.yaml
+    with:
+      TAG_VERSION: ${{ needs.validate-tag.outputs.tag }}
+
+  build-images-with-reusable-workflow:
+    secrets: inherit
+    needs:
+      - validate-tag
+      - detect-changed-images
+    uses: ./.github/workflows/reusable-image-builder.yaml
+    with:
+      IMAGE-DESCRIPTORS: ${{ needs.detect-changed-images.outputs.images }}
+      TAG: ${{ needs.validate-tag.outputs.tag }}

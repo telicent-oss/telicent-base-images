@@ -1,0 +1,12 @@
+schema_version: 1
+
+name: "telicent.container.util.python-entrypoint"
+version: "1.0"
+
+description: "Creates the entrypoint script for Python environment activation."
+
+artifacts:
+  - name: python-entrypoint-artifact
+    path: files/python-entrypoint
+    target: entrypoint
+    dest: /usr/local/bin/

@@ -1,0 +1,27 @@
+schema_version: 1
+
+name: "telicent.container.python"
+description: "Installs specified python version."
+version: &pythonver "3.12.7"
+
+labels:
+- name: "org.telicent.product"
+  value: "python"
+- name: "org.telicent.product.version"
+  value: *pythonver
+- name: "org.telicent.product.python.version"
+  value: *pythonver
+
+envs:
+- name: "PYTHON_INSTALL_VERSION"
+  value: *pythonver
+
+modules:
+  install:
+    - name: telicent.container.util.python-packages
+    - name: telicent.container.user
+    - name: telicent.container.python.base
+    - name: telicent.container.util.readlines
+
+execute:
+- script: configure.sh

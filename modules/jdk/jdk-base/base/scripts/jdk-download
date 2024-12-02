@@ -1,0 +1,52 @@
+#!/bin/bash
+
+
+# ==============================================================================
+#
+# Script managing the download and extraction of Temurin JDK, tarballs are sig
+# verified
+#
+# ==============================================================================
+
+#source utils to bring log/exit functions
+. ../utils
+
+# Check if curl and tar are installed, additionally gpg as non default on mac
+command -v curl >/dev/null 2>&1 || error_exit "curl is missing please install it."
+command -v tar >/dev/null 2>&1 || error_exit "tar is missing please install it."
+command -v gpg >/dev/null 2>&1 || error_exit "gpg is missing please install it"
+
+SCRIPT_DIR=$(dirname "$0")
+JAVA_INSTALL_VERSION=${JAVA_INSTALL_VERSION:-"21"}
+
+# Use eval to load variables from fetched Java URLs
+source <(bash "${SCRIPT_DIR}"/jdk-download-urls "${JAVA_INSTALL_VERSION}") ||
+die "Failed to fetch necessary Java URLs used for downloads." 1;
+
+log "Fetching Temurin OpenJDK..."
+curl  -L "$TAR_GZ_URL" -o temurin.tar.gz || error_exit "Failed to download JDK${JAVA_INSTALL_VERSION}";
+curl  -L "$SIG_URL" -o temurin.tar.gz.sig || error_exit "Failed to download signature file";
+log "Download complete."
+
+
+# Import public key and verify the tarball
+TEMURIN_KEY_SERVER=${TEMURIN_KEY_SERVER:-"keyserver.ubuntu.com"}
+TEMURIN_KEY_ID=${TEMURIN_KEY_ID:-"3B04D753C9050D9A5D343F39843C48A565F8F04B"}
+
+log "Importing gpg keys to verify JDK tar."
+gpg --keyserver "${TEMURIN_KEY_SERVER}" --recv-keys "${TEMURIN_KEY_ID}" ||
+error_exit "Failed to import key: ${TEMURIN_KEY_ID} from server: ${TEMURIN_KEY_SERVER}, they might be obsolete.";
+
+log "Veryfing gpg signature..."
+gpg --verify temurin.tar.gz.sig temurin.tar.gz  ||
+error_exit "JDK${JAVA_INSTALL_VERSION} tar signature verification failed.";
+
+TARGET_DIR="/opt/jre-${JAVA_INSTALL_VERSION}"
+mkdir -p "$TARGET_DIR"
+
+# Extract the downloaded tarball into the target directory
+tar -xzf temurin.tar.gz -C "$TARGET_DIR" --strip-components=1 || error_exit "Failed to extract JDK tarball."
+log "Moved JDK to ${TARGET_DIR}"
+
+rm -f temurin.tar.gz temurin.tar.gz.sig || error_exit "Failed to perform clean up"
+log "Clean up done."

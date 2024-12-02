@@ -1,0 +1,22 @@
+#!/bin/bash
+
+#==============================================
+#
+# Update securerandom.source for quicker starts
+#
+#==============================================
+set -e
+
+. ../utils
+
+log "Updating securerandom.source for quicker starts"
+
+JAVA_SECURITY_FILE=/opt/jre-${JAVA_INSTALL_VERSION:-"21"}/conf/security/java.security
+SECURERANDOM=securerandom.source
+if grep -q "^$SECURERANDOM=.*" $JAVA_SECURITY_FILE; then
+    log "Updating SECURERANDOM setting in ${JAVA_SECURITY_FILE}"
+    sed -i "s|^$SECURERANDOM=.*|$SECURERANDOM=file:/dev/urandom|" $JAVA_SECURITY_FILE
+else
+    log "SECURERANDOM setting does not exist. Appending it to ${JAVA_SECURITY_FILE}"
+    echo $SECURERANDOM=file:/dev/urandom >> $JAVA_SECURITY_FILE
+fi

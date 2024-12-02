@@ -1,0 +1,12 @@
+schema_version: 1
+name: telicent.container.util.tzdata
+version: '1.0'
+description: "Reinstall the tzdata package, to ensure zone info is present."
+
+
+modules:
+  install:
+  - name: telicent.container.util.pkg-update
+
+execute:
+  - script: exec.sh

@@ -1,0 +1,79 @@
+name: handle-release-pr.yaml
+
+on:
+  pull_request:
+    types:
+      - closed
+
+jobs:
+  handle-release-pr:
+    name: Handle Release PR
+    runs-on: ubuntu-latest
+    if: >
+      github.event.pull_request.base.ref == 'main' &&
+      startsWith(github.event.pull_request.head.ref, 'release/')
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Determine Action on PR Closure
+        if: ${{ github.event.pull_request.merged }}
+        run: |
+          echo "PR merged. Proceeding to tag release."
+          echo "Head ref is: ${{ github.event.pull_request.head.ref }}"
+          echo "Event commit msg: ${{ github.event.head_commit.message }}"
+          # Extract version from the branch name
+          RELEASE_BRANCH="${GITHUB_HEAD_REF:-${{ github.event.pull_request.head.ref }}}"
+          if [[ "$RELEASE_BRANCH" == release/* ]]; then
+            VERSION="${RELEASE_BRANCH#release/}"
+            echo "Version extracted: $VERSION"
+            echo "release_version=$VERSION" >> $GITHUB_ENV
+          else
+            echo "Branch name does not follow the 'release/' pattern. Exiting."
+            exit 1
+          fi
+
+      - name: Tag and Push Release
+        if: ${{ github.event.pull_request.merged }}
+        run: |
+          echo "Release version: ${{ env.release_version }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "${{ env.release_version }}" -m "Release ${{ env.release_version }}"
+          git push origin "${{ env.release_version }}"
+      
+
+
+      - name: Label PR as Released
+        if: ${{ github.event.pull_request.merged }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          PR_NUMBER=${{ github.event.pull_request.number }}
+          REPO=${{ github.repository }}
+          
+          LABELS=$(gh issue view "$PR_NUMBER" --repo "$REPO" --json labels -q ".labels[].name" | paste -sd "," -)
+          
+          if echo "$LABELS" | grep -q "release: pending"; then
+          gh issue edit "$PR_NUMBER" --repo "$REPO" --remove-label "release: pending"
+          fi
+          
+          gh issue edit "$PR_NUMBER" --repo "$REPO" --add-label "release: tagged"
+
+      - name: Label PR as Cancelled
+        if: ${{ !github.event.pull_request.merged }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          PR_NUMBER=${{ github.event.pull_request.number }}
+          REPO=${{ github.repository }}
+          
+          LABELS=$(gh issue view "$PR_NUMBER" --repo "$REPO" --json labels -q ".labels[].name" | paste -sd "," -)
+          
+          if echo "$LABELS" | grep -q "release: pending"; then
+            gh issue edit "$PR_NUMBER" --repo "$REPO" --remove-label "release: pending"
+          fi
+          
+          gh issue edit "$PR_NUMBER" --repo "$REPO" --add-label "release: cancelled"

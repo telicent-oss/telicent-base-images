@@ -1,0 +1,42 @@
+#!/bin/sh
+
+# ==============================================================================
+# Update alternatives to expose java to the system
+#
+# ==============================================================================
+
+set -e
+
+# Bring in logging functions
+. ../utils
+
+if ! command -v alternatives >/dev/null 2>&1; then
+   error_exit "alternatives command not found"
+fi
+
+# Otheriwse linking fails
+mkdir -p /usr/lib/jvm
+
+JAVA_INSTALL_VERSION=${JAVA_INSTALL_VERSION:-"21"}
+_arch="$(uname -m)"
+JAVA_PATH="/opt/jre-${JAVA_INSTALL_VERSION}/bin/java"
+JAVAC_PATH="/opt/jre-${JAVA_INSTALL_VERSION}/bin/javac"
+JAVA_HOME="/opt/jre-${JAVA_INSTALL_VERSION}"
+
+# Create symbolic links for java_sdk_openjdk and jre_openjdk in /usr/lib/jvm
+# probably an overkill but won't be created by alternatives
+ln -sf "$JAVA_HOME" /usr/lib/jvm/java_sdk_openjdk
+ln -sf "$JAVA_HOME" /usr/lib/jvm/jre_openjdk
+
+log "Installing java alternatives..."
+alternatives --install /usr/bin/java java "$JAVA_PATH" 1
+alternatives --install /usr/bin/javac javac "$JAVAC_PATH" 1
+
+log "Setting java alternatives..."
+alternatives --set java "$JAVA_PATH"
+alternatives --set javac "$JAVAC_PATH"
+
+alternatives --display java
+alternatives --display javac
+
+log "Alternatives operations complete."

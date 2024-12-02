@@ -1,0 +1,26 @@
+Copyright 2024 Telicent LTD
+
+This product is inspired by the structure and design of the JBoss OpenJDK Container Images project,
+available at https://github.com/jboss-container-images/openjdk.
+
+Some files were adapted from this project, with significant modifications to fit the specific needs of this product.
+The original project is licensed under the Apache License, Version 2.0.
+
+This product’s **source code** is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+    http://www.apache.org/licenses/LICENSE-2.0
+
+However, when building container images using this source code, the resulting container image itself is subject to the
+**Red Hat Universal Base Image (UBI) 9 End User License Agreement (EULA)**.
+
+By using this project to build container images based on Red Hat UBI 9, you agree to comply with the terms of the
+UBI EULA, available at: https://www.redhat.com/en/about-red-hat-end-user-license-agreements#UBI.
+
+### Important Licensing Considerations for RHEL Users:
+If this project is built on a licensed Red Hat Enterprise Linux (RHEL) host, the build process may enable full RHEL repositories.
+This can result in the installation of packages covered by the Red Hat Enterprise Linux Subscription Agreement.
+Those packages may not be legally run on non-RHEL systems without a valid RHEL subscription.
+
+For more information, see the following link:
+https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/9/html-single/building_running_and_managing_containers/index/#add_software_to_a_running_ubi_container
+

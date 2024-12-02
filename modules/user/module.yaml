@@ -1,0 +1,25 @@
+schema_version: 1
+name: telicent.container.user
+version: '1.0'
+description: "Configures the default user and permissions. This module should be included by all images."
+
+envs:
+- name: "USER"
+  value: "user"
+- name: "UID"
+  value: &uid "185"
+- name: "HOME"
+  value: &home "/home/user"
+- name: "GECOS"
+  value: "Default user"
+
+packages:
+  install:
+  - shadow-utils # groupadd
+
+execute:
+- script: configure.sh
+
+run:
+  user: *uid
+  workdir: *home

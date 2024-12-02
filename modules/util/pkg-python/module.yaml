@@ -1,0 +1,22 @@
+schema_version: 1
+name: telicent.container.util.python-packages
+version: '1.0'
+description: A collection of packages needed for python images
+
+packages:
+  install:
+    - libuuid-devel
+    - gcc
+    - gcc-c++
+    - make
+    - wget
+    - zlib-devel
+    - bzip2
+    - bzip2-devel
+    - sqlite-devel
+    - openssl-devel
+    - libffi-devel
+    - findutils
+    - xz-devel
+    - patch
+    - ncurses-devel

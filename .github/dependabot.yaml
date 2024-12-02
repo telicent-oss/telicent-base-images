@@ -1,0 +1,8 @@
+version: 2
+updates:
+  - package-ecosystem: "docker"
+    directory: "/image-descriptors"
+    schedule:
+      interval: "weekly"
+    allow:
+      - dependency-name: "registry.access.redhat.com/ubi9-minimal"

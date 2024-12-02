@@ -1,0 +1,70 @@
+schema_version: 1
+
+from: "registry.access.redhat.com/ubi9-minimal:9.5-1731593028"  # User versioned image to allow dependabot updates
+
+name: &name "telicent-python3.13"
+version: &version "1.0.4"
+description: "Telicent's base python3.13 image built on Red Hat UBI9 minimal."
+
+# Ensure compliance with Red Hat UBI EULA
+labels:
+  - name: "name"
+    value: *name
+  - name: "version"
+    value: *version
+  - name: "description"
+    value: "Telicent's base python 3.13 image built on Red Hat UBI9 minimal"
+  - name: "com.redhat.license_terms"
+    value: "https://www.redhat.com/en/about-red-hat-end-user-license-agreements#UBI" # DO NOT REMOVE
+  - name: "io.k8s.display-name"
+    value: "Telicent UBI Python 3.13 Base"
+  - name: "io.openshift.tags"
+    value: "base ubi9 telicent-python3.13"
+  - name: "org.opencontainers.image.source"
+    value: "https://github.com/telicent-oss/telicent-base-images"
+  - name: "summary"
+    value: "Telicent Base Python 3.13 Image built from Red Hat Universal Base Image 9 with added non root default user"
+  - name: "maintainer"
+    value: "Telicent OSS <opensource@telicent.io>"
+  - name: "vendor"
+    value: "Telicent OSS"
+  - name: "org.opencontainers.image.authors"
+    value: "Telicent OSS <opensource@telicent.io>"
+  - name: "org.opencontainers.image.vendor"
+    value: "Telicent OSS"
+
+envs:
+  - name: "LANG"
+    value: "en_US.UTF-8"
+  - name: "LC_ALL"
+    value: "en_US.UTF-8"
+  - name: "PYTHONUNBUFFERED"
+    value: "1"
+  - name: "PYTHONIOENCODING"
+    value: "UTF-8"
+  - name: "PYTHON_VERSION"
+    value: "3.13"
+
+
+packages:
+  manager: microdnf
+  manager_flags: --setopt=tsflags=nodocs --setopt=install_weak_deps=0 --enablerepo=ubi-9-appstream-rpms
+
+modules:
+  repositories:
+   - path: ../modules
+  install:
+    - name: telicent.container.util.pkg-update
+    - name: telicent.container.util.tzdata
+    - name: telicent.container.tar-gzip
+    - name: telicent.container.python
+      version: "3.13.0"
+    - name: telicent.container.util.pyenv-perms
+    - name: telicent.container.util.python-entrypoint
+    - name: telicent.container.util.cleanup.gcc
+    - name: telicent.container.util.cleanup
+
+
+run:
+  entrypoint:
+    - "/usr/local/bin/entrypoint"
