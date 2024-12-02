@@ -1,3 +1,5 @@
+name: resusable-image-builder.yaml
+
 on:
   workflow_call:
     inputs:
@@ -58,10 +60,10 @@ jobs:
           run: |
             descriptor_path="target/image.yaml"
 
-            # Extract version using yq
+            # Extract version using yq - input: version: &version "1.0.7" output - 1.0.7
             current_version=$(yq eval '.version' "$descriptor_path" | sed 's/^[ \t]*//;s/[ \t]*$//')
 
-            # Extract image name using yq
+            # Extract image name using yq 
             image_name=$(yq eval '.labels[] | select(.name == "name") | .value' "$descriptor_path")
 
             echo "Extracted version: $current_version"
@@ -73,10 +75,8 @@ jobs:
 
         - name: Verify Correct Context
           run: |
-            if [[ ! -f "target/image/Dockerfile" || ! -f "target/image.yaml" ]]; then
-              echo "Error: Missing Dockerfile or image.yaml in target directory for image ${{ inputs.inputs.IMAGE-DESCRIPTOR }}"
-              exit 1
-            fi
+            [[ ! -d "target-${{ matrix.image }}/image" ]] && echo "Missing image dir" && exit 1 
+            [[ ! -f "target-${{ matrix.image }}/image/Dockerfile" ]] && echo "Missing dockerfile" && exit 1
 
         - name: Set up QEMU
           uses: docker/setup-qemu-action@v3
@@ -179,7 +179,7 @@ jobs:
             path: trivy-docker-report.json
             retention-days: 30
 
-        - name: Generate SBOM for image (IF has tags for release)
+        - name: Generate SBOM for image
           uses: aquasecurity/trivy-action@master
           with:
             scan-type: 'image'

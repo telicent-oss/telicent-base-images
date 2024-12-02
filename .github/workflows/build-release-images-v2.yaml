@@ -1,8 +1,8 @@
-name: Build and Push Telicent Base Images
+name: build-release-images.yaml
 
 # Use this workflow to build and publish images, ideally we should find a way to
 # be able to run the original one as it gives us access to more reusable workflows
-# unfortunately github actions become really tricky for more complex use cases.
+# unfortunately GitHub actions become really tricky for more complex use cases.
 
 on:
   workflow_dispatch:

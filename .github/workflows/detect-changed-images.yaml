@@ -1,3 +1,5 @@
+name: detect-changed-images.yaml
+
 on:
   workflow_call:
     outputs:

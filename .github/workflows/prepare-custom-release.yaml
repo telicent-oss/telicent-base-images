@@ -1,4 +1,4 @@
-name: Create or Update Release Branch
+name: prepare-custom-release.yaml
 
 on:
   workflow_dispatch:
