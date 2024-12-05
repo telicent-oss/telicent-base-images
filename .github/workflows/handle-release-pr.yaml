@@ -12,6 +12,9 @@ jobs:
     if: >
       github.event.pull_request.base.ref == 'main' &&
       startsWith(github.event.pull_request.head.ref, 'release/')
+    outputs:
+      status: ${{ steps.set-outputs.outputs.status }}
+      tag: ${{ steps.set-outputs.outputs.tag }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -61,9 +64,6 @@ jobs:
           echo "PR merged. Setting outputs for downstream workflow." 
           echo "status=release_ready" >> $GITHUB_ENV
           echo "tag=${{ env.release_version }}" >> $GITHUB_ENV
-        outputs:
-          status: release_ready
-          tag: ${{ env.release_version }}
 
       - name: Label PR as Released
         if: ${{ github.event.pull_request.merged }}

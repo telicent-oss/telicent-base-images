@@ -28,15 +28,34 @@ permissions:
 jobs:
   validate-tag:
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.outputs.status == 'release_ready' }}
+    if: ${{ (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.outputs.status == 'release_ready') || github.event_name == 'workflow_dispatch' }}
     outputs:
       tag: ${{ steps.validate.outputs.tag }}
     steps:
       - name: Validate Tag
-        id: validate
+        env:
+          TAG_FROM_WORKFLOW_RUN: ${{ github.event.workflow_run.outputs.tag || '' }}
+          TAG_FROM_INPUTS: ${{ github.event.inputs.tag || '' }}
+          TAG_FROM_REF: ${{ github.ref_name || '' }}
         run: |
-          echo "tag - ${{ github.event.inputs.tag }} ref = ${{ github.ref_name }}"
-          TAG="${{ github.event.inputs.tag || github.ref_name || inputs.tag }}"
+          echo "Checking tag source..."
+          if [ -n "$TAG_FROM_WORKFLOW_RUN" ]; then
+            TAG="$TAG_FROM_WORKFLOW_RUN"
+            echo "Tag retrieved from workflow_run: $TAG"
+          elif [ -n "$TAG_FROM_INPUTS" ]; then
+            TAG="$TAG_FROM_INPUTS"
+            echo "Tag retrieved from manual dispatch inputs: $TAG"
+          elif [ -n "$TAG_FROM_REF" ]; then
+            TAG="$TAG_FROM_REF"
+            echo "Tag retrieved from git ref: $TAG"
+          else
+            echo "Error: No tag provided or detected."
+            exit 1
+          fi
+          
+          echo "TAG=$TAG" >> $GITHUB_ENV
+          echo "Validate Tag: $TAG"
+           
           if [[ ! "$TAG" =~ ^v[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
             echo "Error: The tag must be in the format v<major>.<minor>.<patch>, where each part is 1-3 digits."
             exit 1
@@ -45,7 +64,6 @@ jobs:
             echo "Error: The specified tag ($TAG) does not exist in the repository."
             exit 1
           fi
-
           echo "Tag validated: $TAG"
           echo "tag=$TAG" >> $GITHUB_ENV
 
