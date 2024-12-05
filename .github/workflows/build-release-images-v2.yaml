@@ -18,9 +18,8 @@ on:
         type: string
   workflow_run:
     workflows: [ handle-release-pr ]
-    types: [ requested ]
-    branches:
-      - 'release/**'
+    types:
+      - completed
 
 permissions:
   contents: write
