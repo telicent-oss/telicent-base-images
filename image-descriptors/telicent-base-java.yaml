@@ -39,6 +39,7 @@ envs:
 
 packages:
   manager: microdnf
+  manager_flags: --setopt=tsflags=nodocs --setopt=install_weak_deps=0 --enablerepo=ubi-9-appstream-rpms
 
 modules:
   repositories:
