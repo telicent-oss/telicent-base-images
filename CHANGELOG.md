@@ -1,5 +1,10 @@
 # Changelog
 
+## Changes from v0.1.1 to v0.1.2
+
+### Fixes
+- misc fixes around builds  ([3bda786](https://github.com/telicent-oss/telicent-base-images/commit/3bda786cbf385f70ee268191ad1dd54c39964a1b))
+
 ## Changes from 9cf9e905002400ada8df661e1ad209bbbc0975cd to v0.1.1
 
 ### Features
