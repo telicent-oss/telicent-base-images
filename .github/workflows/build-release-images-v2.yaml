@@ -16,10 +16,11 @@ on:
         description: "Specify the tag to build (must exist in the format v<major>.<minor>.<patch>)"
         required: true
         type: string
-    workflows:
-      - handle-release-pr.yaml
-    types:
-      - completed
+  workflow_run:
+    workflows: [ handle-release-pr ]
+    types: [ completed ]
+    branches:
+      - 'release/**'
 
 permissions:
   contents: write
