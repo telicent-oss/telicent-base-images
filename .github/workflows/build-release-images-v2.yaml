@@ -16,42 +16,32 @@ on:
         description: "Specify the tag to build (must exist in the format v<major>.<minor>.<patch>)"
         required: true
         type: string
-  workflow_run:
-    workflows: [ handle-release-pr ]
+  release:
     types:
-      - completed
+      - published
 
 permissions:
   contents: write
   pull-requests: write
 
 jobs:
-  debug:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Debug Workflow Run
-        run: |
-          echo "Event: ${{ toJson(github.event.workflow_run) }}"
-          echo "Event name: ${{ github.event_name}}"
-          echo "Conclusion: ${{ github.event.workflow_run.conclusion }}"
-          echo "Out status: ${{ github.event.workflow_run.outputs.status }}"
 
   validate-tag:
     runs-on: ubuntu-latest
-    if: ${{ (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.outputs.status == 'release_ready') || github.event_name == 'workflow_dispatch' }}
+    if: ${{ github.event_name == 'release' || github.event_name == 'workflow_dispatch' }}
     outputs:
       tag: ${{ steps.validate.outputs.tag }}
     steps:
       - name: Validate Tag
         env:
-          TAG_FROM_WORKFLOW_RUN: ${{ github.event.workflow_run.outputs.tag || '' }}
+          TAG_FROM_RELEASE: ${{ github.event.release.tag_name || '' }}
           TAG_FROM_INPUTS: ${{ github.event.inputs.tag || '' }}
           TAG_FROM_REF: ${{ github.ref_name || '' }}
         run: |
           echo "Checking tag source..."
-          if [ -n "$TAG_FROM_WORKFLOW_RUN" ]; then
-            TAG="$TAG_FROM_WORKFLOW_RUN"
-            echo "Tag retrieved from workflow_run: $TAG"
+          if [ -n "$TAG_FROM_RELEASE" ]; then
+            TAG="$TAG_FROM_RELEASE"
+            echo "Tag retrieved from release event: $TAG"
           elif [ -n "$TAG_FROM_INPUTS" ]; then
             TAG="$TAG_FROM_INPUTS"
             echo "Tag retrieved from manual dispatch inputs: $TAG"
@@ -65,7 +55,7 @@ jobs:
           
           echo "TAG=$TAG" >> $GITHUB_ENV
           echo "Validate Tag: $TAG"
-           
+          
           if [[ ! "$TAG" =~ ^v[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
             echo "Error: The tag must be in the format v<major>.<minor>.<patch>, where each part is 1-3 digits."
             exit 1

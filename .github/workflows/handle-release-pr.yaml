@@ -63,10 +63,6 @@ jobs:
             "prerelease": false
           }
           EOF
-          
-          echo "PR merged. Setting outputs for downstream workflow." 
-          echo "status=release_ready" >> $GITHUB_ENV
-          echo "tag=${{ env.release_version }}" >> $GITHUB_ENV
 
       - name: Label PR as Released
         if: ${{ github.event.pull_request.merged }}
