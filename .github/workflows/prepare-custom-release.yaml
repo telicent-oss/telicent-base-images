@@ -59,10 +59,10 @@ jobs:
         uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "chore: prepare release v${{ env.new_version }}"
+          commit-message: "chore: prepare release ${{ env.new_version }}"
           base: main
           branch: release/${{ env.new_version }}
-          title: "chore: prepare release v${{ env.new_version }}"
+          title: "chore: prepare release ${{ env.new_version }}"
           body: |
             ## Changes 
             ${{ env.new_changelog }}
