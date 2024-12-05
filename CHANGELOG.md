@@ -3,6 +3,14 @@
 ## Changes from v0.1.2 to v0.1.3
 
 ### Fixes
+- misc fixes around builds bot user details  ([11e7f4b](https://github.com/telicent-oss/telicent-base-images/commit/11e7f4b42bfe245379ae68d7a39b82adf68c026a))
+- misc fixes around builds subsequent workflows  ([ccea9c8](https://github.com/telicent-oss/telicent-base-images/commit/ccea9c85b92de8faf72e32e03caef4900fd633f1))
+- misc fixes around builds subsequent workflows  ([22439ff](https://github.com/telicent-oss/telicent-base-images/commit/22439fffb2fca80fc56184957979f6aa6a8c8ca1))
+- misc fixes around builds  ([6be5700](https://github.com/telicent-oss/telicent-base-images/commit/6be5700294402473f48fe06cabc19e907f5a10a4))
+
+## Changes from v0.1.2 to v0.1.3
+
+### Fixes
 - misc fixes around builds subsequent workflows  ([ccea9c8](https://github.com/telicent-oss/telicent-base-images/commit/ccea9c85b92de8faf72e32e03caef4900fd633f1))
 - misc fixes around builds subsequent workflows  ([22439ff](https://github.com/telicent-oss/telicent-base-images/commit/22439fffb2fca80fc56184957979f6aa6a8c8ca1))
 - misc fixes around builds  ([6be5700](https://github.com/telicent-oss/telicent-base-images/commit/6be5700294402473f48fe06cabc19e907f5a10a4))
