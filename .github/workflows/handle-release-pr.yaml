@@ -35,25 +35,35 @@ jobs:
             exit 1
           fi
 
-      - name: Tag and Push Release
+      - name: Create Tag and Release (Only for Merged PR)
         if: ${{ github.event.pull_request.merged }}
         run: |
-          echo "Release version: ${{ env.release_version }}"
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          RELEASE_BRANCH="${GITHUB_HEAD_REF:-${{ github.event.pull_request.head.ref }}}"
           git tag -a "${{ env.release_version }}" -m "Release ${{ env.release_version }}"
+          #git push origin "${{ env.release_version }}"
           git push --tags
-
           
-          # Trigger push events for downstream workflows - disabled by GH when called from action
-          # to prevent infinite loops 
           curl -X POST \
             -H "Accept: application/vnd.github+json" \
             -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-            https://api.github.com/repos/${{ github.repository }}/dispatches \
-            -d '{"event_type":"push_tag"}'
-      
-
+            https://api.github.com/repos/${{ github.repository }}/releases \
+            -d @- << EOF
+          {
+            "tag_name": "${{ env.release_version }}",
+            "target_commitish": "$RELEASE_BRANCH",
+            "name": "Release ${{ env.release_version }}",
+            "body": "Automated release for version ${{ env.release_version }}",
+            "draft": false,
+            "prerelease": false
+          }
+          EOF
+          
+          echo "PR merged. Setting outputs for downstream workflow." 
+          echo "status=release_ready" >> $GITHUB_ENV
+          echo "tag=${{ env.release_version }}" >> $GITHUB_ENV
+        outputs:
+          status: release_ready
+          tag: ${{ env.release_version }}
 
       - name: Label PR as Released
         if: ${{ github.event.pull_request.merged }}

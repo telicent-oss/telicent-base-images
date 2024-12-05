@@ -16,9 +16,10 @@ on:
         description: "Specify the tag to build (must exist in the format v<major>.<minor>.<patch>)"
         required: true
         type: string
-  push:
-    tags:
-      - "v*.*.*"
+    workflows:
+      - handle-release-pr.yaml
+    types:
+      - completed
 
 permissions:
   contents: write
@@ -27,6 +28,7 @@ permissions:
 jobs:
   validate-tag:
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.outputs.status == 'release_ready' }}
     outputs:
       tag: ${{ steps.validate.outputs.tag }}
     steps:
