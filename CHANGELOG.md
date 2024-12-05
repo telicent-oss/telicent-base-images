@@ -1,5 +1,10 @@
 # Changelog
 
+## Changes from v0.1.9 to v0.2.0
+
+### Features
+- trigger build from release  ([62051b4](https://github.com/telicent-oss/telicent-base-images/commit/62051b459834777e548693c46b11471a420f8baa))
+
 ## Changes from v0.1.8 to v0.1.9
 
 ### Fixes
