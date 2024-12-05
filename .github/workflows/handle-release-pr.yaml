@@ -41,6 +41,9 @@ jobs:
       - name: Create Tag and Release (Only for Merged PR)
         if: ${{ github.event.pull_request.merged }}
         run: |
+          echo "Release version: ${{ env.release_version }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           RELEASE_BRANCH="${GITHUB_HEAD_REF:-${{ github.event.pull_request.head.ref }}}"
           git tag -a "${{ env.release_version }}" -m "Release ${{ env.release_version }}"
           #git push origin "${{ env.release_version }}"
