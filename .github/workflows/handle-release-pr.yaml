@@ -1,4 +1,4 @@
-name: handle-release-pr.yaml
+name: handle-release-pr
 
 on:
   pull_request:

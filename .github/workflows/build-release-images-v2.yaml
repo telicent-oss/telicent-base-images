@@ -1,4 +1,4 @@
-name: build-release-images.yaml
+name: build-release-images
 
 # Use this workflow to build and publish images, ideally we should find a way to
 # be able to run the original one as it gives us access to more reusable workflows
@@ -26,6 +26,12 @@ permissions:
   pull-requests: write
 
 jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Debug Workflow Run
+        run: |
+          echo "Event: ${{ toJson(github.event.workflow_run) }}"
   validate-tag:
     runs-on: ubuntu-latest
     if: ${{ (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.outputs.status == 'release_ready') || github.event_name == 'workflow_dispatch' }}
