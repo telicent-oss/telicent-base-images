@@ -1,5 +1,10 @@
 # Changelog
 
+## Changes from v0.1.4 to v0.1.5
+
+### Fixes
+- misc fixes around builds bot user details  ([b76e597](https://github.com/telicent-oss/telicent-base-images/commit/b76e597b5e5ef6259bdbe7dc18bc52cdf2911f57))
+
 ## Changes from v0.1.3 to v0.1.4
 
 ### Fixes
