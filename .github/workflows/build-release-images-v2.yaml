@@ -18,7 +18,7 @@ on:
         type: string
   workflow_run:
     workflows: [ handle-release-pr ]
-    types: [ completed ]
+    types: [ requested ]
     branches:
       - 'release/**'
 
