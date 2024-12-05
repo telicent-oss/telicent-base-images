@@ -32,9 +32,9 @@ jobs:
       - name: Debug Workflow Run
         run: |
           echo "Event: ${{ toJson(github.event.workflow_run) }}"
-          echo "Event name: ${{ github.event_name}}
-          echo "Conclusion: ${{ github.event.workflow_run.conclusion }}
-          echo "Out status: ${{ github.event.workflow_run.outputs.status }}
+          echo "Event name: ${{ github.event_name}}"
+          echo "Conclusion: ${{ github.event.workflow_run.conclusion }}"
+          echo "Out status: ${{ github.event.workflow_run.outputs.status }}"
 
   validate-tag:
     runs-on: ubuntu-latest
