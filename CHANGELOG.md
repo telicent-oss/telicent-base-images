@@ -1,5 +1,10 @@
 # Changelog
 
+## Changes from v0.3.1 to v0.3.2
+
+### Fixes
+- handle pr logic improvements v2  ([2f1af95](https://github.com/telicent-oss/telicent-base-images/commit/2f1af95eaa0bc9066254721302bb2311780a95cb))
+
 ## Changes from v0.3.0 to v0.3.1
 
 ### Fixes
