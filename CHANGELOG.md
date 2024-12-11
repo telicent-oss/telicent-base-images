@@ -1,5 +1,12 @@
 # Changelog
 
+## Changes from v0.2.1 to v0.2.2
+
+### Fixes
+- bild resolver logic fixes  ([9550072](https://github.com/telicent-oss/telicent-base-images/commit/95500722af80e8b79c000efb9aa478788b49b925))
+### Others
+- whitespace chage on tzdata module ([686f03a](https://github.com/telicent-oss/telicent-base-images/commit/686f03aaa5a01ef45f51eaf611a1d6424ac94261))
+
 ## Changes from v0.2.0 to v0.2.1
 
 ### Chores
