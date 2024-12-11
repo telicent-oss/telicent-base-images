@@ -78,13 +78,14 @@ jobs:
             ls -la ./target
 
         - name: Verify Correct Context
+          shell: bash
           run: |
             pwd 
             ls -la
             echo "========"
             ls -la ./target
-            cat ./target/image/Dockerfile 
-            
+            cat ./target/image/Dockerfile
+            [ -f ./target/image/Dockerfile ] && "Dockerfile found" 
             [ ! -f ./target/image/Dockerfile ] && echo "Missing dockerfile" && exit 1
 
         - name: Set up QEMU
