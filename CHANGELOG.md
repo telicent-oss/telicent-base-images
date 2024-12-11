@@ -1,5 +1,10 @@
 # Changelog
 
+## Changes from v0.2.4 to v0.2.5
+
+### Fixes
+- update path in image builder script  ([4d14964](https://github.com/telicent-oss/telicent-base-images/commit/4d1496438151e8c44afc04b871cbcfffb66804e3))
+
 ## Changes from v0.2.3 to v0.2.4
 
 ### Fixes
