@@ -5,6 +5,12 @@ on:
     types:
       - closed
 
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+  actions: write
+
 jobs:
   handle-release-pr:
     name: handle-release-pr-merged
