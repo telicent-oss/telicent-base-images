@@ -35,6 +35,9 @@ jobs:
         with:
           name: tag_version
           path: ./tag
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
 
       - name: Unzip Tag Artifact
         if: ${{ github.event_name == 'workflow_run' }}
