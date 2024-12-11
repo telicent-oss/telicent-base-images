@@ -5,6 +5,10 @@ on:
     types:
       - closed
 
+permissions:
+  contents: write
+  actions: read
+
 jobs:
   handle-release-pr:
     name: handle-release-pr-merged

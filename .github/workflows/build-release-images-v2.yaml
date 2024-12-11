@@ -19,6 +19,7 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  actions: read
 
 jobs:
   validate-tag:
@@ -40,6 +41,11 @@ jobs:
           if [ -f ./tag/tag_version.zip ]; then
             unzip ./tag/tag_version.zip -d ./tag
           fi
+
+      - name: Check downloaded content
+        if:  ${{ github.event_name == 'workflow_run' }}
+        run: |
+          ls -lahr ./tag
 
       - name: Validate Tag
         env:
