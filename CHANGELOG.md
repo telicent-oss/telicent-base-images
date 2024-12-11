@@ -1,5 +1,10 @@
 # Changelog
 
+## Changes from v0.2.0 to v0.2.1
+
+### Chores
+- yq should be availabe on gh runners  ([dc5437e](https://github.com/telicent-oss/telicent-base-images/commit/dc5437ebe28b96779f45268abe037815f42da0c9))
+
 ## Changes from 9cf9e905002400ada8df661e1ad209bbbc0975cd to v0.2.0
 
 ### Features
