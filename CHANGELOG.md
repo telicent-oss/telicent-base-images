@@ -1,5 +1,10 @@
 # Changelog
 
+## Changes from v0.3.3 to v0.3.4
+
+### Fixes
+- artifact fetch logic  ([e103286](https://github.com/telicent-oss/telicent-base-images/commit/e1032862c8902fafa863dfa081c0c062844be5fd))
+
 ## Changes from v0.3.2 to v0.3.3
 
 ### Chores
