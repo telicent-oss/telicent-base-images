@@ -1,4 +1,4 @@
-name: handle-release-pr
+name: handle-release-pr-merged
 
 on:
   pull_request:
@@ -7,11 +7,12 @@ on:
 
 jobs:
   handle-release-pr:
-    name: Handle Release PR
+    name: handle-release-pr
     runs-on: ubuntu-latest
     if: >
       github.event.pull_request.base.ref == 'main' &&
-      startsWith(github.event.pull_request.head.ref, 'release/')
+      startsWith(github.event.pull_request.head.ref, 'release/') &&
+      ${{ github.event.pull_request.merged }}
     outputs:
       status: ${{ steps.set-outputs.outputs.status }}
       tag: ${{ steps.set-outputs.outputs.tag }}
@@ -22,7 +23,6 @@ jobs:
           fetch-depth: 0
 
       - name: Determine Action on PR Closure
-        if: ${{ github.event.pull_request.merged }}
         run: |
           echo "PR merged. Proceeding to tag release."
           echo "Head ref is: ${{ github.event.pull_request.head.ref }}"
@@ -39,7 +39,6 @@ jobs:
           fi
 
       - name: Create Tag and Release (Only for Merged PR)
-        if: ${{ github.event.pull_request.merged }}
         run: |
           echo "Release version: ${{ env.release_version }}"
           git config user.name "github-actions[bot]"
@@ -56,7 +55,6 @@ jobs:
             -d @- << EOF
           {
             "tag_name": "${{ env.release_version }}",
-            "target_commitish": "$RELEASE_BRANCH",
             "name": "Release ${{ env.release_version }}",
             "body": "Automated release for version ${{ env.release_version }}",
             "draft": false,
@@ -80,18 +78,14 @@ jobs:
           
           gh issue edit "$PR_NUMBER" --repo "$REPO" --add-label "release: tagged"
 
-      - name: Label PR as Cancelled
-        if: ${{ !github.event.pull_request.merged }}
+      - name: Save Tag version
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ env.release_version }}"
         run: |
-          PR_NUMBER=${{ github.event.pull_request.number }}
-          REPO=${{ github.repository }}
-          
-          LABELS=$(gh issue view "$PR_NUMBER" --repo "$REPO" --json labels -q ".labels[].name" | paste -sd "," -)
-          
-          if echo "$LABELS" | grep -q "release: pending"; then
-            gh issue edit "$PR_NUMBER" --repo "$REPO" --remove-label "release: pending"
-          fi
-          
-          gh issue edit "$PR_NUMBER" --repo "$REPO" --add-label "release: cancelled"
+          mkdir -p ./tag
+          echo $TAG > ./tag/tag_version
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tag_version
+          path: tag/

@@ -1,9 +1,5 @@
 name: build-release-images
 
-# Use this workflow to build and publish images, ideally we should find a way to
-# be able to run the original one as it gives us access to more reusable workflows
-# unfortunately GitHub actions become really tricky for more complex use cases.
-
 on:
   workflow_dispatch:
     inputs:
@@ -16,46 +12,57 @@ on:
         description: "Specify the tag to build (must exist in the format v<major>.<minor>.<patch>)"
         required: true
         type: string
-  release:
-    types:
-      - published
+  workflow_run:
+    workflows: [ handle-release-pr-merged ]
+    types: [ completed ]
 
 permissions:
   contents: write
   pull-requests: write
 
 jobs:
-
   validate-tag:
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'release' || github.event_name == 'workflow_dispatch' }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
     outputs:
       tag: ${{ steps.validate.outputs.tag }}
     steps:
+      - name: Download and Extract Tag Artifact (if triggered by workflow)
+        if: ${{ github.event_name == 'workflow_run' }}
+        uses: actions/download-artifact@v4
+        with:
+          name: tag_version
+          path: ./tag
+
+      - name: Unzip Tag Artifact
+        if: ${{ github.event_name == 'workflow_run' }}
+        run: |
+          if [ -f ./tag/tag_version.zip ]; then
+            unzip ./tag/tag_version.zip -d ./tag
+          fi
+
       - name: Validate Tag
         env:
-          TAG_FROM_RELEASE: ${{ github.event.release.tag_name || '' }}
+          TAG_FROM_ARTIFACT: ${{ github.event_name == 'workflow_run' }}
           TAG_FROM_INPUTS: ${{ github.event.inputs.tag || '' }}
-          TAG_FROM_REF: ${{ github.ref_name || '' }}
         run: |
           echo "Checking tag source..."
-          if [ -n "$TAG_FROM_RELEASE" ]; then
-            TAG="$TAG_FROM_RELEASE"
-            echo "Tag retrieved from release event: $TAG"
+
+          if [ -f ./tag/tag_version/tag_version ]; then
+            TAG_FROM_ARTIFACT=$(cat ./tag/tag_version/tag_version)
+            TAG="$TAG_FROM_ARTIFACT"
+            echo "Tag retrieved from artifact: $TAG" 
           elif [ -n "$TAG_FROM_INPUTS" ]; then
             TAG="$TAG_FROM_INPUTS"
-            echo "Tag retrieved from manual dispatch inputs: $TAG"
-          elif [ -n "$TAG_FROM_REF" ]; then
-            TAG="$TAG_FROM_REF"
-            echo "Tag retrieved from git ref: $TAG"
+            echo "Tag retrieved from manual dispatch inputs: $TAG" 
           else
             echo "Error: No tag provided or detected."
             exit 1
           fi
-          
+
           echo "TAG=$TAG" >> $GITHUB_ENV
           echo "Validate Tag: $TAG"
-          
+
           if [[ ! "$TAG" =~ ^v[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
             echo "Error: The tag must be in the format v<major>.<minor>.<patch>, where each part is 1-3 digits."
             exit 1

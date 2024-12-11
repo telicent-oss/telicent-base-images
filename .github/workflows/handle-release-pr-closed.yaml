@@ -1,0 +1,38 @@
+name: handle-release-pr-merged
+
+on:
+  pull_request:
+    types:
+      - closed
+
+jobs:
+  handle-release-pr:
+    name: handle-release-pr
+    runs-on: ubuntu-latest
+    if: >
+      github.event.pull_request.base.ref == 'main' &&
+      startsWith(github.event.pull_request.head.ref, 'release/') &&
+      ${{ !github.event.pull_request.merged }}
+    outputs:
+      status: ${{ steps.set-outputs.outputs.status }}
+      tag: ${{ steps.set-outputs.outputs.tag }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Label PR as Cancelled
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          PR_NUMBER=${{ github.event.pull_request.number }}
+          REPO=${{ github.repository }}
+          
+          LABELS=$(gh issue view "$PR_NUMBER" --repo "$REPO" --json labels -q ".labels[].name" | paste -sd "," -)
+          
+          if echo "$LABELS" | grep -q "release: pending"; then
+            gh issue edit "$PR_NUMBER" --repo "$REPO" --remove-label "release: pending"
+          fi
+          
+          gh issue edit "$PR_NUMBER" --repo "$REPO" --add-label "release: cancelled"
