@@ -79,7 +79,12 @@ jobs:
 
         - name: Verify Correct Context
           run: |
-            [ ! -d ./target/image ] && echo "Missing image dir" && exit 1 
+            pwd 
+            ls -la
+            echo "========"
+            ls -la ./target
+            cat ./target/image/Dockerfile 
+            
             [ ! -f ./target/image/Dockerfile ] && echo "Missing dockerfile" && exit 1
 
         - name: Set up QEMU
