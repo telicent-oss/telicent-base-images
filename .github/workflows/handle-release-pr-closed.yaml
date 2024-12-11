@@ -1,4 +1,4 @@
-name: handle-release-pr-merged
+name: handle-release-pr-closed
 
 on:
   pull_request:
@@ -7,12 +7,12 @@ on:
 
 jobs:
   handle-release-pr:
-    name: handle-release-pr
+    name: handle-release-pr-closed
     runs-on: ubuntu-latest
     if: >
       github.event.pull_request.base.ref == 'main' &&
       startsWith(github.event.pull_request.head.ref, 'release/') &&
-      ${{ !github.event.pull_request.merged }}
+      !github.event.pull_request.merged
     outputs:
       status: ${{ steps.set-outputs.outputs.status }}
       tag: ${{ steps.set-outputs.outputs.tag }}

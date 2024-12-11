@@ -7,12 +7,12 @@ on:
 
 jobs:
   handle-release-pr:
-    name: handle-release-pr
+    name: handle-release-pr-merged
     runs-on: ubuntu-latest
     if: >
       github.event.pull_request.base.ref == 'main' &&
       startsWith(github.event.pull_request.head.ref, 'release/') &&
-      ${{ github.event.pull_request.merged }}
+      github.event.pull_request.merged
     outputs:
       status: ${{ steps.set-outputs.outputs.status }}
       tag: ${{ steps.set-outputs.outputs.tag }}
@@ -80,7 +80,7 @@ jobs:
 
       - name: Save Tag version
         env:
-          TAG: ${{ env.release_version }}"
+          TAG: ${{ env.release_version }}
         run: |
           mkdir -p ./tag
           echo $TAG > ./tag/tag_version
