@@ -72,21 +72,10 @@ jobs:
             echo "image_version=$current_version" >> $GITHUB_OUTPUT
             echo "image_name=$image_name" >> $GITHUB_OUTPUT
 
-
-        - name: Debug
-          run: |
-            ls -la ./target
-
         - name: Verify Correct Context
           shell: bash
-          run: |
-            pwd 
-            ls -la
-            echo "========"
-            ls -la ./target
-            cat ./target/image/Dockerfile
-            [ -f ./target/image/Dockerfile ] && "Dockerfile found" 
-            [ ! -f ./target/image/Dockerfile ] && echo "Missing dockerfile" && exit 1
+          run: | 
+            [ -f ./target/image/Dockerfile ] || $(echo "Missing Dockerfile in ./target" && exit 1)
 
         - name: Set up QEMU
           uses: docker/setup-qemu-action@v3

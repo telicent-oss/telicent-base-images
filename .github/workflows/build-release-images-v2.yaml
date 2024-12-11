@@ -46,18 +46,12 @@ jobs:
             unzip ./tag/tag_version.zip -d ./tag
           fi
 
-      - name: Check downloaded content
-        if:  ${{ github.event_name == 'workflow_run' }}
-        run: |
-          ls -lahr ./tag
-
       - name: Validate Tag
         env:
           TAG_FROM_ARTIFACT: ${{ github.event_name == 'workflow_run' }}
           TAG_FROM_INPUTS: ${{ github.event.inputs.tag || '' }}
         run: |
           echo "Checking tag source..."
-
           if [ -f ./tag/tag_version ]; then
             TAG_FROM_ARTIFACT=$(cat ./tag/tag_version)
             TAG="$TAG_FROM_ARTIFACT"
