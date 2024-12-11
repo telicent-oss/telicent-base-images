@@ -11,6 +11,10 @@ on:
         description: "Specify the tag to build (must exist in the format v<major>.<minor>.<patch>)"
         required: true
         type: string
+      USE_LAST_TAG:
+        description: "Tell the build resolver script which tag to use for comparison"
+        type: boolean
+        required: false
 
 jobs:
   changed-images:
@@ -29,7 +33,11 @@ jobs:
         id: resolve-changes
         run: |
           chmod +x build_resolver.sh
-          ./build_resolver.sh
+          if [[ "${{ inputs.USE_LAST_TAG }}" == "true" ]]; then
+            ./build_resolver.sh use_last
+          else
+            ./build_resolver.sh
+          fi 
 
       - name: Export Changed Images
         id: export-images

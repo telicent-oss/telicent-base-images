@@ -27,17 +27,27 @@ function debug_print() {
 }
 
 function get_commit_range() {
-  # Get the most recent tag in the repository, sorted by creation date
+  # Get the most recent tags in the repository, sorted by creation date
   tags=($(git tag --sort=-creatordate | head -n 2))
 
-  if [[ ${#tags[@]} -ge 1 ]]; then
-    last_tag="${tags[0]}" # Pick the most recent tag
-    last_tag=$(git log --oneline $last_tag..HEAD | tail -1 | awk '{print $1}')
-    echo "$last_tag HEAD"
+  if [[ "$1" == "use_last" ]]; then
+    last_tag="${tags[0]}" # Use the most recent tag
   else
-    # Generally, everything else compare from base of the repo, as soon
-    # there are 2 tags this will never execute anyway
+    last_tag="${tags[1]}" # Use the second most recent tag
+  fi
+
+  # Handle cases where no tags are found
+  if [[ -z "$last_tag" ]]; then
+    # If no tags exist, compare from the base of the repository
     echo "$(git rev-list --max-parents=0 HEAD) HEAD"
+  else
+    # Fallback to repository base if selected tag cannot resolve properly
+    last_tag_commit=$(git log --oneline "$last_tag"..HEAD | tail -1 | awk '{print $1}')
+    if [[ -z "$last_tag_commit" ]]; then
+      echo "$(git rev-list --max-parents=0 HEAD) HEAD"
+    else
+      echo "$last_tag_commit HEAD"
+    fi
   fi
 }
 
@@ -155,8 +165,8 @@ function detect_image_changes() {
   echo "Base dir: ${base_dir}"
   local affected_images=()
 
-  # Get the last two merge commits
-  read -r START_REF END_REF < <(get_commit_range)
+  # Get the last two merge commits, passing the script argument to `get_commit_range`
+  read -r START_REF END_REF < <(get_commit_range "$USE_LAST")
   echo "Start sha:${START_REF} - End: $END_REF"
   if [[ -z "$START_REF" || -z "$END_REF" ]]; then
     echo "Error: Unable to find two merge commits. Ensure there is enough merge history."
@@ -202,5 +212,10 @@ function detect_image_changes() {
     [[ -n "$GITHUB_ENV" ]] && echo "changed_images=[]" >> "$GITHUB_ENV"
   fi
 }
+
+USE_LAST=""
+if [[ "$1" == "use_last" ]]; then
+  USE_LAST="use_last"
+fi
 
 detect_image_changes "image-descriptors"
