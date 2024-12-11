@@ -11,7 +11,7 @@ function get_commit_range() {
   tags=($(git tag --sort=-creatordate | head -n 2))
 
 
-  if [[ ${#tags[@]} -ge 2 ]]; then
+  if [[ ${#tags[@]} -ge 1 ]]; then
     last_tag="${tags[0]}" # Pick the most recent tag
     echo "$last_tag HEAD"
   else

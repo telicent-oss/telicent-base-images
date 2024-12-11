@@ -30,10 +30,8 @@ function get_commit_range() {
   # Get the most recent tag in the repository, sorted by creation date
   tags=($(git tag --sort=-creatordate | head -n 2))
 
-  # In case where there are many tags pick the second last one and
-  # compare it to head which can be a tag or a repo
   if [[ ${#tags[@]} -ge 2 ]]; then
-    last_tag="${tags[1]}" # Pick the second most recent tag
+    last_tag="${tags[0]}" # Pick the most recent tag
     last_tag=$(git log --oneline $last_tag..HEAD | tail -1 | awk '{print $1}')
     echo "$last_tag HEAD"
   else
