@@ -58,8 +58,8 @@ jobs:
         run: |
           echo "Checking tag source..."
 
-          if [ -f ./tag/tag_version/tag_version ]; then
-            TAG_FROM_ARTIFACT=$(cat ./tag/tag_version/tag_version)
+          if [ -f ./tag/tag_version ]; then
+            TAG_FROM_ARTIFACT=$(cat ./tag/tag_version)
             TAG="$TAG_FROM_ARTIFACT"
             echo "Tag retrieved from artifact: $TAG" 
           elif [ -n "$TAG_FROM_INPUTS" ]; then
