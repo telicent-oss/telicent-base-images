@@ -76,7 +76,7 @@ jobs:
         - name: Verify Correct Context
           run: |
             [[ ! -d "./target/image" ]] && echo "Missing image dir" && exit 1 
-            [[ ! -f ".//image/Dockerfile" ]] && echo "Missing dockerfile" && exit 1
+            [[ ! -f "./target/image/Dockerfile" ]] && echo "Missing dockerfile" && exit 1
 
         - name: Set up QEMU
           uses: docker/setup-qemu-action@v3
