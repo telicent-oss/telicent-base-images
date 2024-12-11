@@ -1,5 +1,12 @@
 # Changelog
 
+## Changes from v0.2.0 to v0.2.1
+
+### Chores
+- refactor  ([c84896d](https://github.com/telicent-oss/telicent-base-images/commit/c84896deb5aba5d5234478d1320720d0e02c8171))
+### Fixes
+- detect changes narrow comparison range  ([738678e](https://github.com/telicent-oss/telicent-base-images/commit/738678e3e7ebbb3c92f6b7d558dd52b23b059809))
+
 ## Changes from v0.1.0 to v0.2.0
 
 ### Features
