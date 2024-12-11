@@ -73,6 +73,10 @@ jobs:
             echo "image_name=$image_name" >> $GITHUB_OUTPUT
 
 
+        - name: Debug
+          run: |
+            ls -la ./target
+
         - name: Verify Correct Context
           run: |
             [[ ! -d "./target/image" ]] && echo "Missing image dir" && exit 1 
