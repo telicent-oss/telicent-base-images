@@ -28,9 +28,9 @@ function debug_print() {
 
 function get_commit_range() {
   # Get the most recent tag in the repository, sorted by creation date
-  tags=($(git tag --sort=-creatordate | head -n 2))
+  tags=($(git tag --sort=-creatordate | head -n 1))
 
-  if [[ ${#tags[@]} -ge 2 ]]; then
+  if [[ ${#tags[@]} -ge 1 ]]; then
     last_tag="${tags[0]}" # Pick the most recent tag
     last_tag=$(git log --oneline $last_tag..HEAD | tail -1 | awk '{print $1}')
     echo "$last_tag HEAD"
