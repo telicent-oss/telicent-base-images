@@ -1,5 +1,13 @@
 # Changelog
 
+## Changes from v0.3.2 to v0.3.3
+
+### Chores
+- remove dependabot as it is not suitable for this project  ([bd4b7a4](https://github.com/telicent-oss/telicent-base-images/commit/bd4b7a42fba3f3b82498b3b2f726293f5a4b186e))
+### Fixes
+- graphql  ([ea8fcc8](https://github.com/telicent-oss/telicent-base-images/commit/ea8fcc859c32388bee78801c41fc0b708d007129))
+- graphql  ([219d280](https://github.com/telicent-oss/telicent-base-images/commit/219d28051b6e65969b721db1840eac467eda8973))
+
 ## Changes from v0.3.1 to v0.3.2
 
 ### Fixes
