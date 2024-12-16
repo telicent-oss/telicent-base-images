@@ -48,7 +48,7 @@ jobs:
           commit-message: "chore: update descriptors ubi9 version"
           base: main
           branch: chore/update-descriptors
-          title: "Chore(bot): update ubi9 version in descriptors"
+          title: "chore(bot): update ubi9 version in descriptors"
           body: |
             This PR updates the descriptors using the latest released versions of ubi9 minimal.
           labels: "chore"
