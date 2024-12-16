@@ -1,5 +1,17 @@
 # Changelog
 
+## Changes from v0.2.0 to v0.2.1
+
+### Chores
+- add periodic scans for published images  ([35a5fd4](https://github.com/telicent-oss/telicent-base-images/commit/35a5fd4dceea7f7d5290538d070486f16a13c682))
+### Fixes
+- artifacts naming  ([72bb3de](https://github.com/telicent-oss/telicent-base-images/commit/72bb3dece1eccf8fc3a6831f5bc4b55cee5ea3a3))
+- artifacts naming  ([dbc97b1](https://github.com/telicent-oss/telicent-base-images/commit/dbc97b1662a522847444a99288da4f3d0a19b4b0))
+- artifacts naming  ([5492ba4](https://github.com/telicent-oss/telicent-base-images/commit/5492ba4d658618b0037dbf48eb60b882005fec57))
+- inherit secrets  ([0dc7349](https://github.com/telicent-oss/telicent-base-images/commit/0dc73496679ba5f0d41f91b39dcd035b74fa2d8d))
+- periodic scans wrong arg  ([97a12ad](https://github.com/telicent-oss/telicent-base-images/commit/97a12ad999f051db84d87f9acb340ba3c4d73ce2))
+- periodic scans need two matrix jobs  ([1df7870](https://github.com/telicent-oss/telicent-base-images/commit/1df78703516627c5a6618a0aff49464a3ed8498c))
+
 ## Changes from v0.1.0 to v0.2.0
 
 ### Features
