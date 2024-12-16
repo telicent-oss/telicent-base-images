@@ -34,6 +34,7 @@ jobs:
         run: |
           chmod +x build_resolver.sh
           if [[ "${{ inputs.USE_LAST_TAG }}" == "true" ]]; then
+            echo "Calling build resolver with use_last"
             ./build_resolver.sh use_last
           else
             ./build_resolver.sh
