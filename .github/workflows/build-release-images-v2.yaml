@@ -85,6 +85,7 @@ jobs:
       TAG_VERSION: ${{ needs.validate-tag.outputs.tag }}
 
   build-images-with-reusable-workflow:
+    if: ${{ needs.detect-changed-images.outputs.images != '["[]"]' }}
     secrets: inherit
     needs:
       - validate-tag
@@ -93,3 +94,10 @@ jobs:
     with:
       IMAGE-DESCRIPTORS: ${{ needs.detect-changed-images.outputs.images }}
       TAG: ${{ needs.validate-tag.outputs.tag }}
+
+  no-changes:
+    if: ${{ needs.detect-changed-images.outputs.images == '["[]"]' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: No images to build
+        run: echo "No images to build."
