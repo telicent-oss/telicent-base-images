@@ -13,7 +13,7 @@ labels:
   - name: "version"
     value: *version
   - name: "description"
-    value: "Telicent's base NodeJS 20 image built on Red Hat UBI9 minimal"
+    value: "Telicent's base NodeJS 20 image built on Red Hat UBI9 minimal."
   - name: "com.redhat.license_terms"
     value: "https://www.redhat.com/en/about-red-hat-end-user-license-agreements#UBI" # DO NOT REMOVE
   - name: "io.k8s.display-name"

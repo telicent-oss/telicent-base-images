@@ -19,7 +19,7 @@ labels:
   - name: "io.k8s.display-name"
     value: "Telicent UBI NGINX Base"
   - name: "io.openshift.tags"
-    value: "base ubi9 nginx126"
+    value: "base ubi9 nginx127"
   - name: "org.opencontainers.image.source"
     value: "https://github.com/telicent-oss/telicent-base-images"
   - name: "summary"

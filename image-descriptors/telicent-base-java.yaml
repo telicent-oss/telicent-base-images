@@ -35,7 +35,7 @@ labels:
 
 envs:
   - name: "LANG"
-    value: "C.utf8"  # might not be needed
+    value: "C.utf8"
 
 packages:
   manager: microdnf

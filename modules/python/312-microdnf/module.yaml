@@ -2,7 +2,7 @@ schema_version: 1
 
 name: "telicent.container.python312-microdnf"
 description: "Installs specified python version via ubi9 repos"
-version: &pythonver "3.12"
+version: &pythonver "3.12.5"
 
 labels:
 - name: "org.telicent.product"

@@ -7,7 +7,6 @@ version: &version "1.0.2"
 
 description: "Telicent's base python3.11 image built on Red Hat UBI9 minimal."
 
-# Ensure compliance with Red Hat UBI EULA
 labels:
   - name: "name"
     value: *name
