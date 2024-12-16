@@ -35,19 +35,12 @@ function get_commit_range() {
   else
     last_tag="${tags[1]}" # Use the second most recent tag
   fi
-
   # Handle cases where no tags are found
   if [[ -z "$last_tag" ]]; then
     # If no tags exist, compare from the base of the repository
     echo "$(git rev-list --max-parents=0 HEAD) HEAD"
   else
-    # Fallback to repository base if selected tag cannot resolve properly
-    last_tag_commit=$(git log --oneline "$last_tag"..HEAD | tail -1 | awk '{print $1}')
-    if [[ -z "$last_tag_commit" ]]; then
-      echo "$(git rev-list --max-parents=0 HEAD) HEAD"
-    else
-      echo "$last_tag_commit HEAD"
-    fi
+    echo "$last_tag HEAD"
   fi
 }
 
