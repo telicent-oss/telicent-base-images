@@ -1,5 +1,10 @@
 # Changelog
 
+## Changes from v0.2.1 to v0.2.2
+
+### Fixes
+- do not fail workflow wehn to images to build  ([acb5fac](https://github.com/telicent-oss/telicent-base-images/commit/acb5facaef8b316a0056f0df4d7de54404f97275))
+
 ## Changes from v0.2.0 to v0.2.1
 
 ### Chores
