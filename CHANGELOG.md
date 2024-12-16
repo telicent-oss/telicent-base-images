@@ -1,5 +1,12 @@
 # Changelog
 
+## Changes from v0.2.3 to v0.2.4
+
+### Fixes
+- issues with build resolver  ([3b92ebc](https://github.com/telicent-oss/telicent-base-images/commit/3b92ebc4a5ac44918d64e31ec0eec434af15dc31))
+- cves  ([5e471df](https://github.com/telicent-oss/telicent-base-images/commit/5e471df0e4bcdce40323ea33104b841619ccbe9c))
+- cves  ([7d8a647](https://github.com/telicent-oss/telicent-base-images/commit/7d8a6476158f3fd34fc25d3eebfcfdec1419b4bc))
+
 ## Changes from v0.2.2 to v0.2.3
 
 ### Fixes
