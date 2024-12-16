@@ -1,5 +1,10 @@
 # Changelog
 
+## Changes from v0.2.2 to v0.2.3
+
+### Fixes
+- cves  ([14c01e2](https://github.com/telicent-oss/telicent-base-images/commit/14c01e2732a6f18134d8d3d1ef6541d6dde24e22))
+
 ## Changes from v0.2.1 to v0.2.2
 
 ### Fixes
