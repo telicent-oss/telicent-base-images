@@ -162,11 +162,12 @@ function check_modules_in_image_descriptor() {
 # Function to detect changes in images based on modules
 function detect_image_changes() {
   local base_dir=$1
+  local use_last=$2
   echo "Base dir: ${base_dir}"
   local affected_images=()
 
   # Get the last two merge commits, passing the script argument to `get_commit_range`
-  read -r START_REF END_REF < <(get_commit_range "$USE_LAST")
+  read -r START_REF END_REF < <(get_commit_range "$use_last")
   echo "Start sha:${START_REF} - End: $END_REF"
   if [[ -z "$START_REF" || -z "$END_REF" ]]; then
     echo "Error: Unable to find two merge commits. Ensure there is enough merge history."
@@ -218,4 +219,4 @@ if [[ "$1" == "use_last" ]]; then
   USE_LAST="use_last"
 fi
 
-detect_image_changes "image-descriptors"
+detect_image_changes "image-descriptors" $USE_LAST
