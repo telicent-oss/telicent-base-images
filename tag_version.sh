@@ -39,7 +39,6 @@ BUMP_PATCH=false
 echo "Initial Version: v${MAJOR}.${MINOR}.${PATCH}"
 echo "Analyzing commits between $START_REF and HEAD..."
 
-# Step 3: Analyze commit messages
 commit_messages=$(git log "$START_REF"..HEAD --pretty=format:"%s")
 
 while IFS= read -r line; do
@@ -49,16 +48,17 @@ while IFS= read -r line; do
   # Debugging each commit message
   echo "Processing commit message: '$line'"
 
-  # check for breaking changes (explicit or with `!` suffix)
+  # Check for breaking changes (explicit or with `!` suffix)
   if echo "$line" | grep -qE "(BREAKING CHANGE|!:|^.*!:)" ; then
     BUMP_MAJOR=true
-  # check for features (e.g., feat:, feat(scope):, feat!:)
-  elif echo "$line" | grep -qE "^feat(\(.*\))?!?:"; then
+  # Check for features (e.g., feat, feat(scope), feat!:)
+  elif echo "$line" | grep -qE "^feat(\(.*\))?!?:?$"; then
     BUMP_MINOR=true
-  # check for fixes, chores, and other non-major updates (e.g., fix:, fix(scope):, fix!:, chore:, chore!:)
-  elif echo "$line" | grep -qE "^(fix|chore)(\(.*\))?!?:"; then
+  # Check for fixes, chores, and other non-major updates (e.g., fix, fix(scope), fix!:, chore, chore!:)
+  elif echo "$line" | grep -qE "^(fix|chore)(\(.*\))?!?:?$"; then
     BUMP_PATCH=true
   fi
+
 done <<< "$commit_messages"
 
 echo "Calculating the new version..."
