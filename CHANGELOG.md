@@ -1,5 +1,12 @@
 # Changelog
 
+## Changes from v0.2.2 to v0.2.3
+
+### Chores
+- update descriptors (#107)  ([e0ef7df](https://github.com/telicent-oss/telicent-base-images/commit/e0ef7df3366249318179d1cf76437fc2650c420f))
+### Fixes
+- use different name for base images updater  ([84f5934](https://github.com/telicent-oss/telicent-base-images/commit/84f59341325796b8f82392acd1b09c220391ff8e))
+
 ## Changes from v0.2.1 to v0.2.2
 
 ### Fixes
