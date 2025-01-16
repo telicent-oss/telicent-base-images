@@ -1,5 +1,12 @@
 # Changelog
 
+## Changes from v0.2.3 to v0.2.3
+
+### Chores
+- add background to the notification  ([4072073](https://github.com/telicent-oss/telicent-base-images/commit/40720733e6992dd8a3a59bd44e324c9b68ef695b))
+### Fixes
+- issues around parsing in tag version  ([8fceb4e](https://github.com/telicent-oss/telicent-base-images/commit/8fceb4ef65d7c671e45384cb8ecc7ad8f294a7c2))
+
 ## Changes from v0.2.2 to v0.2.3
 
 ### Chores
