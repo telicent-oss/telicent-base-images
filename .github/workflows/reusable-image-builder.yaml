@@ -1,4 +1,4 @@
-name: resusable-image-builder.yaml
+name: reusable-image-builder.yaml
 
 on:
   workflow_call:
@@ -50,11 +50,6 @@ jobs:
           run: |
             cekit --descriptor image-descriptors/${{ matrix.image }}.yaml build --dry-run docker 
 
-#        - name: Install yq
-#          run: |
-#            sudo add-apt-repository -y "ppa:rmescandon/yq"
-#            sudo apt update
-#            sudo apt install yq -y
 
         - name: Extract Image Version and Name
           id: extract
@@ -219,3 +214,89 @@ jobs:
             cache-dir: .trivy
             # Counter-intuitive BUT trivy-action has its own cache which duplicates our own but in a less flexible way
             cache: false
+
+  notify-teams:
+    name: Notify Teams on Workflow Result
+    needs: [ test_inputs, build-push-image ]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Notify Teams
+        env:
+          TEAMS_WORKFLOW_URL: ${{ secrets.TEAMS_WORKFLOW_URL }}
+          IMAGE_NAME: ${{ needs.build-push-image.outputs.image_name }}
+          IMAGE_VERSION: ${{ needs.build-push-image.outputs.image_version }}
+          JOB_STATUS: ${{ needs.test_inputs.result }}
+        run: |
+          build_url="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          if [ "$JOB_STATUS" = "success" ]; then
+            icon_url="https://github.com/telicent-oss/telicent-base-images/blob/main/.github/workflows/assets/check-green.png"
+            message_title="Workflow Success: ${{ github.workflow }}"
+            message_text="The build and push process for the image completed successfully. Details are below:"
+          else
+            icon_url="https://github.com/telicent-oss/telicent-base-images/blob/main/.github/workflows/assets/error-transparent.png"
+            message_title="Workflow Failure: ${{ github.workflow }}"
+            message_text="The build and push process for the image has failed. See details below:"
+          fi
+          
+          cat > payload.json << EOF
+          {
+            "attachments": [
+              {
+                "contentType": "application/vnd.microsoft.card.adaptive",
+                "content": {
+                  "type": "AdaptiveCard",
+                  "\$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+                  "version": "1.4",
+                  "body": [
+                    {
+                      "type": "Image",
+                      "url": "$icon_url",
+                      "altText": "Workflow Result Icon",
+                      "size": "Medium",
+                      "style": "Default"
+                    },
+                    {
+                      "type": "TextBlock",
+                      "size": "Large",
+                      "weight": "Bolder",
+                      "text": "$message_title",
+                      "wrap": true
+                    },
+                    {
+                      "type": "TextBlock",
+                      "text": "$message_text",
+                      "wrap": true
+                    },
+                    {
+                      "type": "FactSet",
+                      "facts": [
+                        {
+                          "title": "Repository:",
+                          "value": "${{ github.repository }}"
+                        },
+                        {
+                          "title": "Run ID:",
+                          "value": "${{ github.run_id }}"
+                        },
+                        {
+                          "title": "Image:",
+                          "value": "$IMAGE_NAME:$IMAGE_VERSION"
+                        }
+                      ]
+                    }
+                  ],
+                  "actions": [
+                    {
+                      "type": "Action.OpenUrl",
+                      "title": "View Workflow Details",
+                      "url": "$build_url"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+          EOF
+          
+          curl -X POST -H "Content-Type: application/json" -d @payload.json "$TEAMS_WORKFLOW_URL"
