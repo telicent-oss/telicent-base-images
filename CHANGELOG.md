@@ -3,6 +3,17 @@
 ## Changes from v0.2.3 to v0.2.3
 
 ### Chores
+- introduce reporting to image builds  ([9187934](https://github.com/telicent-oss/telicent-base-images/commit/918793449abc8ae6da9a2274ad1a301ce1741ef7))
+- typo in filename  ([27dbf3d](https://github.com/telicent-oss/telicent-base-images/commit/27dbf3df7aa9ee92375ac554fb0e35dc2b6cac14))
+- better workflow reporting in teams  ([b22663e](https://github.com/telicent-oss/telicent-base-images/commit/b22663ecdeef903a0f40e7506184c92c5aa7c7f5))
+- add background to the notification  ([4072073](https://github.com/telicent-oss/telicent-base-images/commit/40720733e6992dd8a3a59bd44e324c9b68ef695b))
+### Fixes
+- resolve issues around json payload in teams notification  ([983dd1d](https://github.com/telicent-oss/telicent-base-images/commit/983dd1dd970b7f6416ebcb6792eb3a0477118930))
+- issues around parsing in tag version  ([8fceb4e](https://github.com/telicent-oss/telicent-base-images/commit/8fceb4ef65d7c671e45384cb8ecc7ad8f294a7c2))
+
+## Changes from v0.2.3 to v0.2.3
+
+### Chores
 - add background to the notification  ([4072073](https://github.com/telicent-oss/telicent-base-images/commit/40720733e6992dd8a3a59bd44e324c9b68ef695b))
 ### Fixes
 - issues around parsing in tag version  ([8fceb4e](https://github.com/telicent-oss/telicent-base-images/commit/8fceb4ef65d7c671e45384cb8ecc7ad8f294a7c2))
