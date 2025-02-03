@@ -18,9 +18,5 @@ packages:
     - python3.11
     - python3.11-pip
 
-modules:
-  install:
-    - name: telicent.container.user
-
 execute:
-- script: envsetup
+  - script: home-perms

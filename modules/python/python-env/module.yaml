@@ -1,0 +1,41 @@
+schema_version: 1
+
+name: "telicent.container.python-env"
+version: "1.0"
+
+envs:
+  - name: "BASH_ENV"
+    value: "/home/user/py-enable"
+  - name: "PROMPT_COMMAND"
+    value: ". /home/user/py-enable"
+  - name: "PATH"
+    value: "/usr/bin:/home/user/.local/bin:/usr/local/bin:/home/user/app-venv/bin:$PATH"
+
+modules:
+  install:
+    - name: telicent.container.util.devtools
+
+artifacts:
+  - name: pyenv-enable
+    path: scripts/py-enable
+    target: py-enable
+    dest: /home/user/
+
+  - name: python-entrypoint-artifact
+    path: scripts/python-entrypoint
+    target: entrypoint
+    dest: /usr/local/bin
+
+  - name: rpm-file-permissions
+    path: scripts/rpm-file-permissions
+    target: rpm-file-permissions
+    dest: /usr/bin
+
+  - name: fix-permissions
+    path: scripts/fix-permissions
+    target: fix-permissions
+    dest: /usr/bin
+
+
+execute:
+  - script: configure

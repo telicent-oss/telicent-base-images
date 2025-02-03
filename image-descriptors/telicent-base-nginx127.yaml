@@ -52,3 +52,4 @@ modules:
     - name: telicent.container.nginx
     - name: telicent.container.util.cleanup.gcc
     - name: telicent.container.util.cleanup
+    - name: telicent.container.util.devtools

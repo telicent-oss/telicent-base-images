@@ -43,7 +43,12 @@ envs:
     value: "UTF-8"
   - name: "PYTHON_VERSION"
     value: "3.11"
-
+  - name: "BASH_ENV"
+    value: &env "/home/user/app-venv/bin/activate"
+  - name: "ENV"
+    value: *env
+  - name: "PROMPT_COMMAND"
+    value: ". /home/user/app-venv/bin/activate"
 
 packages:
   manager: microdnf
@@ -53,20 +58,17 @@ modules:
   repositories:
    - path: ../modules
   install:
-    - name: telicent.container.util.pkg-update
-    - name: telicent.container.util.tzdata
-    - name: telicent.container.python311-microdnf
-    - name: telicent.container.util.python-entrypoint-virtualenv
-#    - name: telicent.container.tar-gzip
-#    - name: telicent.container.python
-#      version: "3.11.10"
-#    - name: telicent.container.util.pyenv-perms
-#    - name: telicent.container.util.python-entrypoint
-#    - name: telicent.container.util.cleanup.gcc
-#    - name: telicent.container.util.cleanup.pkg-python
-    - name: telicent.container.util.cleanup
-
-
-run:
-  entrypoint:
-    - "/usr/local/bin/entrypoint"
+    install:
+      - name: telicent.container.util.pkg-update
+      - name: telicent.container.util.tzdata
+      - name: telicent.container.user
+      - name: telicent.container.python311-microdnf
+      - name: telicent.container.python-env
+      #    - name: telicent.container.util.python-entrypoint-virtualenv
+      #    - name: telicent.container.tar-gzip
+      #    - name: telicent.container.python
+      #      version: "3.12.7"
+      #    - name: telicent.container.util.pyenv-perms
+      #    - name: telicent.container.util.python-entrypoint
+      #    - name: telicent.container.util.cleanup.gcc
+      - name: telicent.container.util.cleanup
