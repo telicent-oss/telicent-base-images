@@ -1,5 +1,10 @@
 # Changelog
 
+## Changes from v0.2.4 to v0.2.5
+
+### Fixes
+- invalid yaml fixed formatting  ([dae0922](https://github.com/telicent-oss/telicent-base-images/commit/dae09228e2b74def3c95fbb7816b057b375562de))
+
 ## Changes from v0.2.3 to v0.2.4
 
 ### Chores
