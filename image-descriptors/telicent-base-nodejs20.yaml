@@ -55,4 +55,5 @@ modules:
     - name: telicent.container.nodejs
     #- name: telicent.container.util.cleanup.npm
     - name: telicent.container.util.cleanup
+    - name: telicent.container.util.devtools
 

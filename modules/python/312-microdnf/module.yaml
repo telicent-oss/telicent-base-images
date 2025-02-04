@@ -18,9 +18,5 @@ packages:
     - python3.12
     - python3.12-pip
 
-modules:
-  install:
-    - name: telicent.container.user
-
 execute:
-- script: envsetup
+  - script: home-perms

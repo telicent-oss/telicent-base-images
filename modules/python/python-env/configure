@@ -1,0 +1,12 @@
+#!/bin/sh
+
+set -e
+
+chmod 755 /usr/local/bin/entrypoint /usr/bin/fix-permissions /usr/bin/rpm-file-permissions
+fix-permissions /home/user -P
+rpm-file-permissions
+chown -R user:user /home/user
+chmod -R 0750 /home/user
+df --local -P | awk '{if (NR!=1) print $6}' |
+xargs -I '{}' find '{}' -xdev -type d \( -perm -0002 -a ! -perm -1000 \) 2>/dev/null | xargs -I '{}' chmod a+t
+

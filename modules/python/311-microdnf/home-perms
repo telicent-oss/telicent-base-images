@@ -1,0 +1,4 @@
+#!/bin/sh
+python3.11 -m venv /home/user/app-venv
+chmod -R 0750 /home/user
+. /home/user/app-venv/bin/activate

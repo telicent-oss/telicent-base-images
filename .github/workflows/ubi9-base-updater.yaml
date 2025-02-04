@@ -36,8 +36,8 @@ jobs:
 
       - name: Commit Changes
         run: |
-          git config user.name "github-actions[bot-dependencies]"
-          git config user.email "41898282+github-actions[bot-dependencies]@users.noreply.github.com"
+          git config user.name "dependencies[bot]"
+          git config user.email "41898282+dependencies[bot]@users.noreply.github.com"
           git add .
           git commit -m "chore: update descriptors" || echo "No changes to commit."
 
@@ -45,8 +45,8 @@ jobs:
         uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          author: github-actions[bot-dependencies] <41898282+github-actions[bot-dependencies]@users.noreply.github.com>
-          commiter: github-actions[bot-dependencies] <41898282+github-actions[bot-dependencies]@users.noreply.github.com>
+          author: dependencies[bot] <41898282+dependencies[bot]@users.noreply.github.com>
+          commiter: dependencies[bot] <41898282+dependencies[bot]@users.noreply.github.com>
           commit-message: "chore: update descriptors ubi9 version"
           base: main
           branch: chore/update-descriptors

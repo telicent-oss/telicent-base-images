@@ -299,4 +299,4 @@ jobs:
           }
           EOF
           
-          curl -X POST -H "Content-Type: application/json" -d @payload.json "$TEAMS_WORKFLOW_URL"
+          curl -X POST -H "Content-Type: application/json" -d @payload.json "${{ env.TEAMS_WORKFLOW_URL }}"

@@ -25,7 +25,7 @@ cd $BUILD_DIR
 log "Setting up log directory and permissions..."
 
 mkdir -p /var/log/nginx
-chown -R 185:root /var/log/nginx
+chown -R user:user /var/log/nginx
 chmod -R g+w /var/log/nginx
 ln -sf /dev/stdout /var/log/nginx/access.log
 ln -sf /dev/stderr /var/log/nginx/error.log

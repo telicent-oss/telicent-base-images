@@ -53,4 +53,5 @@ modules:
     - name: telicent.container.dumb-init
       version: "1.2.5"
     - name: telicent.container.utils.cleanup.tar-gzip
+    - name: telicent.container.util.devtools
 
