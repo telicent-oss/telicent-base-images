@@ -1,5 +1,14 @@
 # Changelog
 
+## Changes from v0.2.3 to v0.2.4
+
+### Chores
+- typo in workflow  ([338c8e0](https://github.com/telicent-oss/telicent-base-images/commit/338c8e0fabc5d33fa6512c16217adb81bef3726c))
+- update descriptors (#114)  ([14effe5](https://github.com/telicent-oss/telicent-base-images/commit/14effe5c1b3149eebfefb702f657571545667643))
+- rename files (#111)  ([fce7fc7](https://github.com/telicent-oss/telicent-base-images/commit/fce7fc7324b8ab993aee2e10f6211601ef4d5bc2))
+### Fixes
+- prep python images for k8s fixed issues around perms (#113)  ([3225ff5](https://github.com/telicent-oss/telicent-base-images/commit/3225ff5e4b36d2839511314fd2aa859ca7735456))
+
 ## Changes from v0.2.3 to v0.2.3
 
 ### Chores
