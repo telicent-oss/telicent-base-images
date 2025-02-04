@@ -1,7 +1,7 @@
 # IMPORTANT: Do not add more content to this file unless you know what you are
 #            doing. This file is sourced everytime the shell session is opened.
 # This will make the python libraries work out of the box.
-# source: https://repo1.dso.mil/dsop/redhat/python/python39-ubi9/-/blob/development/scripts/usr/bin/py_enable
+# source: https://repo1.dso.mil/dsop/redhat/python/python39-ubi9/-/blob/development/scripts/opt/app-root/etc/py_enable
 unset BASH_ENV PROMPT_COMMAND ENV
 source /home/user/app-venv/bin/activate
 
