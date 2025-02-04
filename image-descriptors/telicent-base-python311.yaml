@@ -56,9 +56,8 @@ packages:
 
 modules:
   repositories:
-   - path: ../modules
+    - path: ../modules
   install:
-    install:
       - name: telicent.container.util.pkg-update
       - name: telicent.container.util.tzdata
       - name: telicent.container.user
