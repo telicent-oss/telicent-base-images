@@ -1,5 +1,12 @@
 # Changelog
 
+## Changes from v0.2.6 to v0.2.7
+
+### Chores
+- provide sample usage examples  ([5e9546b](https://github.com/telicent-oss/telicent-base-images/commit/5e9546b0da5e5ef224813d621cdeda03137bca0d))
+### Fixes
+- do not trigger release if changes do not affect images directly  ([d97f7bc](https://github.com/telicent-oss/telicent-base-images/commit/d97f7bcef678c819b7ff7eec3e707241a0d0caff))
+
 ## Changes from v0.2.5 to v0.2.6
 
 ### Fixes
