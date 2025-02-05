@@ -54,6 +54,10 @@ Images built by this tool could be found in [Telicent's DockerHub](https://hub.d
  - Local development, requires the installation of Python and cekit via pip, additional dependencies might be needed 
 depending on the builder engine of choice. See CeKit for supported build engines.
 
+### Releases
+
+Now only changes affecting the images directly would trigger GH release, this behaviour was changed in 
+[cdb097f6 - commit](https://github.com/telicent-oss/telicent-base-images/commit/cdb097f6f8b36e76394262c4c600561363154be6)
 
 ### General note on images
 
@@ -91,6 +95,11 @@ currently only the secure file is touched.
 
 Can be run/configured by non-root users. See [modules/nginx/127/configure.sh](modules/nginx/127/configure.sh)
 for specific changes made. Default open port 8080
+
+Nginx is installed under /usr/local/nginx.
+Default logging as per defualt conf is /usr/local/nginx/logs...
+Default logging needs updated to /var/log/nginx/access.log | error.log in order to be propagated to docker.
+
 
 ### Node image
 
