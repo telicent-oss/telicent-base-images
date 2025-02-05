@@ -22,8 +22,7 @@ jobs:
 
   create-release-pr:
     needs: [changed-images]
-    if: ${{ github.event.head_commit.author.name != 'github-actions[bot]'}}
-
+    if: ${{ github.event.head_commit.author.name != 'github-actions[bot]' && needs.detect-changed-images.outputs.images != '["[]"]' }}
     name: create-or-update-release-pr
     runs-on: ubuntu-latest
     steps:
