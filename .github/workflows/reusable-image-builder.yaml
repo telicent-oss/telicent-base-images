@@ -223,7 +223,7 @@ jobs:
     steps:
       - name: Notify Teams
         env:
-          TEAMS_WORKFLOW_URL: ${{ secrets.TEAMS_WORKFLOW_URL }}
+          TEAMS_WORKFLOW_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
           IMAGE_NAME: ${{ needs.build-push-image.outputs.image_name }}
           IMAGE_VERSION: ${{ needs.build-push-image.outputs.image_version }}
           JOB_STATUS: ${{ needs.test_inputs.result }}
