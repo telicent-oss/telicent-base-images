@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Hello from telicent-nginx!</title>
+</head>
+<body>
+  <h1>Hello, world!</h1>
+  <p>Your telicent-nginx is working!</p>
+  <p>location /hello {
+        return 200 "Hello from the advanced telicent-nginx example!\n";
+    }
+
+     location /api/ {
+        proxy_pass https://telicent.io/;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+     }</p>
+
+</body>
+</html>
