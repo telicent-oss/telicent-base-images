@@ -1,5 +1,10 @@
 # Changelog
 
+## Changes from v0.2.5 to v0.2.6
+
+### Fixes
+- teams reporting  ([8943c43](https://github.com/telicent-oss/telicent-base-images/commit/8943c43b6fc2c6b44d280ee0ce12c54e0b55f1cc))
+
 ## Changes from v0.2.4 to v0.2.5
 
 ### Fixes
