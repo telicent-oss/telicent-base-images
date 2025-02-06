@@ -1,5 +1,12 @@
 # Changelog
 
+## Changes from v0.2.7 to v0.2.8
+
+### Chores
+- update descriptors (#118)  ([3646c85](https://github.com/telicent-oss/telicent-base-images/commit/3646c854541d2d0febc26a7515db5b8ebe63db72))
+### Fixes
+- release workflow not triggering when new base is detected  ([6649e5c](https://github.com/telicent-oss/telicent-base-images/commit/6649e5c7489c1c95d0e6b4b67ecc9d5c7a3b12fc))
+
 ## Changes from v0.2.6 to v0.2.7
 
 ### Chores
