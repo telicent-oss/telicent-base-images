@@ -45,8 +45,8 @@ jobs:
         uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          author: dependencies[bot] <41898282+dependencies[bot]@users.noreply.github.com>
-          committer: dependencies[bot] <41898282+dependencies[bot]@users.noreply.github.com>
+          author: "dependencies[bot] <41898282+dependencies[bot]@users.noreply.github.com>"
+          committer: "dependencies[bot] <41898282+dependencies[bot]@users.noreply.github.com>"
           commit-message: "chore: update descriptors ubi9 version"
           base: main
           branch: chore/update-descriptors
