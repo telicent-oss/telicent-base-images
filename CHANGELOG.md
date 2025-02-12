@@ -1,5 +1,10 @@
 # Changelog
 
+## Changes from v0.2.8 to v0.2.9
+
+### Fixes
+- fixes around cve-2022-49043  ([0f0fdbc](https://github.com/telicent-oss/telicent-base-images/commit/0f0fdbc06b94a30b3d5fcb421bf97459c19e363e))
+
 ## Changes from v0.2.7 to v0.2.8
 
 ### Chores
