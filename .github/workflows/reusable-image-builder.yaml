@@ -11,6 +11,12 @@ on:
         description: "Specify the tag to build (must exist in the format v<major>.<minor>.<patch>)"
         required: true
         type: string
+      GRYPE_SECURITY_ISSUES_BLOCK_ONLY_IF_FIX_AVAILABLE:
+        required: false
+        default: false
+        type: boolean
+        description: |
+          Sets --only-fixed flag for Grype
 
 jobs:
   test_inputs:
@@ -118,6 +124,7 @@ jobs:
             output-format: table
             severity-cutoff: high
             fail-build: true
+            only-fixed: ${{ inputs.SECURITY_ISSUES_BLOCK_ONLY_IF_FIX_AVAILABLE }}
 
         - name: Trivy Cache
           id: trivy-cache

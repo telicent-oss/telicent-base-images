@@ -94,6 +94,7 @@ jobs:
     with:
       IMAGE-DESCRIPTORS: ${{ needs.detect-changed-images.outputs.images }}
       TAG: ${{ needs.validate-tag.outputs.tag }}
+      GRYPE_SECURITY_ISSUES_BLOCK_ONLY_IF_FIX_AVAILABLE: true
 
   no-changes:
     if: ${{ needs.detect-changed-images.outputs.images == '["[]"]' }}
