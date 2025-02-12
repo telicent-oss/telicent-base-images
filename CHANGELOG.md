@@ -1,5 +1,14 @@
 # Changelog
 
+## Changes from v0.2.9 to v0.2.10
+
+### Chores
+- manual version bump  ([1336f50](https://github.com/telicent-oss/telicent-base-images/commit/1336f50d651c0bf4e3b6fbc30a9bdbe3db35e2d4))
+- allow builds to pass when cve has no fixes  ([75a3c0b](https://github.com/telicent-oss/telicent-base-images/commit/75a3c0b2980d10cc5118c474ec9d8e59c08d9766))
+- allow builds to pass when cve has no fixes  ([fe1a7f3](https://github.com/telicent-oss/telicent-base-images/commit/fe1a7f3c028002deaaabe83e948861e21339e086))
+### Fixes
+- make sure teams notification is sent  ([3d56070](https://github.com/telicent-oss/telicent-base-images/commit/3d56070d9799a083d5c17afb24459670a6135d77))
+
 ## Changes from v0.2.8 to v0.2.9
 
 ### Fixes
