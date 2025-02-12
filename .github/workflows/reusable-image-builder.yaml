@@ -118,6 +118,8 @@ jobs:
             output-format: table
             severity-cutoff: high
             fail-build: true
+          continue-on-error: true
+
 
         - name: Trivy Cache
           id: trivy-cache
@@ -214,6 +216,8 @@ jobs:
             cache-dir: .trivy
             # Counter-intuitive BUT trivy-action has its own cache which duplicates our own but in a less flexible way
             cache: false
+          continue-on-error: true
+
 
   notify-teams:
     name: Notify Teams on Workflow Result

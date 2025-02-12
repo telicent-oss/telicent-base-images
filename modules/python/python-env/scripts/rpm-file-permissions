@@ -1,5 +1,6 @@
 #!/bin/sh
 # source: https://repo1.dso.mil/dsop/redhat/python/python39-ubi9/-/blob/development/scripts/usr/bin/rpm-file-permissions?ref_type=heads
+# reset original permissions defined by rpm specs - in the directories below
 CHECK_DIRS="/ /opt /etc /usr /usr/bin /usr/lib /usr/lib64 /usr/share /usr/libexec /home/user"
 
 rpm_format="[%{FILESTATES:fstate}  %7{FILEMODES:octal} %{FILENAMES:shescape}\n]"

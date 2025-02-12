@@ -7,6 +7,8 @@ fix-permissions /home/user -P
 rpm-file-permissions
 chown -R user:user /home/user
 chmod -R 0750 /home/user
+# Goes through the entire local FS, all directories which are open for writing by anyone but lack protective sticky bit
+# are updated with a sticky bit to prevent from users cannot delete or rename files they do not own
 df --local -P | awk '{if (NR!=1) print $6}' |
 xargs -I '{}' find '{}' -xdev -type d \( -perm -0002 -a ! -perm -1000 \) 2>/dev/null | xargs -I '{}' chmod a+t
 
