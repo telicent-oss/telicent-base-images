@@ -1,5 +1,11 @@
 # Changelog
 
+## Changes from v0.2.13 to v0.2.14
+
+### Fixes
+- teams notification sends success message on failure  ([12adc65](https://github.com/telicent-oss/telicent-base-images/commit/12adc6531f2ecf4d8e31b2eb19c06e0e31380226))
+- address cves from setuptools  ([9e4318b](https://github.com/telicent-oss/telicent-base-images/commit/9e4318bd359239c034a5d511ce13c0b0e7f23676))
+
 ## Changes from v0.2.12 to v0.2.13
 
 ### Chores
