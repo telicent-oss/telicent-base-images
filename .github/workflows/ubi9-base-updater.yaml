@@ -39,7 +39,7 @@ jobs:
           git config user.name "dependencies[bot]"
           git config user.email "41898282+dependencies[bot]@users.noreply.github.com"
           git add .
-          git commit -m "chore: update descriptors" || echo "No changes to commit."
+          git commit -m "chore(bot): update base for descriptors" || echo "No changes to commit."
 
       - name: Open or Update PR
         uses: peter-evans/create-pull-request@v7
@@ -47,10 +47,10 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           author: "dependencies[bot] <41898282+dependencies[bot]@users.noreply.github.com>"
           committer: "dependencies[bot] <41898282+dependencies[bot]@users.noreply.github.com>"
-          commit-message: "chore: update descriptors ubi9 version"
+          commit-message: "chore(bot): update descriptors version"
           base: main
           branch: chore/update-descriptors
-          title: "chore(bot): update ubi9 version in descriptors"
+          title: "chore(bot): update base for descriptors"
           body: |
             This PR updates the descriptors using the latest released versions of ubi9 minimal.
           labels: "chore"

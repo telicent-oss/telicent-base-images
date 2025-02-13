@@ -14,7 +14,7 @@ jobs:
   changed-images:
     name: Detect Changes
     #&& !contains(github.event.head_commit.message, 'release')
-    if: ${{ github.event.head_commit.author.name != 'github-actions[bot]'}}
+    if: ${{ github.event.head_commit.author.name != 'github-actions[bot]' || contains(github.event.head_commit.message, 'chore(bot)')}}
     uses: ./.github/workflows/detect-changed-images.yaml
     with:
      TAG_VERSION: ${{ github.ref }}
@@ -22,7 +22,7 @@ jobs:
 
   create-release-pr:
     needs: [changed-images]
-    if: ${{ github.event.head_commit.author.name != 'github-actions[bot]' && needs.changed-images.outputs.images != '["[]"]' }}
+    if: ${{ (github.event.head_commit.author.name != 'github-actions[bot]' || contains(github.event.head_commit.message, 'chore(bot)')) && needs.changed-images.outputs.images != '["[]"]' }}
     name: create-or-update-release-pr
     runs-on: ubuntu-latest
     steps:
