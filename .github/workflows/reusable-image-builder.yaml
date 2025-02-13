@@ -233,7 +233,7 @@ jobs:
           TEAMS_WORKFLOW_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
           IMAGE_NAME: ${{ needs.build-push-image.outputs.image_name }}
           IMAGE_VERSION: ${{ needs.build-push-image.outputs.image_version }}
-          JOB_STATUS: ${{ needs.test_inputs.result }}
+          JOB_STATUS: ${{ needs.build-push-image.result }}
         run: |
           build_url="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           if [ "$JOB_STATUS" = "success" ]; then
