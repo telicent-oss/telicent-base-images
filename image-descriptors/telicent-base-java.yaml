@@ -46,7 +46,6 @@ modules:
    - path: ../modules
   install:
     - name: telicent.container.util.pkg-update
-    - name: telicent.container.patches.cve.2022-49043
     - name: telicent.container.util.tzdata
     - name: telicent.container.tar-gzip
     - name: telicent.container.openjdk

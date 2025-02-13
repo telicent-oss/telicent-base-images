@@ -59,11 +59,11 @@ modules:
     - path: ../modules
   install:
       - name: telicent.container.util.pkg-update
-      - name: telicent.container.patches.cve.2022-49043
       - name: telicent.container.util.tzdata
       - name: telicent.container.user
       - name: telicent.container.python311-microdnf
       - name: telicent.container.python-env
+      # needed for non microdnf installs
       #    - name: telicent.container.util.python-entrypoint-virtualenv
       #    - name: telicent.container.tar-gzip
       #    - name: telicent.container.python

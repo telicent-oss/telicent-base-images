@@ -1,6 +1,11 @@
 #!/bin/sh
+python3.11 -m pip install --upgrade pip
 python3.11 -m pip install --upgrade setuptools
 python3.11 -m pip install --upgrade wheel
 python3.11 -m venv /home/user/app-venv
 chmod -R 0750 /home/user
 . /home/user/app-venv/bin/activate
+python3.11 -m pip install --upgrade pip
+python3.11 -m pip install --upgrade wheel
+python3.11 -m pip install --upgrade setuptools
+

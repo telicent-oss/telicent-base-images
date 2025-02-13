@@ -49,7 +49,7 @@ modules:
   repositories:
    - path: ../modules
   install:
-    - name: telicent.container.patches.cve.2022-49043
+    - name: telicent.container.util.pkg-update
     - name: telicent.container.nginx
     - name: telicent.container.util.cleanup.gcc
     - name: telicent.container.util.cleanup
