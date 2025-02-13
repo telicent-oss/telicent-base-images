@@ -1,5 +1,14 @@
 # Changelog
 
+## Changes from v0.2.10 to v0.2.11
+
+### Chores
+- update base for descriptors (#125)  ([f81f654](https://github.com/telicent-oss/telicent-base-images/commit/f81f654e0abea4a75eaea52d29c10491ce560e52))
+- change commit message from bots  ([fdf7f33](https://github.com/telicent-oss/telicent-base-images/commit/fdf7f3321d6e857d0af9a7efcb54c5228a20a86d))
+- update descriptors (#123)  ([766d332](https://github.com/telicent-oss/telicent-base-images/commit/766d33234f56ea25cb3dc2424a71b3cca283bb00))
+### Others
+- Revert "chore: update descriptors (#123)" (#124) ([52122d2](https://github.com/telicent-oss/telicent-base-images/commit/52122d21a17998567e327776c070a731b44178e0))
+
 ## Changes from v0.2.9 to v0.2.10
 
 ### Chores
