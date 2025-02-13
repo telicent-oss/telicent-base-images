@@ -1,5 +1,10 @@
 # Changelog
 
+## Changes from v0.2.12 to v0.2.13
+
+### Chores
+- update base for descriptors (#128)  ([98d60c0](https://github.com/telicent-oss/telicent-base-images/commit/98d60c009f22f217b5fa3a73bc4b9ad2b09dc290))
+
 ## Changes from v0.2.11 to v0.2.12
 
 ### Fixes
