@@ -1,5 +1,10 @@
 # Changelog
 
+## Changes from v0.2.11 to v0.2.12
+
+### Fixes
+- upgrade setuptools in older python  ([0322827](https://github.com/telicent-oss/telicent-base-images/commit/0322827f537985e16071f23e4dca0e6a77d17e44))
+
 ## Changes from v0.2.10 to v0.2.11
 
 ### Chores
