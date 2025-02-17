@@ -1,5 +1,11 @@
 # Changelog
 
+## Changes from v0.2.14 to v0.2.15
+
+### Fixes
+- correct nodever in nodejs module (#133)  ([58d4a43](https://github.com/telicent-oss/telicent-base-images/commit/58d4a43f131c021a29f8eb49d8b1d9e17c5f51d0))
+- trigger install of latest nodejs 20 to resolve CVE-2025-22150 and CVE-2025-23085  ([a5cb515](https://github.com/telicent-oss/telicent-base-images/commit/a5cb5153c7241e6db5a3716ecd43f38bffd8403d))
+
 ## Changes from v0.2.13 to v0.2.14
 
 ### Fixes
