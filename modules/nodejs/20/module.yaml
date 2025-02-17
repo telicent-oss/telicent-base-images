@@ -2,7 +2,7 @@ schema_version: 1
 
 name: "telicent.container.nodejs"
 description: "Installs specified NodeJS version."
-version: &nodever "3.13.0"
+version: &nodever "20"
 
 labels:
 - name: "org.telicent.product"
