@@ -3,7 +3,11 @@ schema_version: 1
 from: "registry.access.redhat.com/ubi9-minimal:9.5-1739420147"
 
 name: &name "telicent-nginx1.24"
+<<<<<<< HEAD
 version: &version "1.0.1"
+=======
+version: &version "1.0.0"
+>>>>>>> 8217140 (feat: attempt nginx 1.24 from redhat package source)
 description: "Telicent's NGINX base image built on Red Hat UBI9 minimal."
 
 # Ensure compliance with Red Hat UBI EULA
