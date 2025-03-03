@@ -1,0 +1,29 @@
+schema_version: 1
+
+name: "telicent.container.nginx-microdnf"
+version: "1.0.0"
+
+description: "Builds and installs NGINX 1.26 on UBI9 Minimal and configures it to run as a non-root user (GUID 185)."
+
+envs:
+  - name: "NGINX_VERSION"
+    value: "1.24"
+  - name: UID
+    value: "185"
+
+modules:
+  repositories:
+    - path: ../modules
+  install:
+    - name: telicent.container.util.pkg-nginx
+    - name: telicent.container.util.pkg-update
+    - name: telicent.container.util.tzdata
+    - name: telicent.container.tar-gzip
+    - name: telicent.container.user
+
+packages:
+  install:
+    - nginx
+
+execute:
+  - script: configure.sh

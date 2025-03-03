@@ -1,0 +1,11 @@
+schema_version: 1
+name: telicent.container.util.pkg-nginx
+version: "1.0"
+description: "Enable Nginx 1.24 module stream"
+
+envs:
+  - name: "NGINX_VERSION"
+    value: "1.24"
+
+execute:
+  - script: exec.sh
