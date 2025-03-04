@@ -51,6 +51,5 @@ modules:
   install:
     - name: telicent.container.util.pkg-update
     - name: telicent.container.nginx-microdnf
-    - name: telicent.container.util.cleanup.gcc
     - name: telicent.container.util.cleanup
     - name: telicent.container.util.devtools
