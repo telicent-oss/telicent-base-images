@@ -48,5 +48,4 @@ usermod -a -G $UID root
 log "Cleaning up build environment..."
 cd /
 
-ln -s $INSTALL_PREFIX/sbin/nginx /usr/sbin/nginx
 log "NGINX $NGINX_VERSION installation complete and ready for rootless operation!"
