@@ -1,5 +1,10 @@
 # Changelog
 
+## Changes from v0.2.15 to v0.3.0
+
+### Features
+- attempt nginx 1.24 from redhat package source (#134)  ([9a4701c](https://github.com/telicent-oss/telicent-base-images/commit/9a4701cecde2409ce6e5898b6a260e51e0789c2a))
+
 ## Changes from v0.2.14 to v0.2.15
 
 ### Fixes
