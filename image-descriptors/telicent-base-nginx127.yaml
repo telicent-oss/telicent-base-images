@@ -34,7 +34,7 @@ labels:
     value: "Telicent OSS"
 
 ports:
-- value: 8080
+  - value: 8080
 
 envs:
   - name: "LANG"
@@ -47,7 +47,7 @@ packages:
 
 modules:
   repositories:
-   - path: ../modules
+    - path: ../modules
   install:
     - name: telicent.container.util.pkg-update
     - name: telicent.container.nginx

@@ -3,8 +3,7 @@ schema_version: 1
 name: "telicent.container.nginx"
 version: "1.0.0"
 
-description: "Builds and installs NGINX 1.26 on UBI9 Minimal and configures it to run as a non-root user (GUID 185)."
-
+description: "Builds and installs NGINX 1.27 on UBI9 Minimal and configures it to run as a non-root user (GUID 185)."
 
 envs:
   - name: "NGINX_VERSION"
@@ -39,7 +38,7 @@ envs:
 
 modules:
   repositories:
-   - path: ../modules
+    - path: ../modules
   install:
     - name: telicent.container.util.pkg-update
     - name: telicent.container.util.tzdata
