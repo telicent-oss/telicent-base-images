@@ -1,5 +1,10 @@
 # Changelog
 
+## Changes from v0.3.2 to v0.3.3
+
+### Fixes
+- support old version of pid location alongside newer one (#140)  ([e1e7ece](https://github.com/telicent-oss/telicent-base-images/commit/e1e7ecea4df2047ddd3a38f85f9a8d95685fc318))
+
 ## Changes from v0.3.1 to v0.3.2
 
 ### Fixes
