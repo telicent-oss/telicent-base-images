@@ -1,5 +1,10 @@
 # Changelog
 
+## Changes from v0.3.1 to v0.3.2
+
+### Fixes
+- remove redundant gcc cleanup module from nginx package install (#138)  ([2749deb](https://github.com/telicent-oss/telicent-base-images/commit/2749deb16bac7675836f2a4b8ad27c43769eccbc))
+
 ## Changes from v0.3.0 to v0.3.1
 
 ### Fixes
