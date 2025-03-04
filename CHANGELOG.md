@@ -1,5 +1,10 @@
 # Changelog
 
+## Changes from v0.3.0 to v0.3.1
+
+### Fixes
+- remove redundant symlink creation (#136)  ([cf4bf9c](https://github.com/telicent-oss/telicent-base-images/commit/cf4bf9c89559cde63e3a22d758f4fc3e6fa46698))
+
 ## Changes from v0.2.15 to v0.3.0
 
 ### Features
