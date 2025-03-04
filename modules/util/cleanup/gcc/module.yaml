@@ -3,7 +3,7 @@ schema_version: 1
 name: "telicent.container.util.cleanup.gcc"
 version: "1.0.0"
 
-description: "Cleans up gcc and other compliation tools to reduce image size following complication of binary from source."
+description: "Cleans up gcc and other compilation tools/libraries to reduce image size following complication of binary from source."
 
 packages:
   remove:
