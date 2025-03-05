@@ -1,5 +1,10 @@
 # Changelog
 
+## Changes from v0.3.4 to v0.3.5
+
+### Fixes
+- cleanup gcc more aggressively (#144)  ([4a605a8](https://github.com/telicent-oss/telicent-base-images/commit/4a605a8e85803f0689111d214827526affe58349))
+
 ## Changes from v0.3.3 to v0.3.4
 
 ### Fixes
