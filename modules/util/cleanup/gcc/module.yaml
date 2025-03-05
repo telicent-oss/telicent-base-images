@@ -16,3 +16,10 @@ packages:
     - kernel-headers
     - make
     - cpp
+    - binutils
+    - binutils-gold
+    - elfutils-debuginfod-client
+    - elfutils-default-yama-scope
+    - elfutils-libelf
+    - elfutils-libs
+    - glibc-devel
