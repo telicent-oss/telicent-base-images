@@ -1,5 +1,10 @@
 # Changelog
 
+## Changes from v0.3.3 to v0.3.4
+
+### Fixes
+- reduce software footprint after compilation (#142)  ([013a644](https://github.com/telicent-oss/telicent-base-images/commit/013a644446efac88ca4abe56a5e852df8327ac46))
+
 ## Changes from v0.3.2 to v0.3.3
 
 ### Fixes
