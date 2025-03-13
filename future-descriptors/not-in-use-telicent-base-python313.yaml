@@ -1,6 +1,6 @@
 schema_version: 1
 
-from: "registry.access.redhat.com/ubi9-minimal:9.5-1731593028"  # User versioned image to allow dependabot updates
+from: "registry.access.redhat.com/ubi9-minimal:9.5.1741850109"  # User versioned image to allow dependabot updates
 
 name: &name "telicent-python3.13"
 version: &version "1.0.4"
