@@ -1,5 +1,10 @@
 # Changelog
 
+## Changes from v0.3.5 to v0.3.6
+
+### Fixes
+- updating Red Hat UBI-9 image.  ([e2d85fc](https://github.com/telicent-oss/telicent-base-images/commit/e2d85fc5a27e1c41ed2c435781aa4fc9cb572fe8))
+
 ## Changes from v0.3.4 to v0.3.5
 
 ### Fixes
