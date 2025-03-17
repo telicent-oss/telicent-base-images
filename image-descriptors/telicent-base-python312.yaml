@@ -1,5 +1,6 @@
 schema_version: 1
 
+Nothing to update, current descriptor version is 9.5-1741850109, latest remote version is 9.5-1741850109
 from: "redhat/ubi9-minimal:9.5-1741850109"
 
 name: &name "telicent-python3.12"
