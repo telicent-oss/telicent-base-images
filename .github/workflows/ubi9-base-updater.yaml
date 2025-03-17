@@ -32,7 +32,7 @@ jobs:
 
       - name: Run Descriptor Updater
         run: |
-          python descriptor-updater.py
+          ./descriptor-updater-alternative.sh
 
       - name: Commit Changes
         run: |

@@ -68,7 +68,7 @@ def update_image_version(file_path, registry_url, image_name):
 
     print(f"Updated {file_path} to use {image_name}:{latest_tag}")
 
-
+# Checks against Redhat Registry for image. Use descriptor-updater-alternative.sh fo Docker hub.
 if __name__ == '__main__':
     registry_url = "https://registry.access.redhat.com/v2"
     image_name = "ubi9-minimal"
