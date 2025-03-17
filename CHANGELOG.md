@@ -1,5 +1,11 @@
 # Changelog
 
+## Changes from v0.3.6 to v0.3.7
+
+### Fixes
+- pull red hat images from docker hub rather than from red hat registry. Update workflow to use alternate source & script for image  ([34bb89a](https://github.com/telicent-oss/telicent-base-images/commit/34bb89ad985aa950ddc965cd9333ef22dc1553df))
+- pull red hat images from docker hub rather than from red hat registry.  ([2f7d970](https://github.com/telicent-oss/telicent-base-images/commit/2f7d970cc4e2552dd87856c22e943fd9d7fcd99f))
+
 ## Changes from v0.3.5 to v0.3.6
 
 ### Fixes
