@@ -45,14 +45,14 @@ update_image_version() {
 
   tags_json=$(curl -s "${registry_url}/repositories/${image_name}/tags")
   if [[ $? -ne 0 ]]; then
-    echo "Error fetching tags for ${image_name}"
+    echo "Error fetching tags for ${image_name}" >&2 # Redirect to stderr
     return 1
   fi
 
   latest_tag=$(get_latest_non_sha_non_source "$tags_json")
 
   if [[ -z "$latest_tag" ]]; then
-    echo "No valid tags found for ${image_name}"
+    echo "No valid tags found for ${image_name}" >&2 # Redirect to stderr
     return 1
   fi
 
@@ -64,7 +64,7 @@ update_image_version() {
 
       # shellcheck disable=SC1073
       if [[ ( -z "$current_version_tag" ) || (! "$current_version_tag" =~ - ) ]]; then
-        echo "Skipping line: $current_line. No versioning found."
+        echo "Skipping line: $current_line. No versioning found." >&2 # Redirect to stderr
         echo "$current_line"
         continue
       fi
@@ -77,16 +77,16 @@ update_image_version() {
 
       if [[ "$(echo "$latest_version >= $current_version" | bc)" -eq 1 ]]; then
         if [[ "$latest_tag_num" == "$current_tag" && "$latest_version" == "$current_version" ]]; then
-          echo "Nothing to update, current descriptor version is $current_version_tag, latest remote version is $latest_tag"
+          echo "Nothing to update, current descriptor version is $current_version_tag, latest remote version is $latest_tag" >&2 # Redirect to stderr
           echo "$current_line"
           continue
         elif [[ "$latest_tag_num" -lt "$current_tag" && "$latest_version" == "$current_version" ]]; then
-          echo "Cannot update version with older tag. Current=$current_tag, Candidate=$latest_tag_num"
+          echo "Cannot update version with older tag. Current=$current_tag, Candidate=$latest_tag_num" >&2 # Redirect to stderr
           echo "$current_line"
           continue
         fi
       else
-        echo "Cannot update version older than the current one. Current=$current_version, Candidate=$latest_version"
+        echo "Cannot update version older than the current one. Current=$current_version, Candidate=$latest_version" >&2 # Redirect to stderr
         echo "$current_line"
         continue
       fi
@@ -94,13 +94,13 @@ update_image_version() {
       updated_line="from: \"${image_prefix}:${latest_tag}\""
       echo "$updated_line"
 
-      echo "Updated $current_version_tag to ${image_prefix}:${latest_tag}"
+      echo "Updated $current_version_tag to ${image_prefix}:${latest_tag}" >&2 # Redirect to stderr
     else
       echo "$current_line"
     fi
   done < "$file_path" > "${file_path}.tmp" && mv "${file_path}.tmp" "$file_path"
 
-  echo "Updated ${file_path} to use ${image_name}:${latest_tag}"
+  echo "Updated ${file_path} to use ${image_name}:${latest_tag}" >&2 # Redirect to stderr
 }
 
 # Main script
