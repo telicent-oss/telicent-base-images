@@ -1,4 +1,4 @@
-name: descriptor-updater
+name: Red Hat UBI9 minimal image update check
 
 on:
   workflow_dispatch:
