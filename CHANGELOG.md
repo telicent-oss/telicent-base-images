@@ -1,5 +1,15 @@
 # Changelog
 
+## Changes from v0.3.7 to v0.3.8
+
+### Chores
+- update base for descriptors  ([77903b4](https://github.com/telicent-oss/telicent-base-images/commit/77903b4bf16e124236c9d11416dc3ef8d83f31d0))
+### Fixes
+- disabling (for time being) images that are not in active development or use, thus unlikely to be fixed.  ([54533b8](https://github.com/telicent-oss/telicent-base-images/commit/54533b87dd1ed6dbd515c964f0491efc30349b09))
+- Updating script so as not to write log messages to the file we are updating.  ([c1ef1ab](https://github.com/telicent-oss/telicent-base-images/commit/c1ef1abda515c147b8d44a2bce3d054ee91d7536))
+### Others
+- adding check of existing published Java Images.  Plus some task & job name tidy-up.  ([d549656](https://github.com/telicent-oss/telicent-base-images/commit/d549656eb61d9d327723503916aa8e0eba7253b4))
+
 ## Changes from v0.3.6 to v0.3.7
 
 ### Fixes
