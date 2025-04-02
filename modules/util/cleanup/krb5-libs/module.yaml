@@ -1,0 +1,13 @@
+schema_version: 1
+
+name: "telicent.container.util.cleanup.krb5-libs"
+version: "1.0.0"
+
+# We don't use Kerberos authentication for anything, nor is this package required
+# by anything else.  Plus the version in the RedHat UBI base has CVE-2022-37967 
+# which is rated High so explicitly remove it
+description: "Removes krb5-libs from OS"
+
+packages:
+  remove:
+    - krb5-libs
