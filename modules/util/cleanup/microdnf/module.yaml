@@ -1,9 +1,9 @@
 schema_version: 1
 
-name: "telicent.container.util.cleanup"
+name: "telicent.container.util.cleanup.microdnf"
 version: "1.0.0"
 
-description: "Cleans up microdnf cache, metadata and gcc to reduce image size."
+description: "Cleans up microdnf cache and metadata to reduce image size."
 
 execute:
   - script: cleanup
