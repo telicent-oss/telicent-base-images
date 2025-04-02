@@ -7,25 +7,28 @@ The **source code** for this project is licensed under the Apache License, Versi
 You can view the full text of the Apache License [here](http://www.apache.org/licenses/LICENSE-2.0).
 
 ### Built Image License
-When building container images using this source code, please note that the resulting container image is **not** licensed under Apache 2.0.
-Instead, the image is subject to the **Red Hat Universal Base Image (UBI) 9 End User License Agreement (EULA)**. 
-You can find the UBI EULA [here](https://www.redhat.com/en/about-red-hat-end-user-license-agreements#UBI).
+When building container images using this source code, please note that the resulting container image is **not**
+licensed under Apache 2.0. Instead, the image is subject to the **Red Hat Universal Base Image (UBI) 9 End User License
+Agreement (EULA)**. You can find the UBI EULA
+[here](https://www.redhat.com/en/about-red-hat-end-user-license-agreements#UBI).
 
 
 > [!IMPORTANT]
 > ### Licensing Considerations for RHEL Users
 >
-> If this project is built on a licensed Red Hat Enterprise Linux (RHEL) host, the build process may enable full RHEL repositories. 
-> This can result in the installation of packages that are covered by the Red Hat Enterprise Linux Subscription Agreement. 
+> If this project is built on a licensed Red Hat Enterprise Linux (RHEL) host, the build process may enable full RHEL
+> repositories. This can result in the installation of packages that are covered by the Red Hat Enterprise Linux
+> Subscription Agreement. 
 >
 > #### Why This Matters:
-> - **Running on non-RHEL Hosts**: If you install packages from full RHEL repositories during the build on a RHEL host, those packages may not be legally run on non-RHEL systems without a valid RHEL subscription.
-> - **Avoid Licensing Violations**: Be cautious when adding packages. Ensure that you only install packages that are allowed under the UBI EULA if you intend to run the container on non-RHEL systems.
+> - **Running on non-RHEL Hosts**: If you install packages from full RHEL repositories during the build on a RHEL host,
+>   those packages may not be legally run on non-RHEL systems without a valid RHEL subscription.
+> - **Avoid Licensing Violations**: Be cautious when adding packages. Ensure that you only install packages that are
+>   allowed under the UBI EULA if you intend to run the container on non-RHEL systems.
 
-For more details on the implications of adding software to a UBI container, please refer to the official Red Hat documentation: 
-[Add Software to a Running UBI Container](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/9/html-single/building_running_and_managing_containers/index/#add_software_to_a_running_ubi_container).
-#
-
+For more details on the implications of adding software to a UBI container, please refer to the official Red Hat
+documentation: [Add Software to a Running UBI
+Container](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/9/html-single/building_running_and_managing_containers/index/#add_software_to_a_running_ubi_container).
 
 ## Project overview
 
@@ -56,8 +59,15 @@ depending on the builder engine of choice. See CeKit for supported build engines
 
 ### Releases
 
-Now only changes affecting the images directly would trigger GH release, this behaviour was changed in 
-[cdb097f6 - commit](https://github.com/telicent-oss/telicent-base-images/commit/cdb097f6f8b36e76394262c4c600561363154be6)
+Only changes affecting the images directly would trigger GH release when merging into `main`, this behaviour was 
+changed in [cdb097f6 - commit][cdb097f6]
+
+[cdb097f6]: https://github.com/telicent-oss/telicent-base-images/commit/cdb097f6f8b36e76394262c4c600561363154be6
+
+**NB** Also in order for a release to be automatically triggered there **MUST** be at least one conventional commit
+style commit message in the commits merged into `main`, i.e. `feat`, `fix`, `chore` etc.  See
+[`tag_version.sh`](tag_version.sh) script for the exact logic used to determine if there are relevant commits, or if you
+want to change it in future.
 
 ### General note on images
 
@@ -76,7 +86,6 @@ Upon running an image the workdir is set to `/home/user`
 
 
 ### Python Image
-
 
 Python base image starts up in a virtual environment, there is no need to create one. Only Python and pip are installed.
 There are additional packages that are relevant which can be installed from the appstream and baseos repos.
