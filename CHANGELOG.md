@@ -1,5 +1,15 @@
 # Changelog
 
+## Changes from v0.3.8 to v0.3.9
+
+### Chores
+- Update README re: conventional commits  ([a2ca838](https://github.com/telicent-oss/telicent-base-images/commit/a2ca8382af0f8c13dde51e5a15c5bc1afffd172f))
+### Fixes
+- Apply krb5-libs removal to all images (CORE-774)  ([5788d58](https://github.com/telicent-oss/telicent-base-images/commit/5788d580ea9636b9602390b3698369684d7cda41))
+- Skip release prep steps if no changes to release (CORE-774)  ([bc5dbfb](https://github.com/telicent-oss/telicent-base-images/commit/bc5dbfb3c39dc24769ce4c5fa0f637454ada7754))
+### Others
+- Remove krb5-libs to resolve CVE-2022-37967 (CORE-744) ([d7b8958](https://github.com/telicent-oss/telicent-base-images/commit/d7b8958240891eb291003480f0fc6308e83a9901))
+
 ## Changes from v0.3.7 to v0.3.8
 
 ### Chores
