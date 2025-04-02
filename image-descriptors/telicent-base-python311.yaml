@@ -72,4 +72,3 @@ modules:
       #    - name: telicent.container.util.python-entrypoint
       #    - name: telicent.container.util.cleanup.gcc
       - name: telicent.container.util.cleanup.microdnf
-      - name: telicent.container.util.cleanup.krb5-libs
