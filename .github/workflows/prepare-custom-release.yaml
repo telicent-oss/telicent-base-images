@@ -33,11 +33,20 @@ jobs:
 
       - name: Determine Next Release Version
         id: determine-version
+        # NB - This sets new_version both as an environment variable, and as a step output
+        #      If no eligible changes are detected then the version won't be bumped and we'll
+        #      use the lack of output to skip the subsequent steps
         run: |
             ./tag_version.sh 
 
+      - name: Issue Warning if Merging with No Releasable changes
+        if: ${{ steps.determine-version.outputs.new_version == '' }}
+        run: |
+          echo "::warning title=No Releasable Changes Detected::No Releasable Changes were detected, remember you MUST use conventional commit style messages for releases to be automatically generated!"
+
       - name: Update Versions in Image Descriptors
         id: update-versions
+        if: ${{ steps.determine-version.outputs.new_version != '' }}
         run: |
           echo "Updating image descriptors for version ${{ env.new_version }}."
           echo "Images to update: ${{ needs.changed-images.outputs.images }}"
@@ -45,10 +54,12 @@ jobs:
 
       - name: Append Changelog
         id: generate-changelog
+        if: ${{ steps.determine-version.outputs.new_version != '' }}
         run: |
           ./generate_changelog.sh
 
       - name: Commit Changes and Create Release Branch
+        if: ${{ steps.determine-version.outputs.new_version != '' }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -56,6 +67,7 @@ jobs:
           git commit -m "chore: prepare release ${{ env.new_version }}" || echo "No changes to commit."
 
       - name: Open or Update Release PR
+        if: ${{ steps.determine-version.outputs.new_version != '' }}
         uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
