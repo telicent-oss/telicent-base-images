@@ -54,6 +54,5 @@ modules:
   install:
     - name: telicent.container.nodejs
     - name: telicent.container.util.cleanup.microdnf
-    - name: telicent.container.util.cleanup.krb5-libs
     - name: telicent.container.util.devtools
 

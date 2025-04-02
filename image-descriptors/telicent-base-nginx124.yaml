@@ -52,5 +52,4 @@ modules:
     - name: telicent.container.util.pkg-update
     - name: telicent.container.nginx-microdnf
     - name: telicent.container.util.cleanup.microdnf
-    - name: telicent.container.util.cleanup.krb5-libs
     - name: telicent.container.util.devtools
