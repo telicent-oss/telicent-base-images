@@ -1,5 +1,12 @@
 # Changelog
 
+## Changes from v0.3.9 to v0.3.10
+
+### Fixes
+- Revert removal of krb5-libs (CORE-774)  ([56e1be7](https://github.com/telicent-oss/telicent-base-images/commit/56e1be7c14f2492829996b44d66270b7c273dc74))
+### Others
+- Ignore CVE-2022-37967 (CORE-774) ([137233b](https://github.com/telicent-oss/telicent-base-images/commit/137233b71cb78543077eae683b1d64e494e96c4d))
+
 ## Changes from v0.3.8 to v0.3.9
 
 ### Chores
