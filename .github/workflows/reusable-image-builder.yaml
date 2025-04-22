@@ -172,11 +172,11 @@ jobs:
         run: |
           build_url="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           if [ "$JOB_STATUS" = "success" ]; then
-            icon_url="https://github.com/telicent-oss/telicent-base-images/blob/main/.github/workflows/assets/check-green.png?raw=true"
+            icon_url="https://github.com/telicent-oss/telicent-base-images/blob/main/.github/workflows/assets/check-green.png"
             message_title="Workflow Success: ${{ github.workflow }}"
             message_text="The build and push process for the image completed successfully. Details are below:"
           else
-            icon_url="https://github.com/telicent-oss/telicent-base-images/blob/main/.github/workflows/assets/error-transparent.png?raw=true"
+            icon_url="https://github.com/telicent-oss/telicent-base-images/blob/main/.github/workflows/assets/error-transparent.png"
             message_title="Workflow Failure: ${{ github.workflow }}"
             message_text="The build and push process for the image has failed. See details below:"
           fi
