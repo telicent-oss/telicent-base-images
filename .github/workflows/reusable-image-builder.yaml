@@ -131,6 +131,7 @@ jobs:
             scan-name: ${{ steps.extract.outputs.image_name }}
             scan-ref: telicent/${{ steps.extract.outputs.image_name }}:${{ steps.extract.outputs.image_version }}
             scan-type: image
+            uses-java: true
 
         - name: Generate SBOM for image
           uses: aquasecurity/trivy-action@master
