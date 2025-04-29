@@ -6,19 +6,11 @@
 # It then checks each image descriptor for modules defined in the 'modules.install' section.
 # If any of the modules or their dependencies have changed, the corresponding image is marked for rebuild.
 # Handles nested module dependencies and maintains proper mapping to ensure accurate rebuilds.
-#
-# THIS SCRIPT WOULD NOT RUN ON MACOS
-# In case it is necessary to run on macOS, install gnu grep via homebrew and refactor this code to
-# use ggrep instead. Ensure Bash 4+ is used.
 #====================================================================================================
-
 
 DEBUG=${DEBUG:-0}
 
-if [[ "${BASH_VERSINFO[0]}" -lt 4 ]]; then
-  echo "This script requires Bash 4.0 or higher due to associative arrays."
-  exit 1
-fi
+# No longer checking Bash version; Zsh and Bash 3+ should work with adjustments
 
 function debug_print() {
   if [[ "$DEBUG" == 1 ]]; then
@@ -27,30 +19,27 @@ function debug_print() {
 }
 
 function get_commit_range() {
-  # Get the most recent tags in the repository, sorted by creation date
   tags=($(git tag --sort=-creatordate | head -n 2))
 
   if [[ "$1" == "use_last" ]]; then
-    last_tag="${tags[0]}" # Use the most recent tag
+    last_tag="${tags[0]}"
   else
-    last_tag="${tags[1]}" # Use the second most recent tag
+    last_tag="${tags[1]}"
   fi
-  # Handle cases where no tags are found
+
   if [[ -z "$last_tag" ]]; then
-    # If no tags exist, compare from the base of the repository
     echo "$(git rev-list --max-parents=0 HEAD) HEAD"
   else
     echo "$last_tag HEAD"
   fi
 }
 
-# Holds the data produced by `build_module_map`
-declare -A module_map
+declare -a module_map_keys
+declare -a module_map_values
 
-# Build a map of all the names and modules e.g. telicent.container.java => modules/jdk
 function build_module_map() {
-  while IFS= read -r module_yaml; do
-    local module_name=$(grep -m 1 'name:' "$module_yaml" | sed -E 's/^name: *"?([^"]*)"?/\1/' | tr -d ' ' | tr -d '\n')
+  find modules -name module.yaml -print0 | while IFS= read -r -d $'\0' module_yaml; do
+    module_name=$(grep -m 1 'name:' "$module_yaml" | sed -E 's/^name: *"?([^"]*)"?/\1/' | tr -d ' ' | tr -d '\n')
 
     debug_print "Extracted module_name: '$module_name' from $module_yaml"
 
@@ -59,13 +48,16 @@ function build_module_map() {
       continue
     fi
 
-    local module_dir=$(dirname "$module_yaml")
-    module_map["$module_name"]="$module_dir"
+    module_dir=$(dirname "$module_yaml")
+
+    # Simulate associative array
+    module_map_keys+=("$module_name")
+    module_map_values+=("$module_dir")
+
     debug_print "Mapped module $module_name to $module_dir"
-  done < <(find modules -name module.yaml)
+  done
 }
 
-# Function to extract module names from the install section
 function extract_modules_from_install_section() {
   local file=$1
   local in_modules_section=false
@@ -93,7 +85,7 @@ function extract_modules_from_install_section() {
     fi
 
     if $in_install_section && [[ "$line" =~ ^[[:space:]]*-?[[:space:]]*name: ]]; then
-      local module_name=$(echo "$line" | grep -oP '(?<=name: )\S+')
+      local module_name=$(echo "$line" | grep -o '(?<=name: )\S+')
       module_name=$(echo "$module_name" | tr -d ' ' | tr -d '\n')
 
       if [[ -n "$module_name" ]]; then
@@ -108,7 +100,21 @@ function extract_modules_from_install_section() {
 # Function to recursively check if a module or its dependencies have changed
 function track_module_dependencies() {
   local module_name=$1
-  local module_path=${module_map["$module_name"]}
+    # Simulate associative array lookup
+    local module_index=-1
+    for i in "${!module_map_keys[@]}"; do
+      if [[ "${module_map_keys[$i]}" == "$module_name" ]]; then
+        module_index="$i"
+        break
+      fi
+    done
+
+    if [[ "$module_index" -eq -1 ]]; then
+      echo "Module $module_name not found." >&2
+      return 1
+    fi
+
+    local module_path="${module_map_values[$module_index]}"
 
   if [[ -z "$module_path" ]]; then
     echo "Module $module_name not found." >&2
@@ -152,14 +158,12 @@ function check_modules_in_image_descriptor() {
   return 1
 }
 
-# Function to detect changes in images based on modules
 function detect_image_changes() {
   local base_dir=$1
   local use_last=$2
   echo "Base dir: ${base_dir}"
   local affected_images=()
 
-  # Get the last two merge commits, passing the script argument to `get_commit_range`
   read -r START_REF END_REF < <(get_commit_range "$use_last")
   echo "Start sha:${START_REF} - End: $END_REF"
   if [[ -z "$START_REF" || -z "$END_REF" ]]; then
@@ -167,25 +171,25 @@ function detect_image_changes() {
     exit 1
   fi
 
-  build_module_map
+    build_module_map
 
-  echo "----------------------------------------"
-  echo "Module Map:"
-  for module in "${!module_map[@]}"; do
-    echo "Module: $module => Path: ${module_map[$module]}"
-  done
-  echo "----------------------------------------"
+    echo "----------------------------------------"
+    echo "Module Map:"
+    for i in "${!module_map_keys[@]}"; do # Iterate through the keys
+      echo "Module: ${module_map_keys[$i]} => Path: ${module_map_values[$i]}"
+    done
+    echo "----------------------------------------"
 
-  for descriptor in $(find "$base_dir" -name "*.yaml"); do
+  find "$base_dir" -name "*.yaml" -print0 | while IFS= read -r -d $'\0' descriptor; do # Handles filenames with spaces
     debug_print "Checking image descriptor: $descriptor"
 
     if git diff --name-only "$END_REF" "$START_REF" | grep -q "$descriptor"; then
       echo "Image descriptor $descriptor has changed. Rebuild required."
-      local image_name=$(basename "$descriptor" | awk -F'.' '{print $1}')
+      image_name=$(basename "$descriptor" | awk -F'.' '{print $1}')
       affected_images+=("$image_name")
     else
       if check_modules_in_image_descriptor "$descriptor"; then
-        local image_name=$(basename "$descriptor" | awk -F'.' '{print $1}')
+        image_name=$(basename "$descriptor" | awk -F'.' '{print $1}')
         affected_images+=("$image_name")
       fi
     fi
