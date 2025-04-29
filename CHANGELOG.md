@@ -1,5 +1,14 @@
 # Changelog
 
+## Changes from v0.3.10 to v0.3.11
+
+### Chores
+- update base for descriptors  ([0cc9b3b](https://github.com/telicent-oss/telicent-base-images/commit/0cc9b3b575bee1528fbcb59a934f7eebcbd362c1))
+- Fix notification images  ([5f34ba1](https://github.com/telicent-oss/telicent-base-images/commit/5f34ba18b160ca03ce0842bbc98bbacd41957a51))
+### Others
+- Revert "chore: Fix notification images" ([2d6d09a](https://github.com/telicent-oss/telicent-base-images/commit/2d6d09ae2094f7ac8dae2237339c103866893497))
+- Set USES_JAVA flag on Periodic CVE scans ([ab6771c](https://github.com/telicent-oss/telicent-base-images/commit/ab6771c5e935a9b69eb50b228a2ecc33c2f17a37))
+
 ## Changes from v0.3.9 to v0.3.10
 
 ### Fixes
