@@ -47,7 +47,7 @@ Images built by this tool could be found in [Telicent's DockerHub](https://hub.d
 > 
 > Refer to https://github.com/cekit/cekit/pull/929 for more information
 > 
-> In next release of CeKit the intention is to swtich to building the images with CeKit utilising podman 
+> In next release of CeKit the intention is to switch to building the images with CeKit utilising podman 
 > as builder orchestrator this would reduce the complexity of the CI/CD Pipelines.
 >
 
@@ -67,7 +67,7 @@ changed in [cdb097f6 - commit][cdb097f6]
 **NB** Also in order for a release to be automatically triggered there **MUST** be at least one conventional commit
 style commit message in the commits merged into `main`, i.e. `feat`, `fix`, `chore` etc.  See
 [`tag_version.sh`](tag_version.sh) script for the exact logic used to determine if there are relevant commits, or if you
-want to change it in future.
+want to change it in the future.
 
 ### General note on images
 
@@ -106,7 +106,7 @@ Can be run/configured by non-root users. See [modules/nginx/127/configure.sh](mo
 for specific changes made. Default open port 8080
 
 Nginx is installed under /usr/local/nginx.
-Default logging as per defualt conf is /usr/local/nginx/logs...
+Default logging as per default conf is /usr/local/nginx/logs...
 Default logging needs updated to /var/log/nginx/access.log | error.log in order to be propagated to docker.
 
 
