@@ -1,14 +1,11 @@
 Copyright 2024 Telicent LTD
 
+The license applied to the *original code* within this project is based on the PolyForm Strict License 1.0.0
+
 This product is inspired by the structure and design of the JBoss OpenJDK Container Images project,
 available at https://github.com/jboss-container-images/openjdk.
-
 Some files were adapted from this project, with significant modifications to fit the specific needs of this product.
 The original project is licensed under the Apache License, Version 2.0.
-
-This product’s **source code** is licensed under the Apache License, Version 2.0.
-You may obtain a copy of the License at:
-    http://www.apache.org/licenses/LICENSE-2.0
 
 However, when building container images using this source code, the resulting container image itself is subject to the
 **Red Hat Universal Base Image (UBI) 9 End User License Agreement (EULA)**.
