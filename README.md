@@ -3,12 +3,12 @@
 ## Licensing and Usage Terms
 
 ### Source Code License
-The **source code** for this project is licensed under the Apache License, Version 2.0. 
-You can view the full text of the Apache License [here](http://www.apache.org/licenses/LICENSE-2.0).
+The license applied to this project is based on the PolyForm Strict License 1.0.0
+You can view the full terms in the LICENSE file.
 
 ### Built Image License
 When building container images using this source code, please note that the resulting container image is **not**
-licensed under Apache 2.0. Instead, the image is subject to the **Red Hat Universal Base Image (UBI) 9 End User License
+licensed under Polyform. Instead, the image is subject to the **Red Hat Universal Base Image (UBI) 9 End User License
 Agreement (EULA)**. You can find the UBI EULA
 [here](https://www.redhat.com/en/about-red-hat-end-user-license-agreements#UBI).
 
