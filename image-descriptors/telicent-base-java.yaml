@@ -1,6 +1,6 @@
 schema_version: 1
 
-from: "redhat/ubi9-minimal:9.5-1745855087"
+from: "redhat/ubi9-minimal:9.5-1747111267"
 
 name: &name "telicent-java21"
 version: &version "1.2.10"
