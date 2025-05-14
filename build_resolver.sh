@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 #====================================================================================================
 # Script to determine which images need to be rebuilt based on changes between the last two merge commits.
@@ -162,7 +162,6 @@ function detect_image_changes() {
   local base_dir=$1
   local use_last=$2
   echo "Base dir: ${base_dir}"
-  local affected_images=()
 
   read -r START_REF END_REF < <(get_commit_range "$use_last")
   echo "Start sha:${START_REF} - End: $END_REF"
@@ -171,17 +170,27 @@ function detect_image_changes() {
     exit 1
   fi
 
-    build_module_map
+  build_module_map
 
-    echo "----------------------------------------"
-    echo "Module Map:"
-    for i in "${!module_map_keys[@]}"; do # Iterate through the keys
-      echo "Module: ${module_map_keys[$i]} => Path: ${module_map_values[$i]}"
-    done
-    echo "----------------------------------------"
+  echo "----------------------------------------"
+  echo "Module Map:"
+  for i in "${!module_map_keys[@]}"; do # Iterate through the keys
+    echo "Module: ${module_map_keys[$i]} => Path: ${module_map_values[$i]}"
+  done
+  echo "----------------------------------------"
 
-  find "$base_dir" -name "*.yaml" -print0 | while IFS= read -r -d $'\0' descriptor; do # Handles filenames with spaces
+  # Previous version of the script piped output directly into while loop BUT that effectively created a
+  # sub-shell so when control returned to the function any changes to the variables were not visible
+  # and the script always assumed nothing changed
+  # Therefore capture file output to a temporary file and then consume that in the while loop, cleaning up
+  # the temporary file afterwards
+  find "$base_dir" -name "*.yaml" -print0 > .changed-descriptors
+
+  while IFS= read -r -d $'\0' descriptor; do # Handles filenames with spaces
     debug_print "Checking image descriptor: $descriptor"
+    if [ -z "$descriptor" ]; then
+      continue
+    fi
 
     if git diff --name-only "$END_REF" "$START_REF" | grep -q "$descriptor"; then
       echo "Image descriptor $descriptor has changed. Rebuild required."
@@ -189,13 +198,15 @@ function detect_image_changes() {
       affected_images+=("$image_name")
     else
       if check_modules_in_image_descriptor "$descriptor"; then
+        echo "Image $descriptor modules have changed. Rebuild required."
         image_name=$(basename "$descriptor" | awk -F'.' '{print $1}')
         affected_images+=("$image_name")
       fi
     fi
-  done
+  done < .changed-descriptors
+  rm -f .changed-descriptors
 
-  if [[ "${#affected_images[@]}" -gt 0 ]]; then
+  if [[ ${#affected_images[@]} -gt 0 ]]; then
     echo "Affected images to rebuild:"
     for image in "${affected_images[@]}"; do
       echo "$image"
