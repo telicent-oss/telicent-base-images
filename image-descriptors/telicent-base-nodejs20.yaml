@@ -1,6 +1,6 @@
 schema_version: 1
 
-from: "redhat/ubi9-minimal:9.5-1747111267"
+from: "redhat/ubi9-minimal:9.6-1745487894"
 
 name: &name "telicent-nodejs20"
 version: &version "1.2.12"
