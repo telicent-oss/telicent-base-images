@@ -1,5 +1,17 @@
 # Changelog
 
+## Changes from v0.3.11 to v0.3.12
+
+### Chores
+- Fix build_resolver.sh image change detection  ([c804c6c](https://github.com/telicent-oss/telicent-base-images/commit/c804c6c4e307dd85c16b48aa41b3952924ac22aa))
+- update base for descriptors  ([c06b407](https://github.com/telicent-oss/telicent-base-images/commit/c06b40745ace46ef62a0a62bb3d7dcebcb14b640))
+- update base for descriptors  ([ab789ff](https://github.com/telicent-oss/telicent-base-images/commit/ab789ffbf1e596165d0a00c2bd7d8dedab3e8d0e))
+### Fixes
+- Keep tar/gzip in Java base images, in-line with Python images. (CORE-802)  ([de4273e](https://github.com/telicent-oss/telicent-base-images/commit/de4273ecc39345db61095d5c5e4e835e34e152cb))
+- correcting some typos in the README  ([7d996ed](https://github.com/telicent-oss/telicent-base-images/commit/7d996edeb5bb7645075e8996babc6601ad038cf9))
+### Others
+- Update reusable-image-builder.yaml ([2ae2a47](https://github.com/telicent-oss/telicent-base-images/commit/2ae2a47a7b1aad30aaef77131d06f59104133ec0))
+
 ## Changes from v0.3.10 to v0.3.11
 
 ### Chores
