@@ -135,6 +135,11 @@ jobs:
 
         - name: Generate SBOM for image
           uses: aquasecurity/trivy-action@master
+          env:
+            # NB - Our prior Trivy step MAY generate a TRIVY_VEX file and add it to GITHUB_ENV but it also removes that
+            #      file thus subsequent Trivy steps, like this one, can fail due to the missing file.  We can however
+            #      explicitly override it to an empty string to avoid that.
+            TRIVY_VEX: ""
           with:
             scan-type: 'image'
             format: 'cyclonedx'
