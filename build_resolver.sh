@@ -162,7 +162,7 @@ function detect_image_changes() {
   local base_dir=$1
   local use_last=$2
   echo "Base dir: ${base_dir}"
-  local affected_images=()
+  local -a affected_images=() # Declare as a local array in the current scope
 
   read -r START_REF END_REF < <(get_commit_range "$use_last")
   echo "Start sha:${START_REF} - End: $END_REF"
@@ -180,20 +180,27 @@ function detect_image_changes() {
     done
     echo "----------------------------------------"
 
-  find "$base_dir" -name "*.yaml" -print0 | while IFS= read -r -d $'\0' descriptor; do # Handles filenames with spaces
+  # Use a while loop with process substitution to avoid the subshell for the find command
+  while IFS= read -r -d $'\0' descriptor; do
     debug_print "Checking image descriptor: $descriptor"
+
+    needs_rebuild=false
 
     if git diff --name-only "$END_REF" "$START_REF" | grep -q "$descriptor"; then
       echo "Image descriptor $descriptor has changed. Rebuild required."
-      image_name=$(basename "$descriptor" | awk -F'.' '{print $1}')
-      affected_images+=("$image_name")
+      needs_rebuild=true
     else
       if check_modules_in_image_descriptor "$descriptor"; then
-        image_name=$(basename "$descriptor" | awk -F'.' '{print $1}')
-        affected_images+=("$image_name")
+        echo "$descriptor requires build since a dependant module has changed."
+        needs_rebuild=true
       fi
     fi
-  done
+
+    if "$needs_rebuild"; then
+      image_name=$(basename "$descriptor" | awk -F'.' '{print $1}')
+      affected_images+=("$image_name")
+    fi
+  done < <(find "$base_dir" -name "*.yaml" -print0) # Process substitution
 
   if [[ "${#affected_images[@]}" -gt 0 ]]; then
     echo "Affected images to rebuild:"
