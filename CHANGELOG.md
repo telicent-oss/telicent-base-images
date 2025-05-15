@@ -1,5 +1,12 @@
 # Changelog
 
+## Changes from v0.3.12 to v0.3.13
+
+### Chores
+- update base for descriptors  ([61bcd51](https://github.com/telicent-oss/telicent-base-images/commit/61bcd51e8016e75125a3e50286c9bab79e919ff1))
+### Fixes
+- Don't propagate TRIVY_VEX env  ([940466b](https://github.com/telicent-oss/telicent-base-images/commit/940466b972d940bf5174555c4740926e2a8ac2d4))
+
 ## Changes from v0.3.11 to v0.3.12
 
 ### Chores
