@@ -102,7 +102,7 @@ jobs:
 
         - name: Grype Container Vulnerability Scan
           id: grype-scan
-          uses: anchore/scan-action@v4.1.2
+          uses: anchore/scan-action@v6.2.0
           with:
             image: telicent/${{ steps.extract.outputs.image_name }}:${{ steps.extract.outputs.image_version }}
             output-format: json
@@ -116,7 +116,7 @@ jobs:
             retention-days: 30
 
         - name: Fail Build on High/Critical Vulnerabilities
-          uses: anchore/scan-action@v4.1.2
+          uses: anchore/scan-action@v6.2.0
           with:
             image: telicent/${{ steps.extract.outputs.image_name }}:${{ steps.extract.outputs.image_version }}
             output-format: table
