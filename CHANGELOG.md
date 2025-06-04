@@ -1,5 +1,19 @@
 # Changelog
 
+## Changes from v0.3.13 to v0.4.0
+
+### Features
+- helper  ([499f9e2](https://github.com/telicent-oss/telicent-base-images/commit/499f9e2098d1804a156cebb0f67e68e9945884a8))
+### Fixes
+- CVE-2025-4638 CVE-2025-4802  ([04b3eb6](https://github.com/telicent-oss/telicent-base-images/commit/04b3eb67c01b0ff455a5f234a3afbe2524aab050))
+- adding vex statement for CVE-2025-4802 (adding x86_64 support)  ([f77a931](https://github.com/telicent-oss/telicent-base-images/commit/f77a9317ae6fe05b51437800f4b0f590c4945909))
+- adding vex statement for CVE-2025-4802  ([5e9c78e](https://github.com/telicent-oss/telicent-base-images/commit/5e9c78e3a6ccd8a17fbf04707bb5cd5a7256c5b0))
+- fixing vex statement for CVE-2025-4638  ([2334df1](https://github.com/telicent-oss/telicent-base-images/commit/2334df16693f90faf03faef13b5fac086e27c81b))
+- adding vex statement for CVE-2025-4638  ([f2545cf](https://github.com/telicent-oss/telicent-base-images/commit/f2545cfea71e05959fd59d448ba2aa8d492ea816))
+### Others
+- fix(2025-06-04T14:20:20.357Z): rebuild for new node - https://nodejs.org/en/blog/vulnerability/may-2025-security-releases - https://access.redhat.com/errata/RHSA-2025:8468  ([cef2f34](https://github.com/telicent-oss/telicent-base-images/commit/cef2f3404ebe6722a6fce25f97aa5bbafcb0e961))
+- bump grype action to 6.2.0 to resolve db cache issues (#183)  ([2d3aae9](https://github.com/telicent-oss/telicent-base-images/commit/2d3aae94605c146d845452a39a52eb9729da30db))
+
 ## Changes from v0.3.12 to v0.3.13
 
 ### Chores
