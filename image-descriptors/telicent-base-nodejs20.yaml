@@ -56,3 +56,7 @@ modules:
     - name: telicent.container.util.cleanup.microdnf
     - name: telicent.container.util.devtools
 
+# CHANGE_CHECKSUM_TO_FORCE_REBUILD
+# Base: v1.2.14
+# When: 2025-06-04T14:20:20.357Z
+# Reason: Get security patch in nodejs 20.19.2
