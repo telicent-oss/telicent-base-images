@@ -147,3 +147,24 @@ table below, therefore the table is not full.
 | `telicent.container.dumb-init`                | `modules/dumb-init`                       |
 | `telicent.container.tar-gzip`                 | `modules/tar-gzip`                        |
 | `telicent.container.nginx`                    | `modules/nginx/127`                       |
+
+## Development
+
+### Dev scripts
+
+**build-image.sh**  
+- **Outcome:** Builds a Docker image from a CEKit descriptor
+- **Usage:** `./.dev/build-image.sh <descriptor.yaml>`  
+- **Result:** After running, you’ll have a new local Docker image based on the given descriptor
+
+**scan-image.sh**  
+- **Outcome:** Scans a Docker image for vulnerabilities
+- **Usage:** `./.dev/scan-image.sh [<image:tag>]`  
+  - No argument → scans the most recently built image
+- **Result:** Outputs Trivy and Grype vulnerability reports in table form
+
+**Example Workflow**  
+```bash
+./.dev/build-image.sh ./image-descriptors/telicent-base-nginx127.yaml && ./.dev/scan-image.sh
+```
+- **Outcome**: Builds the telicent-base-nginx127 image and immediately scans it for issues
