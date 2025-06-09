@@ -1,5 +1,15 @@
 # Changelog
 
+## Changes from v0.4.0 to v0.5.0
+
+### Features
+- dev scripts  ([49e659b](https://github.com/telicent-oss/telicent-base-images/commit/49e659b89ec48d284fa459008bc5ca8f43e487af))
+### Chores
+- update base for descriptors  ([94ee3a2](https://github.com/telicent-oss/telicent-base-images/commit/94ee3a229fcd1ae3352af682b3ed656861f0fb31))
+- prepare release v0.4.0  ([dc39570](https://github.com/telicent-oss/telicent-base-images/commit/dc39570622344beb2971490b365ad696d6c2af3b))
+### Fixes
+- adding vex statement for CVE-2025-5702  ([c1980db](https://github.com/telicent-oss/telicent-base-images/commit/c1980db81848a51039a694bff87746f002400fd9))
+
 ## Changes from v0.3.13 to v0.4.0
 
 ### Features
