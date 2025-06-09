@@ -100,29 +100,13 @@ jobs:
               "telicent/${{ steps.extract.outputs.image_name }}:latest"
               "telicent/${{ steps.extract.outputs.image_name }}:${{ steps.extract.outputs.image_version }}"
 
-        - name: Grype Container Vulnerability Scan
+        - name: Grype Image Scan
           id: grype-scan
-          uses: anchore/scan-action@v6.2.0
+          uses: telicent-oss/grype-action@v1
           with:
-            image: telicent/${{ steps.extract.outputs.image_name }}:${{ steps.extract.outputs.image_version }}
-            output-format: json
-            fail-build: false
-
-        - name: Upload Vulnerability Scan Results
-          uses: actions/upload-artifact@v4.4.3
-          with:
-            name: grype-docker-report-${{ steps.extract.outputs.image_name }}-${{ steps.extract.outputs.image_version }}
-            path: ${{ steps.grype-scan.outputs.json }}
-            retention-days: 30
-
-        - name: Fail Build on High/Critical Vulnerabilities
-          uses: anchore/scan-action@v6.2.0
-          with:
-            image: telicent/${{ steps.extract.outputs.image_name }}:${{ steps.extract.outputs.image_version }}
-            output-format: table
-            severity-cutoff: high
-            fail-build: true
-            only-fixed: ${{ inputs.SECURITY_ISSUES_BLOCK_ONLY_IF_FIX_AVAILABLE }}
+            scan-name: ${{ steps.extract.outputs.image_name }}
+            scan-ref: telicent/${{ steps.extract.outputs.image_name }}:${{ steps.extract.outputs.image_version }}
+            scan-type: image
 
         - name: Trivy Image Scan
           id: trivy-scan
