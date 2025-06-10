@@ -1,5 +1,13 @@
 # Changelog
 
+## Changes from v0.5.0 to v0.5.1
+
+### Chores
+- update base for descriptors  ([e075d07](https://github.com/telicent-oss/telicent-base-images/commit/e075d07bc15c037fe0d53e624d497629ca6ec20b))
+### Fixes
+- adding vex statement for CVE-2025-5702 (telicent-nodejs20 specific add)  ([032c52b](https://github.com/telicent-oss/telicent-base-images/commit/032c52b2bfa4efbc90f6f2b4c410aed685456be9))
+- adding vex statement for CVE-2025-5702 (telicent-nginx1.27 specific add). Migrating to Telicent Grype scan.  ([2b834e1](https://github.com/telicent-oss/telicent-base-images/commit/2b834e13f2cf642899fb802ab20b4805fad2d8a5))
+
 ## Changes from v0.4.0 to v0.5.0
 
 ### Features
