@@ -168,3 +168,66 @@ table below, therefore the table is not full.
 ./.dev/build-image.sh ./image-descriptors/telicent-base-nginx127.yaml && ./.dev/scan-image.sh
 ```
 - **Outcome**: Builds the telicent-base-nginx127 image and immediately scans it for issues
+
+
+## CVE - Suppression
+### Overview
+In the dynamic world of software development, vulnerabilities in third-party libraries are constantly being discovered, patched, and released. Our pipeline tools—used both in CI/CD and across this repository—surface such Common Vulnerabilities and Exposures (CVEs), prompting us to assess and mitigate potential risks before official fixes are available.
+
+To help with tracking and mitigation, we maintain an internal CVE Tracker containing:
+
+- Impact assessments
+
+- Exposure evaluations
+
+- Mitigation strategies
+
+- Plans of action
+
+Often, we determine that a CVE does **not** affect our usage, and we want to suppress it from future reports. However, this can be time-consuming. This is where the `generate_cve.sh` script helps automate and streamline the suppression process.
+
+
+### Usage
+To suppress specific CVEs for an image (e.g., telicent/telicent-java21), run the script as follows:
+
+```bash
+./generate_vex_statements.sh telicent/telicent-java21 CVE-2025-49794 CVE-2025-49795 CVE-2025-49796
+```
+This performs the following steps:
+
+1. Scans the specified Docker image using Trivy (CRITICAL and HIGH severity only)
+
+1. Extracts relevant vulnerability data
+
+1. Generates an OpenVEX JSON suppression file per CVE
+
+1. Re-runs Trivy using those OpenVEX files to confirm suppression
+
+
+
+### Pre-requisites
+
+The script assumes:
+- You're running on macOS (although it _should_ work on other Unix-like systems with Bash)
+
+- The following tools are installed:
+  - **trivy** – for vulnerability scanning
+  - **jq** – for JSON processing
+  - **uuidgen** – for generating unique VEX document IDs
+
+
+### Post-requisites 
+- The script sets default values for:
+  - **status**: not_affected
+  - **justification**: vulnerable_code_not_in_execute_path
+  - **impact_statement**: derived from Trivy (may need review)
+
+These fields should be reviewed and modified to reflect accurate risk assessments.
+
+
+### Optional: Use all existing VEX files
+By default, the script only includes the newly generated suppression files in the final Trivy validation step. If you'd prefer to validate using **all** VEX files in the .vex directory, edit the script and **uncomment** this line:
+
+**NOTE:** The script only focuses on the given CVE and so it may report vulnerabilities for which we already have suppressions files. If that is desired, just comment out this line in script
+
+``` #VEX_FILES_PARAM=$(printf " --vex %s" "${ALL_VEX_FILES[@]}") ```
