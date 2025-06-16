@@ -38,6 +38,13 @@ command -v trivy >/dev/null 2>&1 || {
     exit 1
 }
 
+# Detect architecture and platform
+ARCH=$(uname -m)
+if [[ "$ARCH" == "arm64" ]]; then
+    IS_AARCH64=true
+else
+    IS_AARCH64=false
+fi
 
 # Check if at least two arguments (image name + at least one CVE) are provided.
 if [ "$#" -lt 2 ]; then
@@ -111,6 +118,15 @@ for CURRENT_CVE_ID in "${CVE_IDS[@]}"; do
                 else
                     PRODUCTS_ARRAY="$PRODUCTS_ARRAY, {\"@id\": \"$PURL\"}"
                 fi
+                    # If running on Mac, add an x86_64 variant alongside every aarch64 entry
+                    # Else, add an aarch64 variant for each x86_64 entry
+                    if [ "$IS_AARCH64" = true ] && [[ "$PURL" == *"arch=aarch64"* ]]; then
+                      PURL_X86=${PURL/arch=aarch64/arch=x86_64}
+                      PRODUCTS_ARRAY+=", {\"@id\": \"$PURL_X86\"}"
+                    elif [ "$IS_AARCH64" = false ] && [[ "$PURL" == *"arch=x86_64"* ]]; then
+                       PURL_A64=${PURL/arch=x86_64/arch=aarch64}
+                       PRODUCTS_ARRAY+=", {\"@id\": \"$PURL_A64\"}"
+                    fi
             fi
 
             # Capture the vulnerability description and title from the first occurrence.
@@ -189,5 +205,4 @@ trivy image "$FULL_IMAGE_NAME" --severity CRITICAL,HIGH $VEX_FILES_PARAM --show-
 
 echo ""
 echo "NOTE: The file(s) generated above will need updating manually for: "
-echo " - x86_64 architecture (assuming this is run on MacOS)"
 echo " - justification, status & impact statement, if incorrect"

@@ -191,7 +191,7 @@ Often, we determine that a CVE does **not** affect our usage, and we want to sup
 To suppress specific CVEs for an image (e.g., telicent/telicent-java21), run the script as follows:
 
 ```bash
-./generate_cve.sh telicent/telicent-java21 CVE-2025-49794 CVE-2025-49795 CVE-2025-49796
+./generate_vex_statements.sh telicent/telicent-java21 CVE-2025-49794 CVE-2025-49795 CVE-2025-49796
 ```
 This performs the following steps:
 
@@ -217,9 +217,7 @@ The script assumes:
 
 
 ### Post-requisites 
-- The script generates OpenVEX files for the architecture it was run on (typically *aarch64* on macOS). You may need to edit the files manually for compatibility with other platforms like x86_64.
-
-- It sets default values for:
+- The script sets default values for:
   - **status**: not_affected
   - **justification**: vulnerable_code_not_in_execute_path
   - **impact_statement**: derived from Trivy (may need review)
