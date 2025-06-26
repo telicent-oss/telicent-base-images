@@ -1,5 +1,15 @@
 # Changelog
 
+## Changes from v0.5.1 to v0.5.2
+
+### Chores
+- update base for descriptors  ([c203e6f](https://github.com/telicent-oss/telicent-base-images/commit/c203e6fef059bf30e1edc10a4f84d0499440b4e1))
+### Fixes
+- vex declarations for recent Python CVEs  ([4b085e5](https://github.com/telicent-oss/telicent-base-images/commit/4b085e5223c31e49ae8daccb6a276b5a13d5f249))
+- [CORE-858] disabling checks for apps we don't actively deploy to reduce the noise from alerts.  ([906da3f](https://github.com/telicent-oss/telicent-base-images/commit/906da3f72819388b40a5ad150d834b3e04a6d55c))
+- [CORE-857] correcting recent CVEs raised against libxml2 and adding tooling to aid with suppression. PR Feedback  ([9ec927e](https://github.com/telicent-oss/telicent-base-images/commit/9ec927e7d5bd124a82f0e3f0cd81467aa9d60d1c))
+- [CORE-857] correcting recent CVEs raised against libxml2 and adding tooling to aid with suppression.  ([d445fd2](https://github.com/telicent-oss/telicent-base-images/commit/d445fd25924db0543d0a9d5fa3edc3bc52ae59d1))
+
 ## Changes from v0.5.0 to v0.5.1
 
 ### Chores
