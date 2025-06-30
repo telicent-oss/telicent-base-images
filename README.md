@@ -134,7 +134,6 @@ table below, therefore the table is not full.
 | `telicent.container.util.python-entrypoint-virtualenv` | `modules/util/python-entrypoint-virtualenv` |
 | `telicent.container.openjdk`                  | `modules/jdk/21`                          |
 | `telicent.container.util.pkg-update`          | `modules/util/pkg-update`                 |
-| `telicent.container.python311-microdnf`       | `modules/python/311-microdnf`             |
 | `telicent.container.python`                   | `modules/python/313`                      |
 | `telicent.container.util.cleanup`             | `modules/util/cleanup/microdnf`           |
 | `telicent.container.util.pyenv-perms`         | `modules/util/pyenv-perms`                |
