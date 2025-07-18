@@ -1,5 +1,13 @@
 # Changelog
 
+## Changes from v0.5.4 to v0.5.5
+
+### Fixes
+- updating Red Hat UBI-9 image  ([c7b9e8d](https://github.com/telicent-oss/telicent-base-images/commit/c7b9e8dd7dc98c4fcf44848da9a0518bbee67c7e))
+- vex declarations for recent CVEs  ([da5b37e](https://github.com/telicent-oss/telicent-base-images/commit/da5b37e76afb09ab19b6fa0dbb82dc1c24169a13))
+### Others
+- remove space in file name ([9728298](https://github.com/telicent-oss/telicent-base-images/commit/97282984552db2ab6857cb56d8b86bcc83830284))
+
 ## Changes from v0.5.3 to v0.5.4
 
 ### Chores
