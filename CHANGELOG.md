@@ -1,5 +1,15 @@
 # Changelog
 
+## Changes from v0.5.5 to v0.5.6
+
+### Chores
+- Bump Java image version (CORE-889)  ([994d449](https://github.com/telicent-oss/telicent-base-images/commit/994d449daf2a056e9018a0586d979261c5f2efc9))
+### Fixes
+- Add VEX statements for CVE-2025-30749 & CVE-2025-50059  ([8727e63](https://github.com/telicent-oss/telicent-base-images/commit/8727e633e50041072dbdd0e7a2ffe4bba34daa24))
+### Others
+- Added impact statement ([522e941](https://github.com/telicent-oss/telicent-base-images/commit/522e941f33dcb9aed44db690ead8f4abc1f87856))
+- Corrected author ([1e4d502](https://github.com/telicent-oss/telicent-base-images/commit/1e4d502cd96ddc244676eb4e1a47686a365b790e))
+
 ## Changes from v0.5.4 to v0.5.5
 
 ### Fixes
