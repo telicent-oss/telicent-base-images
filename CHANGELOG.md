@@ -1,5 +1,14 @@
 # Changelog
 
+## Changes from v0.5.6 to v0.5.7
+
+### Chores
+- update base for descriptors  ([88ff991](https://github.com/telicent-oss/telicent-base-images/commit/88ff9919c3a4dec9e879c68061159bfc0040c108))
+### Fixes
+- Adding CVE-2025-50106  ([6a096a2](https://github.com/telicent-oss/telicent-base-images/commit/6a096a2b1c45cffd73be179b4b4f2679bd6b7bab))
+### Others
+- Update CVE-2025-6965.openvex.json ([70ea8d1](https://github.com/telicent-oss/telicent-base-images/commit/70ea8d1bd3695cc8689841a85f1247c19f6eb39d))
+
 ## Changes from v0.5.5 to v0.5.6
 
 ### Chores
