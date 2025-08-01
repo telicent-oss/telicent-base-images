@@ -1,5 +1,13 @@
 # Changelog
 
+## Changes from v0.5.7 to v0.5.8
+
+### Chores
+- update base for descriptors  ([3467643](https://github.com/telicent-oss/telicent-base-images/commit/3467643e9630d8815febd576ae053eb0af43b548))
+### Fixes
+- Adding CVE-2025-7425 - extra variant.  ([22e9f0f](https://github.com/telicent-oss/telicent-base-images/commit/22e9f0f0aca0a0590d7ec7c9d76b207ef01c32f0))
+- Adding CVE-2025-7425  ([6e120b5](https://github.com/telicent-oss/telicent-base-images/commit/6e120b53746d55e33746bed7946c4c966c889397))
+
 ## Changes from v0.5.6 to v0.5.7
 
 ### Chores
