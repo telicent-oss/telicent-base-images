@@ -1,6 +1,6 @@
 schema_version: 1
 
-from: "redhat/ubi9-minimal:9.6-1754000177"
+from: "redhat/ubi9-minimal:9.6-1754584681"
 
 name: &name "telicent-nginx1.27"
 version: &version "1.2.23"
