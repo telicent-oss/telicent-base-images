@@ -1,5 +1,13 @@
 # Changelog
 
+## Changes from v0.5.9 to v0.5.10
+
+### Chores
+- update base for descriptors  ([7a36d12](https://github.com/telicent-oss/telicent-base-images/commit/7a36d12434504eeedd5069f1cc379c74691ae429))
+### Fixes
+- Adding CVE-2025-5914 - (CORE-927). Covering other versions.  ([f33b6ee](https://github.com/telicent-oss/telicent-base-images/commit/f33b6eef211107a81b5bfaec9192a75b6c76c656))
+- Adding CVE-2025-5914 - (CORE-927)  ([2350cc3](https://github.com/telicent-oss/telicent-base-images/commit/2350cc34fd23f2fc39c6b4adecaa62393a8254dd))
+
 ## Changes from v0.5.8 to v0.5.9
 
 ### Chores
