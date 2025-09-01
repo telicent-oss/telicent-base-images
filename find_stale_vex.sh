@@ -136,7 +136,7 @@ extract_products_from_vex() {
 }
 
 # ---- Process files ----
-STALE=0; OKAY=0; UNRELATED=0; UNKNOWN=0
+STALE=0; ACTIVE=0; UNRELATED=0; UNKNOWN=0
 STALE_LIST=(); UNRELATED_LIST=()
 
 echo
@@ -210,17 +210,17 @@ for f in "${VEX_FILES[@]}"; do
   elif (( any_cve_present == 0 )) && (( any_lib_present > 0 )); then
     status="STALE"
   elif (( any_cve_present > 0 )) && (( any_lib_present > 0 )); then
-      status="OK"
+      status="ACTIVE"
   else
     if [[ -z "$CVE_LIST" ]]; then
       status="UNKNOWN"
     else
-      if (( ${#present_cves[@]} == 0 )); then status="STALE"; else status="OK"; fi
+      if (( ${#present_cves[@]} == 0 )); then status="STALE"; else status="ACTIVE"; fi
     fi
   fi
 
   case "$status" in
-    OK)        echo "${GREEN}OK${RESET}        $f"; ((OKAY++)) ;;
+    ACTIVE)        echo "${GREEN}ACTIVE${RESET}        $f"; ((ACTIVE++)) ;;
     STALE)     echo "${YELLOW}STALE${RESET}      $f"; STALE_LIST+=( "$f" ); ((STALE++)) ;;
     UNRELATED) echo "${BLUE}UNRELATED${RESET}  $f"; UNRELATED_LIST+=( "$f" ); ((UNRELATED++)) ;;
     *)         echo "${RED}UNKNOWN${RESET}    $f  (no usable product metadata)"; ((UNKNOWN++)) ;;
@@ -236,4 +236,4 @@ for f in "${VEX_FILES[@]}"; do
 done
 
 echo
-echo "${BOLD}Summary:${RESET}  OK=${OKAY}  STALE=${STALE}  UNRELATED=${UNRELATED}  UNKNOWN=${UNKNOWN}"
+echo "${BOLD}Summary:${RESET}  ACTIVE=${ACTIVE}  STALE=${STALE}  UNRELATED=${UNRELATED}  UNKNOWN=${UNKNOWN}"

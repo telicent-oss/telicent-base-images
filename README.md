@@ -253,7 +253,7 @@ The script does the following:
 4. Compares each VEX file's CVE & Product IDs against the SBOM contents.
 
 The output is a collection of status counts:
-- **OK** The VEX suppression is still required. 
+- **ACTIVE** The VEX suppression is still required. 
 - **STALE** The VEX suppression is no longer required for this image.
 - **UNRELATED** The VEX suppression isn't applicable for this image.
 - **UNKNOWN** The VEX suppression could not be processed or some other error.
