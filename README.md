@@ -236,3 +236,29 @@ By default, the script only includes the newly generated suppression files in th
 **NOTE:** The script only focuses on the given CVE and so it may report vulnerabilities for which we already have suppressions files. If that is desired, just comment out this line in script
 
 ``` #VEX_FILES_PARAM=$(printf " --vex %s" "${ALL_VEX_FILES[@]}") ```
+
+
+## Expired CVEs
+
+After time, we will have updated the various underlying libraries to such a point that the suppressions we have are no longer necessary.
+
+Periodically we should review the .vex files and remove those we do not need.
+To that end, we have created a script to assist.
+
+### Find Stale VEX script
+The script does the following:
+1. Scans the given image (say telicent/telicent-java21:latest) with trivy but without the .vex/ entries.
+2. Collects the resulting list of CVE IDs that are generated.
+3. Builds an SBOM for the image.
+4. Compares each VEX file's CVE & Product IDs against the SBOM contents.
+
+The output is a collection of status counts:
+- **OK** The VEX suppression is still required. 
+- **STALE** The VEX suppression is no longer required for this image.
+- **UNRELATED** The VEX suppression isn't applicable for this image.
+- **UNKNOWN** The VEX suppression could not be processed or some other error.
+
+To run:
+```bash
+./find_stale_vex.sh telicent/telicent-java21:latest
+```

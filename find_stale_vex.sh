@@ -1,4 +1,5 @@
-#!/usr/bin/env bash
+#!/bin/bash
+
 set -euo pipefail
 
 # Identify VEX files that are stale.
@@ -6,13 +7,11 @@ set -euo pipefail
 # referenced library/product exists in the image SBOM.
 #
 # Usage:
-#   ./find_stale_vex.sh <image[:tag]> [--severity CRITICAL,HIGH] [--vex-dir ./.vex] \
-#       [--move-stale <dir>] [--move-unrelated <dir>] [--sbom-file <cyclonedx.json>]
+#   ./find_stale_vex.sh <image[:tag]>
 #
 
 usage() {
-  echo "Usage: $0 <image[:tag]> [--severity <levels>] [--vex-dir <dir>] [--move-stale <dir>] [--move-unrelated <dir>] [--sbom-file <cyclonedx.json>]" >&2
-  echo "Defaults: --severity CRITICAL,HIGH  --vex-dir ./.vex" >&2
+  echo "Usage: $0 <image[:tag]>" >&2
   exit 1
 }
 
@@ -34,21 +33,6 @@ shift || true
 
 SEVERITY="CRITICAL,HIGH"
 VEX_DIR="./.vex"
-MOVE_STALE=""
-MOVE_UNRELATED=""
-SBOM_FILE=""
-
-while [[ $# -gt 0 ]]; do
-  case "$1" in
-    --severity)       SEVERITY="${2:-}"; shift 2;;
-    --vex-dir)        VEX_DIR="${2:-}";  shift 2;;
-    --move-stale)     MOVE_STALE="${2:-}"; shift 2;;
-    --move-unrelated) MOVE_UNRELATED="${2:-}"; shift 2;;
-    --sbom-file)      SBOM_FILE="${2:-}"; shift 2;;
-    -h|--help)        usage;;
-    *) echo "Unknown option: $1" >&2; usage;;
-  esac
-done
 
 # ---- Make sure we have trivy & jq installed ----
 for cmd in trivy jq; do
@@ -58,17 +42,17 @@ done
 # ---- Colour the output ----
 if [ -t 1 ]; then
   RED="$(tput setaf 1)"; GREEN="$(tput setaf 2)"; YELLOW="$(tput setaf 3)"
-  BLUE="$(tput setaf 4)"; MAGENTA="$(tput setaf 5)"; BOLD="$(tput bold)"; RESET="$(tput sgr0)"
+  BLUE="$(tput setaf 4)"; BOLD="$(tput bold)"; RESET="$(tput sgr0)"
 else
-  RED=""; GREEN=""; YELLOW=""; BLUE=""; MAGENTA=""; BOLD=""; RESET=""
+  RED=""; GREEN=""; YELLOW=""; BLUE=""; BOLD=""; RESET=""
 fi
 
 # ---- Collect the VEX files ----
 shopt -s nullglob
-VEX_FILES=( "$VEX_DIR"/*.openvex.json "$VEX_DIR"/*.json )
+VEX_FILES=( "$VEX_DIR"/*.openvex.json )
 shopt -u nullglob
 if (( ${#VEX_FILES[@]} == 0 )); then
-  echo "No VEX files found in '$VEX_DIR' (looked for *.openvex.json and *.json)."
+  echo "No VEX files found in '$VEX_DIR' (looked for *.openvex.json)."
   exit 0
 fi
 
@@ -91,12 +75,8 @@ jq -r '.Results[]? | .Vulnerabilities[]? | .VulnerabilityID' "$SCAN_JSON" \
 has_cve() { grep -Fxq "$1" "$PRESENT_CVES"; }
 
 # ---- Build SBOM (CycloneDX) and extract component identifiers ----
-if [[ -n "$SBOM_FILE" ]]; then
-  cp "$SBOM_FILE" "$SBOM_JSON"
-else
-  echo "Generating CycloneDX SBOM for '${IMAGE}'..."
-  trivy image "${IMAGE}" --format cyclonedx --output "$SBOM_JSON" >/dev/null
-fi
+echo "Generating CycloneDX SBOM for '${IMAGE}'..."
+trivy image "${IMAGE}" --format cyclonedx --output "$SBOM_JSON" >/dev/null
 
 # purls (exact, best signal)
 jq -r '.components[]? | .purl // empty' "$SBOM_JSON" | sort -u > "$SBOM_PURLS"
@@ -120,7 +100,7 @@ has_name_like() {
   local needle
   needle="$(echo "$1" | tr '[:upper:]' '[:lower:]')"
   [[ -z "$needle" ]] && return 1
-  grep -Fxiq "$needle" "$SBOM_NAMES"
+  grep -Fxqi "$needle" "$SBOM_NAMES" || grep -Fqi "$needle" "$SBOM_NAMES"
 }
 
 # ---- extract CVEs from VEX file ----
@@ -150,7 +130,7 @@ extract_products_from_vex() {
 }
 
 # ---- Process files ----
-STALE=0; PARTIAL=0; OKAY=0; UNRELATED=0; UNKNOWN=0
+STALE=0; OKAY=0; UNRELATED=0; UNKNOWN=0
 STALE_LIST=(); UNRELATED_LIST=()
 
 echo
@@ -183,7 +163,7 @@ for f in "${VEX_FILES[@]}"; do
   if (( ${#VEX_PURLS[@]} == 0 )); then
     while IFS= read -r p; do
       [[ -n "$p" ]] && VEX_PURLS+=( "$p" )
-    done < <(grep -Eo 'pkg:[A-Za-z0-9._+/@:%-]+' "$f" | sort -u || true)
+    done < <(grep -Eo 'pkg:[A-Za-z0-9._+/@:%-]+([@?][A-Za-z0-9._+:/%#;=,-]+)?' "$f" | sort -u || true)
   fi
 
   # Deduplicate/lower names
@@ -224,22 +204,17 @@ for f in "${VEX_FILES[@]}"; do
   elif (( any_cve_present == 0 )) && (( any_lib_present > 0 )); then
     status="STALE"
   elif (( any_cve_present > 0 )) && (( any_lib_present > 0 )); then
-    if (( ${#absent_cves[@]} > 0 )) || (( ${#missing_purls[@]} + ${#missing_names[@]} > 0 )); then
-      status="PARTIAL"
-    else
       status="OK"
-    fi
   else
     if [[ -z "$CVE_LIST" ]]; then
       status="UNKNOWN"
     else
-      if (( ${#present_cves[@]} == 0 )); then status="STALE"; else status="PARTIAL"; fi
+      if (( ${#present_cves[@]} == 0 )); then status="STALE"; else status="OK"; fi
     fi
   fi
 
   case "$status" in
     OK)        echo "${GREEN}OK${RESET}        $f"; ((OKAY++)) ;;
-    PARTIAL)   echo "${MAGENTA}PARTIAL${RESET}   $f"; ((PARTIAL++)) ;;
     STALE)     echo "${YELLOW}STALE${RESET}      $f"; STALE_LIST+=( "$f" ); ((STALE++)) ;;
     UNRELATED) echo "${BLUE}UNRELATED${RESET}  $f"; UNRELATED_LIST+=( "$f" ); ((UNRELATED++)) ;;
     *)         echo "${RED}UNKNOWN${RESET}    $f  (no usable product metadata)"; ((UNKNOWN++)) ;;
@@ -255,15 +230,4 @@ for f in "${VEX_FILES[@]}"; do
 done
 
 echo
-echo "${BOLD}Summary:${RESET}  OK=${OKAY}  PARTIAL=${PARTIAL}  STALE=${STALE}  UNRELATED=${UNRELATED}  UNKNOWN=${UNKNOWN}"
-
-if (( STALE > 0 )) && [[ -n "$MOVE_STALE" ]]; then
-  mkdir -p "$MOVE_STALE"
-  for s in "${STALE_LIST[@]}"; do mv -v "$s" "$MOVE_STALE"/; done
-  echo "Moved $STALE stale file(s) to: $MOVE_STALE"
-fi
-if (( UNRELATED > 0 )) && [[ -n "$MOVE_UNRELATED" ]]; then
-  mkdir -p "$MOVE_UNRELATED"
-  for s in "${UNRELATED_LIST[@]}"; do mv -v "$s" "$MOVE_UNRELATED"/; done
-  echo "Moved $UNRELATED unrelated file(s) to: $MOVE_UNRELATED"
-fi
+echo "${BOLD}Summary:${RESET}  OK=${OKAY}  STALE=${STALE}  UNRELATED=${UNRELATED}  UNKNOWN=${UNKNOWN}"
