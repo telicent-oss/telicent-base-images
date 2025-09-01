@@ -8,6 +8,7 @@ set -euo pipefail
 #
 # Usage:
 #   ./find_stale_vex.sh <image[:tag]>
+# Default: will use the ubi9-minimal instance used in this repo (not necessarily latest).
 #
 
 usage() {
@@ -27,17 +28,22 @@ mktempf() {
   printf '%s\n' "$t"
 }
 
-# ---- Parse arguments ----
-IMAGE="${1:-}"; [[ -z "$IMAGE" ]] && usage
-shift || true
+# ---- Make sure we have trivy, jq & awk available ----
+for cmd in trivy jq awk; do
+  command -v "$cmd" >/dev/null 2>&1 || { echo "Error: '$cmd' is required." >&2; exit 1; }
+done
+
+# ---- Parse argument, if provided ----
+IMAGE=""
+if [[ -z "${1:-}" ]]; then
+  IMAGE=$(grep "ubi9-minimal" image-descriptors/telicent-base-java.yaml | awk -F\" '{print $2}')
+else
+  IMAGE="$1"
+  shift || true
+fi
 
 SEVERITY="CRITICAL,HIGH"
 VEX_DIR="./.vex"
-
-# ---- Make sure we have trivy & jq installed ----
-for cmd in trivy jq; do
-  command -v "$cmd" >/dev/null 2>&1 || { echo "Error: '$cmd' is required." >&2; exit 1; }
-done
 
 # ---- Colour the output ----
 if [ -t 1 ]; then
