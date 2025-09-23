@@ -3,7 +3,7 @@ schema_version: 1
 from: "redhat/ubi9-minimal:9.6-1758184547"
 
 name: &name "telicent-java21"
-version: &version "1.2.24"
+version: &version "1.2.25"
 description: "Telicent's java base image built on Red Hat UBI9 minimal."
 
 # Ensure compliance with Red Hat UBI EULA
