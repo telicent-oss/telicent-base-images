@@ -13,7 +13,7 @@ permissions:
 jobs:
   changed-images:
     name: Detect Changes
-    # Only run for commits not from a bot, or if a bot is making a specific 'chore' commit.
+    #&& !contains(github.event.head_commit.message, 'release')
     if: ${{ github.event.head_commit.author.name != 'github-actions[bot]' || contains(github.event.head_commit.message, 'chore(bot)') }}
     uses: ./.github/workflows/detect-changed-images.yaml
     with:
