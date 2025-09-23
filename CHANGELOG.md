@@ -1,5 +1,21 @@
 # Changelog
 
+## Changes from v0.5.10 to v0.5.11
+
+### Chores
+- update base for descriptors  ([651359b](https://github.com/telicent-oss/telicent-base-images/commit/651359b52ff947ada2fdbf5f675a235bb839e52c))
+### Fixes
+- Added CVE-2025-59375 (#230)  ([3b08fce](https://github.com/telicent-oss/telicent-base-images/commit/3b08fcea617deaf031a80974e76751e9d8e04eb0))
+### Others
+- [CORE-938] Tweak output - ACTIVE is better than OK ([9d7686b](https://github.com/telicent-oss/telicent-base-images/commit/9d7686ba57fdfec0327d794e8d36fa3e3b7bdde9))
+- [CORE-938] Adding suppression for CVE-2025-8941. By default, find the UBI-9 instance we are using and check that. ([6d2b600](https://github.com/telicent-oss/telicent-base-images/commit/6d2b600a4ba55f266cdb10410ed6a19c46215d98))
+- [CORE-938] Adding suppression for CVE-2025-8941. Simplifying script to be easier to use and understand. ([85fec2c](https://github.com/telicent-oss/telicent-base-images/commit/85fec2ca8a20256e730b63862807a5c7641a9566))
+- [CORE-938] Adding suppression for CVE-2025-8941. Removing accidental commit. ([8e20ef9](https://github.com/telicent-oss/telicent-base-images/commit/8e20ef9d38ffea9f56bb5cf914d3fb729c23ce50))
+- Update .vex/CVE-2025-8941.openvex.json ([4fd439b](https://github.com/telicent-oss/telicent-base-images/commit/4fd439b59bd002821c7d78249c507108b347a54a))
+- [CORE-939] Adding suppression for CVE-2025-8941 ([f6a3c40](https://github.com/telicent-oss/telicent-base-images/commit/f6a3c407205a054dd8d25acfe364cc72f97496cb))
+- [CORE-938] Removing stale CVEs that are no longer applicable and added script to find them. ([2cf7259](https://github.com/telicent-oss/telicent-base-images/commit/2cf72592208f49ea5bdc54fb25d53d6f03b3019b))
+- [CORE-938] Removing CVE-2025-4638 suppression as no longer necessary. ([f620e54](https://github.com/telicent-oss/telicent-base-images/commit/f620e54976067f598be2ea6e0891196de8b9ef15))
+
 ## Changes from v0.5.9 to v0.5.10
 
 ### Chores
