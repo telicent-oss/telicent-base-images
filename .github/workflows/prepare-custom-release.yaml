@@ -14,7 +14,7 @@ jobs:
   changed-images:
     name: Detect Changes
     #&& !contains(github.event.head_commit.message, 'release')
-    if: ${{ github.event.head_commit.author.name != 'github-actions[bot]' || contains(github.event.head_commit.message, 'chore(bot)')}}
+    if: ${{ github.event.head_commit.author.name != 'github-actions[bot]' || contains(github.event.head_commit.message, 'chore(bot)') }}
     uses: ./.github/workflows/detect-changed-images.yaml
     with:
      TAG_VERSION: ${{ github.ref }}
@@ -22,7 +22,8 @@ jobs:
 
   create-release-pr:
     needs: [changed-images]
-    if: ${{ (github.event.head_commit.author.name != 'github-actions[bot]' || contains(github.event.head_commit.message, 'chore(bot)')) && needs.changed-images.outputs.images != '["[]"]' }}
+    # The job will only run if the 'images' output from the previous job is not empty.
+    if: ${{ needs.changed-images.outputs.images != '["[]"]' }}
     name: create-or-update-release-pr
     runs-on: ubuntu-latest
     steps:
@@ -33,49 +34,43 @@ jobs:
 
       - name: Determine Next Release Version
         id: determine-version
-        # NB - This sets new_version both as an environment variable, and as a step output
-        #      If no eligible changes are detected then the version won't be bumped and we'll
-        #      use the lack of output to skip the subsequent steps
         run: |
-            ./tag_version.sh 
+          ./tag_version.sh
 
       - name: Issue Warning if Merging with No Releasable changes
         if: ${{ steps.determine-version.outputs.new_version == '' }}
         run: |
-          echo "::warning title=No Releasable Changes Detected::No Releasable Changes were detected, remember you MUST use conventional commit style messages for releases to be automatically generated!"
+          echo "::warning title=No Releasable Changes Detected::No releasable changes were detected. Remember you MUST use conventional commit style messages for releases to be automatically generated!"
+          exit 1
 
       - name: Update Versions in Image Descriptors
         id: update-versions
-        if: ${{ steps.determine-version.outputs.new_version != '' }}
         run: |
-          echo "Updating image descriptors for version ${{ env.new_version }}."
+          echo "Updating image descriptors for version ${{ steps.determine-version.outputs.new_version }}."
           echo "Images to update: ${{ needs.changed-images.outputs.images }}"
           ./update_version.sh ${{ needs.changed-images.outputs.images }}
 
       - name: Append Changelog
         id: generate-changelog
-        if: ${{ steps.determine-version.outputs.new_version != '' }}
         run: |
-          ./generate_changelog.sh
+          ./generate_changelog.sh ${{ steps.determine-version.outputs.new_version }}
 
       - name: Commit Changes and Create Release Branch
-        if: ${{ steps.determine-version.outputs.new_version != '' }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add .
-          git commit -m "chore: prepare release ${{ env.new_version }}" || echo "No changes to commit."
+          git commit -m "chore: prepare release ${{ steps.determine-version.outputs.new_version }}" || echo "No changes to commit."
 
       - name: Open or Update Release PR
-        if: ${{ steps.determine-version.outputs.new_version != '' }}
         uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "chore: prepare release ${{ env.new_version }}"
-          base: main
-          branch: release/${{ env.new_version }}
-          title: "chore: prepare release ${{ env.new_version }}"
+          commit-message: "chore: prepare release ${{ steps.determine-version.outputs.new_version }}"
+          base: ${{ github.event.repository.default_branch }}
+          branch: release/${{ steps.determine-version.outputs.new_version }}
+          title: "chore: prepare release ${{ steps.determine-version.outputs.new_version }}"
           body: |
             ## Changes 
-            ${{ env.new_changelog }}
+            ${{ steps.generate-changelog.outputs.new_changelog }}
           labels: "release: pending"
