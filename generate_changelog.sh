@@ -7,6 +7,8 @@
 # Filters out previous release PRs to keep the changelog clean.
 #====================================================================================================
 
+new_version=$1
+
 function get_commit_range() {
   tags=($(git tag --sort=-creatordate | head -n 2))
 
@@ -141,6 +143,6 @@ fi
 
 {
   echo "new_changelog<<EOF"
-  echo -e "$new_changelog"
+  echo "$new_changelog"
   echo "EOF"
 } >> $GITHUB_ENV
