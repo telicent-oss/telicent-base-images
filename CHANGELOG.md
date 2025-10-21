@@ -1,5 +1,10 @@
 # Changelog
 
+## Changes from v0.5.12 to v0.5.13
+
+### Chores
+- prepare release v0.5.12  ([4a2ffc5](https://github.com/telicent-oss/telicent-base-images/commit/4a2ffc5ab8723b990fb661f7a826a99fdf6701e2))
+
 ## Changes from v0.5.11 to v0.5.12
 
 ### Chores
