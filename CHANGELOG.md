@@ -1,5 +1,13 @@
 # Changelog
 
+## Changes from v0.5.11 to v0.5.12
+
+### Chores
+- update base for descriptors  ([f246396](https://github.com/telicent-oss/telicent-base-images/commit/f24639601e05b84f5b12667fab8a3b6b3e5435da))
+### Others
+- [Minor] Properly propagate values and general script tidy up. ([5629aeb](https://github.com/telicent-oss/telicent-base-images/commit/5629aeb00b487c853794eb44cec37bfc3aa3cf9f))
+- [Minor] Properly propagate values and general script tidy up. ([209c68f](https://github.com/telicent-oss/telicent-base-images/commit/209c68fd61832bd8657f750ea341d07d4e339736))
+
 ## Changes from v0.5.10 to v0.5.11
 
 ### Chores
