@@ -186,6 +186,19 @@ To help with tracking and mitigation, we maintain an internal CVE Tracker contai
 Often, we determine that a CVE does **not** affect our usage, and we want to suppress it from future reports. However, this can be time-consuming. This is where the `generate_cve.sh` script helps automate and streamline the suppression process.
 
 ### Test Suppressions
+#### Trivy
+To test the current suppressions against an image run the following script:
+```bash
+./trivy-with-vex.sh telicent/telicent-java21
+```
+
+#### Grype
+Experimental: This has to translate the vex files into a more grype-friendly format (see https://github.com/telicent-oss/grype-action)
+```bash
+./grype-with-vex.sh telicent/telicent-java21
+```
+
+
 To test the current suppressions against an image run the following script:
 ```bash
 ./trivy-with-vex.sh telicent/telicent-java21
