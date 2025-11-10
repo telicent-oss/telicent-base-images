@@ -122,7 +122,7 @@ fi
 # This is the ONLY expected output from the script.
 log "Running Grype scan for image: $IMAGE"
 
-grype -q --by-cve --only-fixed --output=table --show-suppressed "docker:$IMAGE"
+grype -q --by-cve --output=table --sort-by=severity --show-suppressed "docker:$IMAGE"
 
 # --- Cleanup ---
 
