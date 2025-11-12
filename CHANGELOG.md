@@ -1,5 +1,12 @@
 # Changelog
 
+## Changes from v0.5.14 to v0.5.15
+
+### Chores
+- prepare release v0.5.14  ([164794e](https://github.com/telicent-oss/telicent-base-images/commit/164794e4e7e0fd28feba80458e128de6f81d6e2f))
+### Others
+- [Minor] Adding OS variants to existing CVEs ([2ce6891](https://github.com/telicent-oss/telicent-base-images/commit/2ce6891eb50b8d9e2f2629e6ea78cdecc0bf3dd9))
+
 ## Changes from v0.5.13 to v0.5.14
 
 ### Chores
