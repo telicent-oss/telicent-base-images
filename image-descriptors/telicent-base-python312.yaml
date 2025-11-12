@@ -1,6 +1,6 @@
 schema_version: 1
 
-from: "redhat/ubi9-minimal:9.6-1760515502"
+from: "redhat/ubi9-minimal:9.7-1762180032"
 
 name: &name "telicent-python3.12"
 version: &version "1.2.27"
