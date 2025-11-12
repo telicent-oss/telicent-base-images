@@ -1,5 +1,17 @@
 # Changelog
 
+## Changes from v0.5.13 to v0.5.14
+
+### Chores
+- update base for descriptors  ([db918b0](https://github.com/telicent-oss/telicent-base-images/commit/db918b0a1d6e89e9683a1b4dfeb51877103e1c74))
+### Others
+- [Minor] Addressing CVE-2025-12863. Plus updating Grype script. ([db814aa](https://github.com/telicent-oss/telicent-base-images/commit/db814aa1d1cea3b0a5fdff306a6a865770a2c57d))
+- [Minor] Extending CVE-2025-59375 to cover Mac OS. ([694b757](https://github.com/telicent-oss/telicent-base-images/commit/694b7579199fd43900d6e8ba4117c1b9ac621b7c))
+- [Minor] CVE-2005-2541 & CVE-2024-10524 ([84d8426](https://github.com/telicent-oss/telicent-base-images/commit/84d8426d6c1f9b86a038ea52e8c9eb3790ceb5c0))
+- [Minor] CVE-2025-53057 ([5993815](https://github.com/telicent-oss/telicent-base-images/commit/5993815c552e03fdad01dcfb19bd297f5647fd86))
+- [CORE-1017] Adding Vex statement for CVE-2025-53066 and grype script for testing ([728262d](https://github.com/telicent-oss/telicent-base-images/commit/728262d6e50ce6fd05a16c4e000d1879792c4c1e))
+- [CORE-1017] Adding Vex statement for CVE-2025-53066 and grype script for testing ([b7b2ff0](https://github.com/telicent-oss/telicent-base-images/commit/b7b2ff09fc64639d0da112e9e6c1013386b9ef63))
+
 ## Changes from v0.5.12 to v0.5.13
 
 ### Chores
