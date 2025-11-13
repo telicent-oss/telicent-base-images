@@ -1,5 +1,12 @@
 # Changelog
 
+## Changes from v0.5.15 to v0.5.16
+
+### Chores
+- update base for descriptors  ([0a4da1c](https://github.com/telicent-oss/telicent-base-images/commit/0a4da1c832f8be07b8218dddcffa244774072d92))
+### Others
+- [Minor] Some CVEs need patching after base image move to Red Hat 9.7 (from 9.6) ([4262b48](https://github.com/telicent-oss/telicent-base-images/commit/4262b48f2d86f1c7f1040f9126309159eb2b60a6))
+
 ## Changes from v0.5.14 to v0.5.15
 
 ### Chores
