@@ -1,5 +1,14 @@
 # Changelog
 
+## Changes from v0.5.16 to v0.5.17
+
+### Chores
+- update base for descriptors  ([5260c4f](https://github.com/telicent-oss/telicent-base-images/commit/5260c4f3dc5d679a6269390b5d7dbb6861c349cb))
+- update base for descriptors  ([b520060](https://github.com/telicent-oss/telicent-base-images/commit/b52006023de163537c810c96096ab4f110fd8c93))
+- prepare release v0.5.16  ([d3e0035](https://github.com/telicent-oss/telicent-base-images/commit/d3e0035c58e1d217d394911e3e7efde63ed5b33d))
+### Others
+- [Fix] Stop the Prepare Release action from triggering the Prepare Release action infinitely. ([5ac2a05](https://github.com/telicent-oss/telicent-base-images/commit/5ac2a055be5f0d8257efe5ef0960f6c31d7ce39a))
+
 ## Changes from v0.5.15 to v0.5.16
 
 ### Chores
