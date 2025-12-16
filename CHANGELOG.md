@@ -1,5 +1,12 @@
 # Changelog
 
+## Changes from v0.5.17 to v0.5.18
+
+### Chores
+- update base for descriptors  ([d51287f](https://github.com/telicent-oss/telicent-base-images/commit/d51287f714f84a1893a4b94d1912e2c331513f2e))
+### Others
+- [Minor] SC Graph is the only public image we are still using. ([9372eb1](https://github.com/telicent-oss/telicent-base-images/commit/9372eb19b7179c3de850e6c899ec55acc3290198))
+
 ## Changes from v0.5.16 to v0.5.17
 
 ### Chores
