@@ -1,0 +1,7 @@
+schema_version: 1
+name: telicent.container.util.perftools
+version: "1.0"
+description: "Performance profiling tools for runtime images."
+
+execute:
+  - script: exec.sh

@@ -2,9 +2,9 @@ schema_version: 1
 
 from: "redhat/ubi9-minimal:9.7-1764794109"
 
-name: &name "telicent-java21"
+name: &name "telicent-java21-debug"
 version: &version "1.2.35"
-description: &description "Telicent's java base image built on Red Hat UBI9 minimal."
+description: &description "Telicent's Java debug base image built on Red Hat UBI9 minimal."
 
 # Ensure compliance with Red Hat UBI EULA
 labels:
@@ -13,17 +13,17 @@ labels:
   - name: "version"
     value: *version
   - name: "description"
-    value: "Telicent's base image built on Red Hat UBI9 minimal with added Temurin OpenJDK and dumb-init"
+    value: "Telicent's Java debug base image built on Red Hat UBI9 minimal with added Temurin OpenJDK and debug tools"
   - name: "com.redhat.license_terms"
     value: "https://www.redhat.com/en/about-red-hat-end-user-license-agreements#UBI" # DO NOT REMOVE
   - name: "io.k8s.display-name"
-    value: "Telicent UBI Java Base"
+    value: "Telicent UBI Java Debug Base"
   - name: "io.openshift.tags"
-    value: "base ubi9 telicent-java21"
+    value: "base ubi9 telicent-java21-debug"
   - name: "org.opencontainers.image.source"
     value: "https://github.com/telicent-oss/telicent-base-images"
   - name: "summary"
-    value: "Telicent Base Java Image built from Red Hat Universal Base Image 9 with added non root default user"
+    value: "Telicent Java debug image built from Red Hat Universal Base Image 9 with added non root default user"
   - name: "maintainer"
     value: "Telicent OSS <opensource@telicent.io>"
   - name: "vendor"
@@ -58,4 +58,5 @@ modules:
       version: "21"
     - name: telicent.container.dumb-init
       version: "1.2.5"
+    - name: telicent.container.util.debugtools
     - name: telicent.container.util.cleanup.microdnf

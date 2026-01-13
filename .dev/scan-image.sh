@@ -9,10 +9,22 @@ command -v grype >/dev/null 2>&1 || {
   echo "ERROR: grype not found. Install via Homebrew: brew install anchore/grype/grype"
   exit 1
 }
+command -v yq >/dev/null 2>&1 || {
+  echo "ERROR: yq (v4+) not found. Install via Homebrew: brew install yq"
+  exit 1
+}
 command -v docker >/dev/null 2>&1 || {
   echo "ERROR: docker CLI not found. Install Docker Desktop and ensure it's running."
   exit 1
 }
+if [[ ! -x "./trivy-with-vex.sh" ]]; then
+  echo "ERROR: ./trivy-with-vex.sh not found or not executable."
+  exit 1
+fi
+if [[ ! -x "./grype-with-vex.sh" ]]; then
+  echo "ERROR: ./grype-with-vex.sh not found or not executable."
+  exit 1
+fi
 
 # Get docker image; If none passed, then get most recently created local image
 if [[ "${1:-}" ]]; then
@@ -24,9 +36,8 @@ else
   IMAGE="${latest_line##*|}"
 fi
 
-echo "Scanning local image with Trivy: $IMAGE"
-trivy image --severity CRITICAL,HIGH --format table "$IMAGE"
+echo "Scanning local image with Trivy (VEX suppressions): $IMAGE"
+./trivy-with-vex.sh "$IMAGE"
 
-grype db update -vv
-echo "Scanning local image with Grype: $IMAGE"
-grype "$IMAGE" -o table
+echo "Scanning local image with Grype (VEX suppressions): $IMAGE"
+./grype-with-vex.sh "$IMAGE"
