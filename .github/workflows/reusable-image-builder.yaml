@@ -223,14 +223,27 @@ jobs:
 
       - name: Create multi-arch manifests
         run: |
+          set -euo pipefail
+          IMAGE_NAME="${{ steps.extract.outputs.image_name }}"
+          IMAGE_VERSION="${{ steps.extract.outputs.image_version }}"
+
+          if [[ ! "$IMAGE_NAME" =~ ^[a-z0-9._-]+$ ]]; then
+            echo "Invalid image name: $IMAGE_NAME" >&2
+            exit 1
+          fi
+          if [[ ! "$IMAGE_VERSION" =~ ^[0-9]+\\.[0-9]+\\.[0-9]+$ ]]; then
+            echo "Invalid image version: $IMAGE_VERSION" >&2
+            exit 1
+          fi
+
           docker buildx imagetools create \
-            -t telicent/${{ steps.extract.outputs.image_name }}:${{ steps.extract.outputs.image_version }} \
-            telicent/${{ steps.extract.outputs.image_name }}:${{ steps.extract.outputs.image_version }}-amd64 \
-            telicent/${{ steps.extract.outputs.image_name }}:${{ steps.extract.outputs.image_version }}-arm64
+            -t "telicent/${IMAGE_NAME}:${IMAGE_VERSION}" \
+            "telicent/${IMAGE_NAME}:${IMAGE_VERSION}-amd64" \
+            "telicent/${IMAGE_NAME}:${IMAGE_VERSION}-arm64"
           docker buildx imagetools create \
-            -t telicent/${{ steps.extract.outputs.image_name }}:latest \
-            telicent/${{ steps.extract.outputs.image_name }}:latest-amd64 \
-            telicent/${{ steps.extract.outputs.image_name }}:latest-arm64
+            -t "telicent/${IMAGE_NAME}:latest" \
+            "telicent/${IMAGE_NAME}:latest-amd64" \
+            "telicent/${IMAGE_NAME}:latest-arm64"
 
       - name: Grype Image Scan
         id: grype-scan
