@@ -146,7 +146,7 @@ Quick commands you can use inside the debug base image:
 - Process and threads: `ps aux`, `top`, `ps -eLf | grep java`
 - Port and socket checks: `ss -tulpn`, `netstat -tulpn`, `lsof -i :8080`
 - DNS and connectivity: `dig service`, `nslookup service`, `nc -vz host 443`
-- HTTP checks: `curl -v http://localhost:8080/health`
+- HTTP checks: `curl -v http://localhost:8080/healthz`
 - JSON inspection: `curl -s http://service/api | jq .`
 - File and binary tracing: `strace -p <pid>`, `gdb -p <pid>`
 
