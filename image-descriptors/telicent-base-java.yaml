@@ -58,4 +58,4 @@ modules:
       version: "21"
     - name: telicent.container.dumb-init
       version: "1.2.5"
-    - name: telicent.container.util.cleanup.microdnf
+    - name: telicent.container.util.devtools
