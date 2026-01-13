@@ -12,6 +12,11 @@ on:
         description: "Specify the tag to build (must exist in the format v<major>.<minor>.<patch>)"
         required: true
         type: string
+      enable_arm64:
+        description: "Enable native arm64 builds when an arm64 runner is available"
+        required: false
+        default: false
+        type: boolean
   workflow_run:
     workflows: [ handle-release-pr-merged ]
     types: [ completed ]
@@ -97,6 +102,7 @@ jobs:
       IMAGE-DESCRIPTORS: ${{ needs.detect-changed-images.outputs.images }}
       TAG: ${{ needs.validate-tag.outputs.tag }}
       GRYPE_SECURITY_ISSUES_BLOCK_ONLY_IF_FIX_AVAILABLE: true
+      ENABLE_ARM64: ${{ github.event.inputs.enable_arm64 || false }}
 
   no-changes:
     if: ${{ needs.detect-changed-images.outputs.images == '["[]"]' }}
