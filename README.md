@@ -344,6 +344,7 @@ Manual trigger:
 Notes:
 - Tags must be in the format `v<major>.<minor>.<patch>`.
 - Docker Hub credentials are required via repo secrets.
+- ARM64 builds default to QEMU emulation. If the arm64 job fails or hangs, re-run the workflow with `enable_arm64=false` or use a native arm64 runner.
 
 
 ## CVE - Suppression
