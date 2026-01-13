@@ -1,5 +1,17 @@
 # Changelog
 
+## Changes from v0.5.18 to v0.6.0
+
+### Features
+- Adding dedicated Perf and Debug bases for Java.  ([e062f61](https://github.com/telicent-oss/telicent-base-images/commit/e062f61b7be09d57fbdd25e49cf5da7ccb773b56))
+- Adding dedicated Perf and Debug bases for Java.  ([6eadd8d](https://github.com/telicent-oss/telicent-base-images/commit/6eadd8d03e366f3343c3d1717e6c77a1e8dbca04))
+### Others
+- Update README.md ([e0ede29](https://github.com/telicent-oss/telicent-base-images/commit/e0ede2919073553a17bc4e065f45af30089972a9))
+- [CORE-1116] Adding suppression for CVE-2026-22184 ([d2f8001](https://github.com/telicent-oss/telicent-base-images/commit/d2f8001f496d38c83a2bc45c0be18c38c7dd2ce8))
+- [Minor] Adding suppression for medium level CVEs that are raised against the SC Graph. ([7ccce77](https://github.com/telicent-oss/telicent-base-images/commit/7ccce77c29bbd331c52203daece80685859ac4fa))
+- [CORE-1114] Adding suppression for CVE-2025-68973 ([59f2978](https://github.com/telicent-oss/telicent-base-images/commit/59f29782d1e697f5c5f3d6d9307f45ee75eb9a1c))
+- [CORE-1110] Suppress CVE-2025-6176 & CVE-2025-64756 ([dfa7ed5](https://github.com/telicent-oss/telicent-base-images/commit/dfa7ed5993191a61cf8b4aec260c18c8c2758b40))
+
 ## Changes from v0.5.17 to v0.5.18
 
 ### Chores
