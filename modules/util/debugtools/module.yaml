@@ -1,0 +1,22 @@
+schema_version: 1
+name: telicent.container.util.debugtools
+version: "1.0"
+description: "Debugging and troubleshooting tools for runtime images."
+
+packages:
+  install:
+    - bind-utils
+    - curl-minimal
+    - gdb
+    - iproute
+    - iputils
+    - jq
+    - less
+    - lsof
+    - net-tools
+    - nmap-ncat
+    - procps-ng
+    - strace
+    - vim-minimal
+    - wget
+    - which

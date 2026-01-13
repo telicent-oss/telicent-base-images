@@ -99,6 +99,165 @@ Ships with a Temurin JRE and dumb-init installed on it, available on PATH.
 See [modules/jdk/jdk-base](modules/jdk/jdk-base) for specific modifications to Java,
 currently only the secure file is touched.
 
+### Java Slim Base
+
+The standard Java base (`telicent-java21`) is now slim by default and does not include extra
+debug tooling. Use this for production images to reduce size and CVEs.
+
+Descriptor: `image-descriptors/telicent-base-java.yaml`
+
+
+### Java Debug Base
+
+Use the debug base when you need extra tooling for live troubleshooting. It extends the Java base with
+common diagnostics utilities (networking, process, and tracing tools).
+
+Descriptor: `image-descriptors/telicent-base-java-debug.yaml`
+
+Included tools:
+- bind-utils, curl, gdb, iproute, iputils, jq, less, lsof, net-tools
+- nmap-ncat, procps-ng, strace, vim-minimal, wget, which
+
+Example use:
+```
+FROM telicent/telicent-java21-debug:latest
+```
+
+### Java Perf Base
+
+Use the perf base when you need profiling and performance analysis tools. It extends the debug base with
+performance utilities.
+
+Descriptor: `image-descriptors/telicent-base-java-perf.yaml`
+
+Included tools (perf additions):
+- sysstat
+- kernel-tools (perf) when `ubi-9-codeready-builder-rpms` is available
+
+Example use:
+```
+FROM telicent/telicent-java21-perf:latest
+```
+
+### Debugging Cookbook
+
+Quick commands you can use inside the debug base image:
+
+- Process and threads: `ps aux`, `top`, `ps -eLf | grep java`
+- Port and socket checks: `ss -tulpn`, `netstat -tulpn`, `lsof -i :8080`
+- DNS and connectivity: `dig service`, `nslookup service`, `nc -vz host 443`
+- HTTP checks: `curl -v http://localhost:8080/healthz`
+- JSON inspection: `curl -s http://service/api | jq .`
+- File and binary tracing: `strace -p <pid>`, `gdb -p <pid>`
+
+### Perf Cookbook
+
+JVM-native:
+- Thread dump: `jcmd 1 Thread.print > /tmp/telicent-profiles/thread-dump.txt`
+- Heap dump: `jcmd 1 GC.heap_dump /tmp/telicent-profiles/heap.hprof`
+- JFR (startup): `-XX:StartFlightRecording=filename=/tmp/telicent-profiles/app.jfr,settings=profile`
+- JFR (live): `jcmd 1 JFR.start filename=/tmp/telicent-profiles/app.jfr settings=profile`
+
+OS-level (may require extra privileges):
+- CPU profile: `perf record -F 99 -p 1 -g -- sleep 30` (requires kernel-tools)
+- CPU stats: `mpstat -P ALL 1 5`
+- Disk stats: `iostat -xz 1 5`
+
+Async-profiler (example):
+- Add to Dockerfile.perf (pinned version):
+```
+ARG ASYNC_PROFILER_VERSION=3.0
+RUN curl -fsSL -o /tmp/async-profiler.tgz \
+    https://github.com/jvm-profiling-tools/async-profiler/releases/download/v${ASYNC_PROFILER_VERSION}/async-profiler-${ASYNC_PROFILER_VERSION}-linux-x64.tar.gz \
+  && mkdir -p /opt/async-profiler \
+  && tar -xzf /tmp/async-profiler.tgz -C /opt/async-profiler --strip-components=1 \
+  && rm -f /tmp/async-profiler.tgz
+ENV PATH="/opt/async-profiler:$PATH"
+```
+- Run against PID 1 for 30s (CPU flamegraph output):
+  `/opt/async-profiler/profiler.sh -e cpu -d 30 -f /tmp/telicent-profiles/cpu.html 1`
+
+### JVM Flags Quick-Start
+
+Use `JAVA_TOOL_OPTIONS` to turn on common diagnostics without changing startup scripts:
+
+- GC logs:
+  `-Xlog:gc*:file=/tmp/telicent-profiles/gc.log:time,uptime,level,tags`
+- Heap dump on OOM:
+  `-XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/tmp/telicent-profiles/heap-oom.hprof`
+- JFR at startup:
+  `-XX:StartFlightRecording=filename=/tmp/telicent-profiles/app.jfr,settings=profile`
+
+Example:
+```
+ENV JAVA_TOOL_OPTIONS="-Xlog:gc*:file=/tmp/telicent-profiles/gc.log:time,uptime,level,tags -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/tmp/telicent-profiles/heap-oom.hprof"
+```
+
+### Exporting Debug/Perf Artifacts
+
+To get logs, dumps, and profiles out of the container, write them to a mounted directory.
+
+Example Dockerfile snippet:
+```
+FROM telicent/telicent-java21-perf:latest
+USER root
+RUN mkdir -p /tmp/telicent-profiles && chown -R user:user /tmp/telicent-profiles
+USER user
+ENV PROFILE_DIR=/tmp/telicent-profiles
+```
+
+Example run:
+```
+docker run --rm -v "$PWD/profiles:/tmp/telicent-profiles" my-app:latest
+```
+
+If you need `perf`, `strace`, or `gdb` inside a container, you may need extra privileges:
+```
+docker run --rm --cap-add=SYS_PTRACE --cap-add=SYS_ADMIN --security-opt seccomp=unconfined \
+  -v "$PWD/profiles:/tmp/telicent-profiles" my-app:latest
+```
+
+### Dockerfile Variants (Debug/Perf)
+
+Suggested pattern for app repos:
+
+`Dockerfile` (production):
+```
+FROM telicent/telicent-java21:latest
+```
+
+`Dockerfile.debug`:
+```
+FROM telicent/telicent-java21-debug:latest
+USER root
+RUN mkdir -p /tmp/telicent-profiles && chown -R user:user /tmp/telicent-profiles
+USER user
+ENV PROFILE_DIR=/tmp/telicent-profiles
+```
+
+`Dockerfile.perf`:
+```
+FROM telicent/telicent-java21-perf:latest
+USER root
+RUN mkdir -p /tmp/telicent-profiles && chown -R user:user /tmp/telicent-profiles
+USER user
+ENV PROFILE_DIR=/tmp/telicent-profiles
+ENV JAVA_TOOL_OPTIONS="-Xlog:gc*:file=/tmp/telicent-profiles/gc.log:time,uptime,level,tags -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/tmp/telicent-profiles/heap-oom.hprof"
+```
+
+Build/run examples:
+```
+# Build the debug variant with extra troubleshooting tools
+docker build -f Dockerfile.debug -t my-app:debug .
+# Build the perf variant with profiling utilities
+docker build -f Dockerfile.perf -t my-app:perf .
+# Run the debug image and persist artifacts to the host
+docker run --rm -v "$PWD/profiles:/tmp/telicent-profiles" my-app:debug
+# Run the perf image with extra privileges for profiling tools
+docker run --rm --cap-add=SYS_PTRACE --cap-add=SYS_ADMIN --security-opt seccomp=unconfined \
+  -v "$PWD/profiles:/tmp/telicent-profiles" my-app:perf
+```
+
 
 ### Nginx Image
 
@@ -136,6 +295,8 @@ table below, therefore the table is not full.
 | `telicent.container.util.pkg-update`          | `modules/util/pkg-update`                 |
 | `telicent.container.python`                   | `modules/python/313`                      |
 | `telicent.container.util.cleanup`             | `modules/util/cleanup/microdnf`           |
+| `telicent.container.util.debugtools`          | `modules/util/debugtools`                 |
+| `telicent.container.util.perftools`           | `modules/util/perftools`                  |
 | `telicent.container.util.pyenv-perms`         | `modules/util/pyenv-perms`                |
 | `telicent.container.utils.cleanup.tar-gzip`   | `modules/util/cleanup/tar-gzip`           |
 | `telicent.container.openjdk.base`             | `modules/jdk/jdk-base/base`               |
@@ -167,6 +328,22 @@ table below, therefore the table is not full.
 ./.dev/build-image.sh ./image-descriptors/telicent-base-nginx127.yaml && ./.dev/scan-image.sh
 ```
 - **Outcome**: Builds the telicent-base-nginx127 image and immediately scans it for issues
+
+## Release and Publish (GitHub Actions)
+
+Publishing is handled by GitHub Actions and pushes images to Docker Hub (`telicent/*`).
+
+High-level flow:
+1. Create or update a release PR via the `prepare-custom-release.yaml` workflow.
+2. Merge the release PR (branch `release/<version>`), which tags the release.
+3. The tag triggers `build-release-images.yaml`, which builds and pushes images.
+
+Manual trigger:
+- You can also manually dispatch `build-release-images.yaml` with an existing tag like `v1.2.35`.
+
+Notes:
+- Tags must be in the format `v<major>.<minor>.<patch>`.
+- Docker Hub credentials are required via repo secrets.
 
 
 ## CVE - Suppression
