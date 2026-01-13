@@ -87,6 +87,8 @@ jobs:
   build-images-with-reusable-workflow:
     if: ${{ needs.detect-changed-images.outputs.images != '["[]"]' }}
     secrets: inherit
+    permissions:
+      contents: write
     needs:
       - validate-tag
       - detect-changed-images
