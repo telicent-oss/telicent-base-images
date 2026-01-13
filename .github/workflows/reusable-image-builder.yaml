@@ -18,147 +18,298 @@ on:
         description: |
           Sets --only-fixed flag for Grype
 
+permissions:
+  contents: read
+
 jobs:
   test_inputs:
     runs-on: ubuntu-latest
     steps:
       - name: Check inputs
         run: |
-          echo "Raw inputs: ${{ inputs.IMAGE-DESCRIPTORS }}
-          echo "Parsed inputs: ${{ fromJson(inputs.IMAGE-DESCRIPTORS)}}
+          echo "Raw inputs: ${{ inputs.IMAGE-DESCRIPTORS }}"
+          echo "Parsed inputs: ${{ fromJson(inputs.IMAGE-DESCRIPTORS)}}"
 
-  build-push-image:
-      needs: test_inputs
-      runs-on: ubuntu-latest
-      strategy:
-        fail-fast: false
-        matrix:
-          image: ${{ fromJson(inputs.IMAGE-DESCRIPTORS)}}
-      steps:
-        - name: Checkout Repository
-          uses: actions/checkout@v4
-          with:
-            ref: ${{ inputs.TAG }}
-            fetch-depth: 0
+  build-amd64:
+    needs: test_inputs
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        image: ${{ fromJson(inputs.IMAGE-DESCRIPTORS)}}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.TAG }}
+          fetch-depth: 0
 
-        - name: Install Python and PIP
-          run: |
-            sudo apt-get update
-            sudo apt-get install -y python3 python3-pip
+      - name: Install Python and PIP
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3 python3-pip
 
-        - name: Install Cekit
-          run: |
-            python3 -m pip install --upgrade pip
-            python3 -m pip install cekit
+      - name: Install Cekit
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install cekit
 
-        - name: Generate Dockerfile
-          run: |
-            cekit --descriptor image-descriptors/${{ matrix.image }}.yaml build --dry-run docker 
+      - name: Generate Dockerfile
+        run: |
+          cekit --descriptor image-descriptors/${{ matrix.image }}.yaml build --dry-run docker 
 
-        - name: Extract Image Version and Name
-          id: extract
-          run: |
-            descriptor_path="target/image.yaml"
+      - name: Extract Image Version and Name
+        id: extract
+        run: |
+          descriptor_path="target/image.yaml"
 
-            # Extract version using yq - input: version: &version "1.0.7" output - 1.0.7
-            current_version=$(yq eval '.version' "$descriptor_path" | sed 's/^[ \t]*//;s/[ \t]*$//')
+          # Extract version using yq - input: version: &version "1.0.7" output - 1.0.7
+          current_version=$(yq eval '.version' "$descriptor_path" | sed 's/^[ \t]*//;s/[ \t]*$//')
 
-            # Extract image name using yq 
-            image_name=$(yq eval '.labels[] | select(.name == "name") | .value' "$descriptor_path")
+          # Extract image name using yq 
+          image_name=$(yq eval '.labels[] | select(.name == "name") | .value' "$descriptor_path")
 
-            echo "Extracted version: $current_version"
-            echo "Extracted image name: $image_name"
-            
-            echo "image_version=$current_version" >> $GITHUB_OUTPUT
-            echo "image_name=$image_name" >> $GITHUB_OUTPUT
+          echo "Extracted version: $current_version"
+          echo "Extracted image name: $image_name"
+          
+          echo "image_version=$current_version" >> $GITHUB_OUTPUT
+          echo "image_name=$image_name" >> $GITHUB_OUTPUT
 
-        - name: Verify Correct Context
-          shell: bash
-          run: | 
-            [ -f ./target/image/Dockerfile ] || $(echo "Missing Dockerfile in ./target" && exit 1)
+      - name: Verify Correct Context
+        shell: bash
+        run: | 
+          [ -f ./target/image/Dockerfile ] || $(echo "Missing Dockerfile in ./target" && exit 1)
 
-        - name: Set up QEMU
-          uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-        - name: Set up Docker Buildx
-          uses: docker/setup-buildx-action@v3
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: "${{ secrets.DOCKER_USERNAME }}"
+          password: "${{ secrets.DOCKER_PASSWORD }}"
 
-        - name: Login to Docker Hub
-          uses: docker/login-action@v3
-          with:
-            username: "${{ secrets.DOCKER_USERNAME }}"
-            password: "${{ secrets.DOCKER_PASSWORD }}"
+      - name: Build and Push Image (amd64)
+        uses: docker/build-push-action@v5
+        with:
+          context: ./target/image
+          file: ./target/image/Dockerfile
+          platforms: linux/amd64
+          push: true
+          tags: |
+            "telicent/${{ steps.extract.outputs.image_name }}:latest-amd64"
+            "telicent/${{ steps.extract.outputs.image_name }}:${{ steps.extract.outputs.image_version }}-amd64"
 
-        - name: Build and Push Image
-          uses: docker/build-push-action@v5
-          with:
-            context: ./target/image
-            file: ./target/image/Dockerfile
-            platforms: linux/amd64,linux/arm64
-            push: true
-            tags: |
-              "telicent/${{ steps.extract.outputs.image_name }}:latest"
-              "telicent/${{ steps.extract.outputs.image_name }}:${{ steps.extract.outputs.image_version }}"
+  build-arm64:
+    needs: test_inputs
+    runs-on: ubuntu-24.04-arm64
+    strategy:
+      fail-fast: false
+      matrix:
+        image: ${{ fromJson(inputs.IMAGE-DESCRIPTORS)}}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.TAG }}
+          fetch-depth: 0
 
-        - name: Grype Image Scan
-          id: grype-scan
-          uses: telicent-oss/grype-action@v1
-          with:
-            scan-name: ${{ steps.extract.outputs.image_name }}
-            scan-ref: telicent/${{ steps.extract.outputs.image_name }}:${{ steps.extract.outputs.image_version }}
-            scan-type: image
+      - name: Install Python and PIP
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3 python3-pip
 
-        - name: Trivy Image Scan
-          id: trivy-scan
-          uses: telicent-oss/trivy-action@v1
-          with:
-            scan-name: ${{ steps.extract.outputs.image_name }}
-            scan-ref: telicent/${{ steps.extract.outputs.image_name }}:${{ steps.extract.outputs.image_version }}
-            scan-type: image
-            uses-java: true
+      - name: Install Cekit
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install cekit
 
-        - name: Generate SBOM for image
-          uses: aquasecurity/trivy-action@master
-          env:
-            # NB - Our prior Trivy step MAY generate a TRIVY_VEX file and add it to GITHUB_ENV but it also removes that
-            #      file thus subsequent Trivy steps, like this one, can fail due to the missing file.  We can however
-            #      explicitly override it to an empty string to avoid that.
-            TRIVY_VEX: ""
-          with:
-            scan-type: 'image'
-            format: 'cyclonedx'
-            output: trivy-image-scan-sbom-${{ steps.extract.outputs.image_name }}-${{ steps.extract.outputs.image_version }}.json
-            image-ref: telicent/${{ steps.extract.outputs.image_name }}:${{ steps.extract.outputs.image_version }}
-            cache-dir: .trivy
-            # Counter-intuitive BUT trivy-action has its own cache which duplicates our own but in a less flexible way
-            cache: false
+      - name: Generate Dockerfile
+        run: |
+          cekit --descriptor image-descriptors/${{ matrix.image }}.yaml build --dry-run docker 
 
-        - name: Release SBOM for image (IF has tags for release)
-          if: startsWith(github.ref, 'refs/tags/')
-          uses: softprops/action-gh-release@v2.0.8
-          with:
-            files: |
-              trivy-image-scan-sbom-${{ steps.extract.outputs.image_name }}-${{ steps.extract.outputs.image_version }}.json
+      - name: Extract Image Version and Name
+        id: extract
+        run: |
+          descriptor_path="target/image.yaml"
 
-        - name: Release report on docker sbom (IF has tags for release)
-          if: startsWith(github.ref, 'refs/tags/')
-          uses: softprops/action-gh-release@v2.0.8
-          with:
-            files: |
-              ${{ steps.trivy-scan.outputs.scan-results-file }}
+          # Extract version using yq - input: version: &version "1.0.7" output - 1.0.7
+          current_version=$(yq eval '.version' "$descriptor_path" | sed 's/^[ \t]*//;s/[ \t]*$//')
+
+          # Extract image name using yq 
+          image_name=$(yq eval '.labels[] | select(.name == "name") | .value' "$descriptor_path")
+
+          echo "Extracted version: $current_version"
+          echo "Extracted image name: $image_name"
+          
+          echo "image_version=$current_version" >> $GITHUB_OUTPUT
+          echo "image_name=$image_name" >> $GITHUB_OUTPUT
+
+      - name: Verify Correct Context
+        shell: bash
+        run: | 
+          [ -f ./target/image/Dockerfile ] || $(echo "Missing Dockerfile in ./target" && exit 1)
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: "${{ secrets.DOCKER_USERNAME }}"
+          password: "${{ secrets.DOCKER_PASSWORD }}"
+
+      - name: Build and Push Image (arm64)
+        uses: docker/build-push-action@v5
+        with:
+          context: ./target/image
+          file: ./target/image/Dockerfile
+          platforms: linux/arm64
+          push: true
+          tags: |
+            "telicent/${{ steps.extract.outputs.image_name }}:latest-arm64"
+            "telicent/${{ steps.extract.outputs.image_name }}:${{ steps.extract.outputs.image_version }}-arm64"
+
+  create-manifest:
+    needs: [ build-amd64, build-arm64 ]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        image: ${{ fromJson(inputs.IMAGE-DESCRIPTORS)}}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.TAG }}
+          fetch-depth: 0
+
+      - name: Install Python and PIP
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3 python3-pip
+
+      - name: Install Cekit
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install cekit
+
+      - name: Generate Dockerfile
+        run: |
+          cekit --descriptor image-descriptors/${{ matrix.image }}.yaml build --dry-run docker 
+
+      - name: Extract Image Version and Name
+        id: extract
+        run: |
+          descriptor_path="target/image.yaml"
+
+          # Extract version using yq - input: version: &version "1.0.7" output - 1.0.7
+          current_version=$(yq eval '.version' "$descriptor_path" | sed 's/^[ \t]*//;s/[ \t]*$//')
+
+          # Extract image name using yq 
+          image_name=$(yq eval '.labels[] | select(.name == "name") | .value' "$descriptor_path")
+
+          echo "Extracted version: $current_version"
+          echo "Extracted image name: $image_name"
+          
+          echo "image_version=$current_version" >> $GITHUB_OUTPUT
+          echo "image_name=$image_name" >> $GITHUB_OUTPUT
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: "${{ secrets.DOCKER_USERNAME }}"
+          password: "${{ secrets.DOCKER_PASSWORD }}"
+
+      - name: Create multi-arch manifests
+        run: |
+          set -euo pipefail
+          descriptor_path="target/image.yaml"
+          IMAGE_VERSION=$(yq eval '.version' "$descriptor_path" | sed 's/^[ \t]*//;s/[ \t]*$//')
+          IMAGE_NAME=$(yq eval '.labels[] | select(.name == "name") | .value' "$descriptor_path")
+
+          if [[ ! "$IMAGE_NAME" =~ ^[a-z0-9._-]+$ ]]; then
+            echo "Invalid image name: $IMAGE_NAME" >&2
+            exit 1
+          fi
+          if [[ ! "$IMAGE_VERSION" =~ ^[0-9]+\\.[0-9]+\\.[0-9]+$ ]]; then
+            echo "Invalid image version: $IMAGE_VERSION" >&2
+            exit 1
+          fi
+
+          docker buildx imagetools create \
+            -t "telicent/${IMAGE_NAME}:${IMAGE_VERSION}" \
+            "telicent/${IMAGE_NAME}:${IMAGE_VERSION}-amd64" \
+            "telicent/${IMAGE_NAME}:${IMAGE_VERSION}-arm64"
+          docker buildx imagetools create \
+            -t "telicent/${IMAGE_NAME}:latest" \
+            "telicent/${IMAGE_NAME}:latest-amd64" \
+            "telicent/${IMAGE_NAME}:latest-arm64"
+
+      - name: Grype Image Scan
+        id: grype-scan
+        uses: telicent-oss/grype-action@v1
+        with:
+          scan-name: ${{ steps.extract.outputs.image_name }}
+          scan-ref: telicent/${{ steps.extract.outputs.image_name }}:${{ steps.extract.outputs.image_version }}
+          scan-type: image
+
+      - name: Trivy Image Scan
+        id: trivy-scan
+        uses: telicent-oss/trivy-action@v1
+        with:
+          scan-name: ${{ steps.extract.outputs.image_name }}
+          scan-ref: telicent/${{ steps.extract.outputs.image_name }}:${{ steps.extract.outputs.image_version }}
+          scan-type: image
+          uses-java: true
+
+      - name: Generate SBOM for image
+        uses: aquasecurity/trivy-action@master
+        env:
+          # NB - Our prior Trivy step MAY generate a TRIVY_VEX file and add it to GITHUB_ENV but it also removes that
+          #      file thus subsequent Trivy steps, like this one, can fail due to the missing file.  We can however
+          #      explicitly override it to an empty string to avoid that.
+          TRIVY_VEX: ""
+        with:
+          scan-type: 'image'
+          format: 'cyclonedx'
+          output: trivy-image-scan-sbom-${{ steps.extract.outputs.image_name }}-${{ steps.extract.outputs.image_version }}.json
+          image-ref: telicent/${{ steps.extract.outputs.image_name }}:${{ steps.extract.outputs.image_version }}
+          cache-dir: .trivy
+          # Counter-intuitive BUT trivy-action has its own cache which duplicates our own but in a less flexible way
+          cache: false
+
+      - name: Release SBOM for image (IF has tags for release)
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2.0.8
+        with:
+          files: |
+            trivy-image-scan-sbom-${{ steps.extract.outputs.image_name }}-${{ steps.extract.outputs.image_version }}.json
+
+      - name: Release report on docker sbom (IF has tags for release)
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2.0.8
+        with:
+          files: |
+            ${{ steps.trivy-scan.outputs.scan-results-file }}
 
   notify-teams:
     name: Notify Teams on Workflow Result
-    needs: [ test_inputs, build-push-image ]
+    needs: [ test_inputs, create-manifest ]
     runs-on: ubuntu-latest
     if: always()
     steps:
       - name: Notify Teams
         env:
           TEAMS_WORKFLOW_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
-          IMAGE_NAME: ${{ needs.build-push-image.outputs.image_name }}
-          IMAGE_VERSION: ${{ needs.build-push-image.outputs.image_version }}
-          JOB_STATUS: ${{ needs.build-push-image.result }}
+          IMAGE_NAME: ${{ inputs.IMAGE-DESCRIPTORS }}
+          IMAGE_VERSION: ${{ inputs.TAG }}
+          JOB_STATUS: ${{ needs.create-manifest.result }}
         run: |
           build_url="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           if [ "$JOB_STATUS" = "success" ]; then
