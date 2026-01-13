@@ -18,6 +18,9 @@ on:
         description: |
           Sets --only-fixed flag for Grype
 
+permissions:
+  contents: read
+
 jobs:
   test_inputs:
     runs-on: ubuntu-latest
@@ -170,6 +173,8 @@ jobs:
   create-manifest:
     needs: [ build-amd64, build-arm64 ]
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     strategy:
       fail-fast: false
       matrix:
@@ -224,8 +229,9 @@ jobs:
       - name: Create multi-arch manifests
         run: |
           set -euo pipefail
-          IMAGE_NAME="${{ steps.extract.outputs.image_name }}"
-          IMAGE_VERSION="${{ steps.extract.outputs.image_version }}"
+          descriptor_path="target/image.yaml"
+          IMAGE_VERSION=$(yq eval '.version' "$descriptor_path" | sed 's/^[ \t]*//;s/[ \t]*$//')
+          IMAGE_NAME=$(yq eval '.labels[] | select(.name == "name") | .value' "$descriptor_path")
 
           if [[ ! "$IMAGE_NAME" =~ ^[a-z0-9._-]+$ ]]; then
             echo "Invalid image name: $IMAGE_NAME" >&2
