@@ -107,7 +107,7 @@ jobs:
           context: ./target/image
           file: ./target/image/Dockerfile
           platforms: ${{ inputs.ENABLE_ARM64 && 'linux/amd64,linux/arm64' || 'linux/amd64' }}
-          push: true
+          push: ${{ !contains(matrix.image, 'java-debug') && !contains(matrix.image, 'java-perf') }}
           tags: |
             "telicent/${{ steps.extract.outputs.image_name }}:latest"
             "telicent/${{ steps.extract.outputs.image_name }}:${{ steps.extract.outputs.image_version }}"
