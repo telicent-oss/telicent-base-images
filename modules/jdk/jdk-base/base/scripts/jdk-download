@@ -46,9 +46,14 @@ mkdir -p "$TARGET_DIR"
 
 # Extract the downloaded tarball into the target directory
 log "Extracting JDK tarball..."
-tar -xzf temurin.tar.gz -C "$TARGET_DIR" --strip-components=1 \
-  --no-same-owner --no-same-permissions --delay-directory-restore || \
-  error_exit "Failed to extract JDK tarball."
+if command -v bsdtar >/dev/null 2>&1; then
+  bsdtar -xpf temurin.tar.gz -C "$TARGET_DIR" --strip-components=1 || \
+    error_exit "Failed to extract JDK tarball with bsdtar."
+else
+  tar -xzf temurin.tar.gz -C "$TARGET_DIR" --strip-components=1 \
+    --no-same-owner --no-same-permissions --delay-directory-restore || \
+    error_exit "Failed to extract JDK tarball."
+fi
 log "Moved JDK to ${TARGET_DIR}"
 
 rm -f temurin.tar.gz temurin.tar.gz.sig || error_exit "Failed to perform clean up"
