@@ -14,7 +14,7 @@ envs:
 packages:
   install:
     - glibc-langpack-en
-    - libarchive
+    - bsdtar
 
 execute:
   - script: configure.sh
