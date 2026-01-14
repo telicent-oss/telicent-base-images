@@ -1,0 +1,13 @@
+name: check-macos-arch
+
+on:
+  workflow_dispatch:
+
+jobs:
+  macos-arch:
+    runs-on: macos-latest
+    steps:
+      - name: Show runner architecture
+        run: |
+          uname -a
+          uname -m
