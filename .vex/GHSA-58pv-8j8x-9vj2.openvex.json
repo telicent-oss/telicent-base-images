@@ -17,7 +17,7 @@
       ],
       "status": "not_affected",
       "justification": "vulnerable_code_not_in_execute_path",
-      "impact_statement": "No description available from Trivy scan for GHSA-58pv-8j8x-9vj2. (Vulnerability Title: No title available from Trivy scan for GHSA-58pv-8j8x-9vj2.)."
+      "impact_statement": "We do not implement any path traversal that could be exploited within Jaraco"
     }
   ]
 }
