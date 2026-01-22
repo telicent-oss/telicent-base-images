@@ -14,9 +14,9 @@ jobs:
   changed-images:
     name: Detect Changes
     if: >
-      ${{ !contains(github.event.head_commit.author.name,'github-actions[bot]')
-      || contains(github.event.head_commit.message, 'chore(bot)') 
-      && !contains(github.event.head_commit.message, 'chore: prepare for release') }}
+      ${{ !contains(github.event.head_commit.message, 'chore: prepare release')
+      && ( !contains(github.event.head_commit.author.name,'github-actions[bot]')
+      || contains(github.event.head_commit.message, 'chore(bot)') ) }}
     uses: ./.github/workflows/detect-changed-images.yaml
     with:
      TAG_VERSION: ${{ github.ref }}
