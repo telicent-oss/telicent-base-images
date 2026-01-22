@@ -57,6 +57,7 @@ packages:
     - wget
     - gnupg2
     - ca-certificates
+    - bsdtar
 
 execute:
   - script: configure.sh
