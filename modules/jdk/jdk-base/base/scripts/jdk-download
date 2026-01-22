@@ -37,7 +37,7 @@ log "Importing gpg keys to verify JDK tar."
 gpg --keyserver "${TEMURIN_KEY_SERVER}" --recv-keys "${TEMURIN_KEY_ID}" ||
 error_exit "Failed to import key: ${TEMURIN_KEY_ID} from server: ${TEMURIN_KEY_SERVER}, they might be obsolete.";
 
-log "Veryfing gpg signature..."
+log "Verifying gpg signature..."
 gpg --verify temurin.tar.gz.sig temurin.tar.gz  ||
 error_exit "JDK${JAVA_INSTALL_VERSION} tar signature verification failed.";
 

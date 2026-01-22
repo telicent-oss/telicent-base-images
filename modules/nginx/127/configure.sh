@@ -1,7 +1,8 @@
 #!/bin/bash
 set -e
 
-NGINX_SRC_URL="http://nginx.org/download/nginx-${NGINX_VERSION:-1.27.2}.tar.gz"
+NGINX_VERSION="${NGINX_VERSION:-1.27.2}"
+NGINX_SRC_URL="http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz"
 
 RED="\033[31m"
 END="\033[0m"
@@ -40,10 +41,42 @@ log "Importing NGINX GPG key..."
 gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys "${NGINX_GPG_KEY}"
 
 log "Verifying NGINX source tarball..."
-gpg --verify "nginx-${NGINX_VERSION}.tar.gz.asc" "nginx-${NGINX_VERSION}.tar.gz"
+TARBALL="nginx-${NGINX_VERSION}.tar.gz"
+SIGNATURE="${TARBALL}.asc"
+gpg --verify "${SIGNATURE}" "${TARBALL}"
 
 log "Extracting NGINX source..."
-tar -xzf "nginx-${NGINX_VERSION}.tar.gz"
+extract_with() {
+    local label="$1"
+    shift
+    log "Trying extractor: ${label}"
+    "$@" || return 1
+    return 0
+}
+
+extracted="false"
+if command -v bsdtar >/dev/null 2>&1; then
+    if extract_with "bsdtar" bsdtar -xpf "${TARBALL}"; then
+        extracted="true"
+    fi
+fi
+
+if [ "$extracted" != "true" ]; then
+    if extract_with "tar (safe flags)" tar -xzf "${TARBALL}" \
+        --no-same-owner --no-same-permissions --delay-directory-restore --no-xattrs --no-acls --no-selinux; then
+        extracted="true"
+    fi
+fi
+
+if [ "$extracted" != "true" ]; then
+    if extract_with "tar (basic)" tar -xzf "${TARBALL}"; then
+        extracted="true"
+    fi
+fi
+
+if [ "$extracted" != "true" ]; then
+    error_exit "Failed to extract NGINX tarball with all available extractors."
+fi
 cd "nginx-${NGINX_VERSION}"
 
 log "Configuring NGINX..."
