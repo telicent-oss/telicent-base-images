@@ -1,5 +1,10 @@
 # Changelog
 
+## Changes from v0.6.1 to v0.6.2
+
+### Chores
+- correct minimal version numbers  ([c8d7081](https://github.com/telicent-oss/telicent-base-images/commit/c8d70818757e7455476f2f8a4c95bc570515e3a2))
+
 ## Changes from v0.6.0 to v0.6.1
 
 ### Chores
