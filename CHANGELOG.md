@@ -1,5 +1,28 @@
 # Changelog
 
+## Changes from v0.6.0 to v0.6.1
+
+### Chores
+- restore .vex suppression files  ([7287ed9](https://github.com/telicent-oss/telicent-base-images/commit/7287ed9f3c929955f5a143390675dec9070a2d1a))
+- bumped base images to 9.7-1768785530  ([d02dc96](https://github.com/telicent-oss/telicent-base-images/commit/d02dc962080c7c7035e8b58bd5dccc8985685017))
+- cve exception for GHSA-58pv-8j8x-9vj2 affected Python base image  ([7c6cab7](https://github.com/telicent-oss/telicent-base-images/commit/7c6cab73220f5512bec10c450ad4c5025d4babec))
+### Fixes
+- Tweaking tar command to use bsdtar in the hope it performs better  ([cbb5117](https://github.com/telicent-oss/telicent-base-images/commit/cbb5117eb66b91fd298d048a16dfcf2bab6fb246))
+- Tweaking tar command to use bsdtar in the hope it performs better  ([6f2b74f](https://github.com/telicent-oss/telicent-base-images/commit/6f2b74f92bd194a319d5c28ed0dda802d45242d6))
+- Tweaking tar command to hopefully be more resilient  ([628fb68](https://github.com/telicent-oss/telicent-base-images/commit/628fb68f93d3f1234325bd657db1d7aaf87765b1))
+- Disable push of Perf/Debug for now. Add test workflow for MacOS  ([836ac77](https://github.com/telicent-oss/telicent-base-images/commit/836ac77e574f56cfb59dfb2e273d12eaedcd6eac))
+- Address boolean/string warning.  ([1180db8](https://github.com/telicent-oss/telicent-base-images/commit/1180db8afdbd2af5f064cdf95f7c69734afcc92a))
+- Reverting previous changes and adding optional flag to skip if need be  ([1613e98](https://github.com/telicent-oss/telicent-base-images/commit/1613e98cf6c06d5f08abce4150eab2e8e4459ae2))
+- addressing permissions error  ([e7fb58b](https://github.com/telicent-oss/telicent-base-images/commit/e7fb58b5646a21c39c5c4af0cdc41c1dc4730a00))
+- splitting job to do different build runs. Fixing Github highlighted errors  ([b780c29](https://github.com/telicent-oss/telicent-base-images/commit/b780c29ff5ddcbdbf37343d2e9a74cafd201f0a5))
+- splitting job to do different build runs. Fixing Github highlighted error  ([f61bea4](https://github.com/telicent-oss/telicent-base-images/commit/f61bea478415b298d6f1d20d9e05d3006f94ed3b))
+- splitting job to do different build runs  ([9e5dd31](https://github.com/telicent-oss/telicent-base-images/commit/9e5dd31e09a27f52ac0b7be67b9d080b0cf20acd))
+### Others
+- [CORE-1140] Addressing CVE-2026-23745 & CVE-2026-23950 ([fbb79e0](https://github.com/telicent-oss/telicent-base-images/commit/fbb79e0827ebeeabb8a268ab89b97ae6814fcfa5))
+- Update .vex/GHSA-58pv-8j8x-9vj2.openvex.json ([adba27e](https://github.com/telicent-oss/telicent-base-images/commit/adba27e9483e39b71a3863db53ef1ea101b41741))
+- Update .vex/GHSA-58pv-8j8x-9vj2.openvex.json ([65f3f85](https://github.com/telicent-oss/telicent-base-images/commit/65f3f85d13b20611b4f0e7a55cb41f727b67b563))
+- [CORE-1119] Addressing CVE-2025-66471 & CVE-2026-21441 ([40a6c7f](https://github.com/telicent-oss/telicent-base-images/commit/40a6c7fe6a5d74cce5ec4ae60f06a750eaa2eddc))
+
 ## Changes from v0.5.18 to v0.6.0
 
 ### Features
