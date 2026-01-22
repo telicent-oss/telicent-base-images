@@ -1,9 +1,9 @@
 schema_version: 1
 
-from: "redhat/ubi9-minimal:9.7-1764794109"
+from: "redhat/ubi9-minimal:9.7-1768785530"
 
 name: &name "telicent-java21-perf"
-version: &version "1.2.36"
+version: &version "1.2.37"
 description: &description "Telicent's Java performance base image built on Red Hat UBI9 minimal."
 
 # Ensure compliance with Red Hat UBI EULA
