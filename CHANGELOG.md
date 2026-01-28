@@ -1,5 +1,16 @@
 # Changelog
 
+## Changes from v0.6.2 to v0.6.3
+
+### Chores
+- update base for descriptors (#291)  ([bc2701a](https://github.com/telicent-oss/telicent-base-images/commit/bc2701a561843fe9d5a3df54249b61f88091e5b0))
+### Fixes
+- suppression of GHSA-8rrh-rw8j-w5fx / CVE-2026-24049 (#290)  ([dfb9234](https://github.com/telicent-oss/telicent-base-images/commit/dfb923460c4bce9cc6fcab5e44c9181e50e3b602))
+- enable arm64 by default (#288)  ([863c79b](https://github.com/telicent-oss/telicent-base-images/commit/863c79b354dc5cf459f908215322dba6ec0c26bb))
+### Others
+- [Minor] Install bsdtar to use (#289) ([73c4ea3](https://github.com/telicent-oss/telicent-base-images/commit/73c4ea31ea50786eaec5057ef8c0ef0354fd69cb))
+- [Minor] Tell script to ignore "chore:prepare release" and NOT "chore: prepare for release" which doesn't match to stop continuously generating the same "Prepare Release" PRs (#287) ([3404983](https://github.com/telicent-oss/telicent-base-images/commit/340498378b7f3f75d42b9d658684504cd9df8da4))
+
 ## Changes from v0.6.1 to v0.6.2
 
 ### Chores
