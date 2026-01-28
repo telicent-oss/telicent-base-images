@@ -3,7 +3,7 @@ schema_version: 1
 from: "redhat/ubi9-minimal:9.7-1769056855"
 
 name: &name "telicent-python3.12"
-version: &version "1.2.37"
+version: &version "1.2.38"
 description: "Telicent's base python 3.12 image built on Red Hat UBI9 minimal"
 
 labels:

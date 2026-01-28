@@ -3,7 +3,7 @@ schema_version: 1
 from: "redhat/ubi9-minimal:9.7-1769056855"
 
 name: &name "telicent-nodejs20"
-version: &version "1.2.41"
+version: &version "1.2.42"
 description: "Telicent's NodeJS base image built on Red Hat UBI9 minimal."
 
 # Ensure compliance with Red Hat UBI EULA
