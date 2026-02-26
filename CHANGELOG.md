@@ -1,5 +1,16 @@
 # Changelog
 
+## Changes from v0.6.3 to v0.6.4
+
+### Chores
+- update base for descriptors (#297)  ([46bf080](https://github.com/telicent-oss/telicent-base-images/commit/46bf08062491a6675aea36e439f6326c08d46edb))
+### Fixes
+- suppressed CVE-2025-15467  ([b628d24](https://github.com/telicent-oss/telicent-base-images/commit/b628d24e0c381cb4aae2f598feeb24903246c343))
+### Others
+- [Minor] CVE-2025-15467 (#296) ([4390de3](https://github.com/telicent-oss/telicent-base-images/commit/4390de36ccc17e89a5cd12948d7d452f4193e7ea))
+- [Minor] CVE-2025-15467 (#295) ([7b14ee6](https://github.com/telicent-oss/telicent-base-images/commit/7b14ee6202d9d03f9a4e3331d05ba63a15860a6d))
+- [Minor] CVE-2026-24881 & CVE-2026-24882 (#294) ([331c783](https://github.com/telicent-oss/telicent-base-images/commit/331c78359117b9de8bd91eace927dade84d8cead))
+
 ## Changes from v0.6.2 to v0.6.3
 
 ### Chores
