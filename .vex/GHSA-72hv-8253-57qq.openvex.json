@@ -1,0 +1,31 @@
+{
+  "@context": "https://openvex.dev/ns/v0.2.0",
+  "@id": "https://openvex.dev/docs/public/vex-96397531-1b16-49cf-a6b2-855ffe9c95a6",
+  "author": "Telicent Ltd",
+  "timestamp": "2026-03-02T09:57:32Z",
+  "version": 1,
+  "statements": [
+    {
+      "vulnerability": {
+        "name": "GHSA-72hv-8253-57qq"
+      },
+      "timestamp": "2026-03-02T09:57:32Z",
+      "products": [
+        {
+          "@id": "pkg:maven/com.fasterxml.jackson.core/jackson-core@2.17.2"
+        },
+        {
+          "@id": "pkg:maven/io.opentelemetry.javaagent/opentelemetry-javaagent@1.33.6",
+          "subcomponents": [
+            {
+              "@id": "pkg:maven/com.fasterxml.jackson.core/jackson-core@2.17.2"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "justification": "vulnerable_code_not_in_execute_path",
+      "impact_statement": "The reported jackson-core 2.17.2 copy is bundled inside the OpenTelemetry Java agent shipped from smart-caches-core on the 1.33.6 line. In this image the agent is used only for instrumentation, and we do not expose Jackson's async parser in that agent to attacker-controlled JSON, so the vulnerable code path is not exercised."
+    }
+  ]
+}
