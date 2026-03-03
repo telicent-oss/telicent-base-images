@@ -1,5 +1,18 @@
 # Changelog
 
+## Changes from v0.6.4 to v0.7.0
+
+### Features
+- create nginx 1.29.5 module  ([ad89899](https://github.com/telicent-oss/telicent-base-images/commit/ad89899b8b890313e985235fd6f83ae1a7dcdadb))
+### Fixes
+- Updating NGINX_GPG_KEY for 129 (#306)  ([86a3033](https://github.com/telicent-oss/telicent-base-images/commit/86a3033b8bd2fd1ef9ee9e0c78884b644be95b7f))
+- update nginx 129 to have image descriptor (#304)  ([68e0307](https://github.com/telicent-oss/telicent-base-images/commit/68e03074e5a65331a4769c8eb3acefd42e573588))
+- suppressed CVE-2026-1642 (#302)  ([4f5b8ce](https://github.com/telicent-oss/telicent-base-images/commit/4f5b8ceb276db6a36df564aac458ef85ad47cda4))
+### Others
+- [Minor] Applying fix for GHSA-72hv-8253-57qq for Auth Server specific version ([667c91a](https://github.com/telicent-oss/telicent-base-images/commit/667c91a8172c5e813dd9aca8040aec72fa567739))
+- [Minor] Applying fix for GHSA-72hv-8253-57qq in Open Telemetry java agent jar (#300) ([ad29866](https://github.com/telicent-oss/telicent-base-images/commit/ad298664352f26999d39ab7a6400310db6371c6f))
+- [Minor] TWeaking CVE-2026-23745 (#299) ([cf65d92](https://github.com/telicent-oss/telicent-base-images/commit/cf65d928b295d6959e61a54837aeb1de0a2be1b9))
+
 ## Changes from v0.6.3 to v0.6.4
 
 ### Chores
