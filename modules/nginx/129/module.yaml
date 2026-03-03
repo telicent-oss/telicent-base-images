@@ -1,6 +1,6 @@
 schema_version: 1
 
-name: "telicent.container.nginx"
+name: "telicent.container.nginx129"
 version: "1.0.0"
 
 description: "Builds and installs NGINX 1.29.5 on UBI9 Minimal and configures it to run as a non-root user (GUID 185)."
