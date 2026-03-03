@@ -9,7 +9,7 @@ envs:
   - name: "NGINX_VERSION"
     value: "1.29.5"
   - name: "NGINX_GPG_KEY"
-    value: "D6786CE303D9A9022998DC6CC8464D549AF75C0A"
+    value: "43387825DDB1BB97EC36BA5D007C8D7C15D87369"
   - name: UID
     value: "185"
 
