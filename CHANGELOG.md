@@ -1,5 +1,17 @@
 # Changelog
 
+## Changes from v0.7.0 to v0.7.1
+
+### Chores
+- update base for descriptors (#313)  ([0b40553](https://github.com/telicent-oss/telicent-base-images/commit/0b40553feccd43a2aedef98271791df12c867d1c))
+### Fixes
+- Extending to cover smart cache graph (#310)  ([2be570d](https://github.com/telicent-oss/telicent-base-images/commit/2be570ddf8fe65a8414fb032cd200ab81ce70b6f))
+- Extending to cover smart cache graph (#309)  ([44d7d29](https://github.com/telicent-oss/telicent-base-images/commit/44d7d29cd82f4b3f92ac35009a8ea20202cf22db))
+### Others
+- [Minor] Adding CVEs for NodeJS (that don't trigger locally only remotely). (#312) ([d63df13](https://github.com/telicent-oss/telicent-base-images/commit/d63df1316442fcd8989757fb7dccdac787ab479f))
+- [Minor] Adding CVEs for NodeJS (#311) ([8d2cca7](https://github.com/telicent-oss/telicent-base-images/commit/8d2cca763b145aa12af31887fdf22993ff2a58e9))
+- [Minor] Adding CVE-2025-66566 and updating existing CVEs for better coverage of NodeJS, NIGNX and Telicent Access (#308) ([d2237c8](https://github.com/telicent-oss/telicent-base-images/commit/d2237c8e23e2a9d694bd980fc421607224e5c504))
+
 ## Changes from v0.6.4 to v0.7.0
 
 ### Features
