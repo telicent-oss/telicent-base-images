@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+CACHE_DIR="${TRIVY_CACHE_DIR:-$SCRIPT_DIR/.cache/trivy}"
+TRIVY_ARGS=()
+
 [[ "$(uname)" == "Darwin" ]] || {
   echo "Error: macOS only. Detected: $(uname)" >&2
   exit 1
@@ -11,14 +15,22 @@ if [[ $# -ne 1 ]]; then
   exit 1
 fi
 IMAGE="$1"
- 
- # enable Bash nullglob (drop non-matching globs)
+
+cd "$SCRIPT_DIR"
+mkdir -p "$CACHE_DIR"
+
+# enable Bash nullglob (drop non-matching globs)
 shopt -s nullglob
-VEX_ARGS=$(printf -- '--vex %s ' ./.vex/*.json)
+VEX_FILES=(./.vex/*.json)
 shopt -u nullglob
 
+for vex_file in "${VEX_FILES[@]}"; do
+  TRIVY_ARGS+=(--vex "$vex_file")
+done
 
-trivy image "$IMAGE" \
+trivy image \
+  --cache-dir "$CACHE_DIR" \
   --show-suppressed \
   --severity HIGH,CRITICAL \
-  $VEX_ARGS
+  "${TRIVY_ARGS[@]}" \
+  "$IMAGE"

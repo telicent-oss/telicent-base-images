@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+GRYPE_DB_CACHE_DIR="${GRYPE_DB_CACHE_DIR:-$SCRIPT_DIR/.cache/grype/db}"
+export GRYPE_DB_CACHE_DIR
+
 # --- Configuration for Logging ---
 # Set to 'true' to enable log messages, 'false' to disable them.
 # Setting to 'false' ensures only critical errors and the final grype output are visible.
@@ -34,6 +38,9 @@ if [[ $# -ne 1 ]]; then
   exit 1
 fi
 IMAGE="$1"
+
+cd "$SCRIPT_DIR"
+mkdir -p "$GRYPE_DB_CACHE_DIR"
 
 # --- Dependencies Check ---
 log "Checking dependencies..."
