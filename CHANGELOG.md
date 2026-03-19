@@ -1,5 +1,13 @@
 # Changelog
 
+## Changes from v0.7.1 to v0.7.2
+
+### Chores
+- update base for descriptors (#317)  ([813cb44](https://github.com/telicent-oss/telicent-base-images/commit/813cb4460dc71ebceaaa2e64708535fd5a7f6106))
+### Others
+- [Minor] To save downloading the DB _every_ time, updating the trivy-with-vex & grype-with-vex scripts to make use of the cached DB. (#316) ([3d1e9a4](https://github.com/telicent-oss/telicent-base-images/commit/3d1e9a48a6c7b3db9b8a7063b804ec5f5351f785))
+- [CORE-1214] Addressing latest batch of CVEs: CVE-2025-12183, CVE-2026-1605, CVE-2026-4111 & updating the coverage of CVE-2025-68973 (#315) ([7c5d3ba](https://github.com/telicent-oss/telicent-base-images/commit/7c5d3baa31b4d9d5b95958b53e4f72ef5018349b))
+
 ## Changes from v0.7.0 to v0.7.1
 
 ### Chores
