@@ -11,29 +11,42 @@ permissions:
   id-token: write
 
 jobs:
+  build-image-matrix:
+    name: Build image matrix
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.generate-matrix.outputs.matrix }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials from main account
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::098669589541:role/GitHubDeploymentRole
+          aws-region: eu-west-2
+          mask-aws-account-id: false
+
+      - name: Generate image matrix
+        id: generate-matrix
+        run: |
+          chmod +x ./generate_stale_vex_matrix.sh
+          MATRIX_JSON="$(./generate_stale_vex_matrix.sh \
+            --public-images-file .github/stale-vex/public-images.txt \
+            --ecr-repositories-file .github/stale-vex/ecr-repositories.txt \
+          )"
+          echo "$MATRIX_JSON" | jq .
+          echo "matrix=$(echo "$MATRIX_JSON" | jq -c .)" >> "$GITHUB_OUTPUT"
+
   scan-images:
     name: ${{ matrix.image-artifact.artifact }} (stale VEX review)
     runs-on: ubuntu-latest
+    needs: build-image-matrix
     strategy:
       fail-fast: false
       matrix:
-        image-artifact:
-          - { image: "telicent/telicent-python3.12:latest", artifact: "telicent-python3.12" }
-          - { image: "telicent/telicent-nginx1.27:latest", artifact: "telicent-nginx1.27" }
-          - { image: "telicent/telicent-java21:latest", artifact: "telicent-java21" }
-          - { image: "telicent/telicent-nodejs20:latest", artifact: "telicent-nodejs20" }
-          - { image: "telicent/smart-cache-graph:latest", artifact: "smart-cache-graph" }
-          - { image: "098669589541.dkr.ecr.eu-west-2.amazonaws.com/search-api-server:latest", artifact: "search-api-server" }
-          - { image: "098669589541.dkr.ecr.eu-west-2.amazonaws.com/smart-cache-elastic-index:latest", artifact: "smart-cache-elastic-index" }
-          - { image: "098669589541.dkr.ecr.eu-west-2.amazonaws.com/telicent-notifications-projector:latest", artifact: "telicent-notifications-projector" }
-          - { image: "098669589541.dkr.ecr.eu-west-2.amazonaws.com/telicent-notifications-api-server:latest", artifact: "telicent-notifications-api-server" }
-          - { image: "098669589541.dkr.ecr.eu-west-2.amazonaws.com/telicent-auth-server:latest", artifact: "telicent-auth-server" }
-          - { image: "098669589541.dkr.ecr.eu-west-2.amazonaws.com/telicent-document-content-extractor:latest", artifact: "telicent-document-content-extractor" }
-          - { image: "098669589541.dkr.ecr.eu-west-2.amazonaws.com/telicent-document-content-indexer:latest", artifact: "telicent-document-content-indexer" }
-          - { image: "098669589541.dkr.ecr.eu-west-2.amazonaws.com/telicent-document-http-ingester:latest", artifact: "telicent-document-http-ingester" }
-          - { image: "098669589541.dkr.ecr.eu-west-2.amazonaws.com/telicent-document-catalogue-updater:latest", artifact: "telicent-document-catalogue-updater" }
-          - { image: "098669589541.dkr.ecr.eu-west-2.amazonaws.com/telicent-dev-token-minter:latest", artifact: "telicent-dev-token-minter" }
-          - { image: "098669589541.dkr.ecr.eu-west-2.amazonaws.com/telicent-user-preferences:latest", artifact: "telicent-user-preferences" }
+        image-artifact: ${{ fromJSON(needs.build-image-matrix.outputs.matrix) }}
 
     steps:
       - name: Checkout repository
@@ -62,13 +75,21 @@ jobs:
           trivy --version
           jq --version
 
+      - name: Resolve image reference
+        id: resolve-image
+        run: |
+          chmod +x ./resolve_image_ref.sh
+          RESOLVED_IMAGE="$(./resolve_image_ref.sh "${{ matrix.image-artifact.image }}")"
+          echo "Resolved image: $RESOLVED_IMAGE"
+          echo "image=$RESOLVED_IMAGE" >> "$GITHUB_OUTPUT"
+
       - name: Run stale VEX scan
         run: |
           chmod +x ./find_stale_vex.sh
           mkdir -p reports
           ./find_stale_vex.sh \
             --json-output "reports/${{ matrix.image-artifact.artifact }}.json" \
-            "${{ matrix.image-artifact.image }}" \
+            "${{ steps.resolve-image.outputs.image }}" \
             | tee "reports/${{ matrix.image-artifact.artifact }}.txt"
 
       - name: Upload per-image reports

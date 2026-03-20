@@ -1,0 +1,5 @@
+telicent/telicent-python3.12:latest
+telicent/telicent-nginx1.27:latest
+telicent/telicent-java21:latest
+telicent/telicent-nodejs20:latest
+telicent/smart-cache-graph:latest
