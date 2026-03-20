@@ -1,0 +1,15 @@
+search-api-server
+smart-cache-elastic-index
+telicent-notifications-projector
+telicent-notifications-api-server
+telicent-auth-server
+telicent-document-content-extractor
+telicent-document-content-indexer
+telicent-document-http-ingester
+telicent-document-catalogue-updater
+telicent-dev-token-minter
+telicent-user-preferences-service
+telicent-admin
+telicent-user-portal
+telicent-graph
+telicent-search
