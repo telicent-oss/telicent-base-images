@@ -1,0 +1,222 @@
+name: Review stale OpenVEX statements
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 8 * * 5" # Every Friday at 08:00 UTC
+
+permissions:
+  contents: read
+  issues: write
+  id-token: write
+
+jobs:
+  scan-images:
+    name: ${{ matrix.image-artifact.artifact }} (stale VEX review)
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        image-artifact:
+          - { image: "telicent/telicent-python3.12:latest", artifact: "telicent-python3.12" }
+          - { image: "telicent/telicent-nginx1.27:latest", artifact: "telicent-nginx1.27" }
+          - { image: "telicent/telicent-java21:latest", artifact: "telicent-java21" }
+          - { image: "telicent/telicent-nodejs20:latest", artifact: "telicent-nodejs20" }
+          - { image: "telicent/smart-cache-graph:latest", artifact: "smart-cache-graph" }
+          - { image: "098669589541.dkr.ecr.eu-west-2.amazonaws.com/search-api-server:latest", artifact: "search-api-server" }
+          - { image: "098669589541.dkr.ecr.eu-west-2.amazonaws.com/smart-cache-elastic-index:latest", artifact: "smart-cache-elastic-index" }
+          - { image: "098669589541.dkr.ecr.eu-west-2.amazonaws.com/telicent-notifications-projector:latest", artifact: "telicent-notifications-projector" }
+          - { image: "098669589541.dkr.ecr.eu-west-2.amazonaws.com/telicent-notifications-api-server:latest", artifact: "telicent-notifications-api-server" }
+          - { image: "098669589541.dkr.ecr.eu-west-2.amazonaws.com/telicent-auth-server:latest", artifact: "telicent-auth-server" }
+          - { image: "098669589541.dkr.ecr.eu-west-2.amazonaws.com/telicent-document-content-extractor:latest", artifact: "telicent-document-content-extractor" }
+          - { image: "098669589541.dkr.ecr.eu-west-2.amazonaws.com/telicent-document-content-indexer:latest", artifact: "telicent-document-content-indexer" }
+          - { image: "098669589541.dkr.ecr.eu-west-2.amazonaws.com/telicent-document-http-ingester:latest", artifact: "telicent-document-http-ingester" }
+          - { image: "098669589541.dkr.ecr.eu-west-2.amazonaws.com/telicent-document-catalogue-updater:latest", artifact: "telicent-document-catalogue-updater" }
+          - { image: "098669589541.dkr.ecr.eu-west-2.amazonaws.com/telicent-dev-token-minter:latest", artifact: "telicent-dev-token-minter" }
+          - { image: "098669589541.dkr.ecr.eu-west-2.amazonaws.com/telicent-user-preferences:latest", artifact: "telicent-user-preferences" }
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials from main account
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::098669589541:role/GitHubDeploymentRole
+          aws-region: eu-west-2
+          mask-aws-account-id: false
+
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
+        with:
+          mask-password: true
+
+      - name: Install Trivy
+        uses: aquasecurity/setup-trivy@3fb12ec12f41e471780db15c232d5dd185dcb514
+        with:
+          version: v0.69.3
+          cache: true
+
+      - name: Verify prerequisites
+        run: |
+          trivy --version
+          jq --version
+
+      - name: Run stale VEX scan
+        run: |
+          chmod +x ./find_stale_vex.sh
+          mkdir -p reports
+          ./find_stale_vex.sh \
+            --json-output "reports/${{ matrix.image-artifact.artifact }}.json" \
+            "${{ matrix.image-artifact.image }}" \
+            | tee "reports/${{ matrix.image-artifact.artifact }}.txt"
+
+      - name: Upload per-image reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: stale-vex-${{ matrix.image-artifact.artifact }}
+          path: reports/
+
+  aggregate-report:
+    name: Aggregate stale VEX report
+    runs-on: ubuntu-latest
+    needs: scan-images
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download per-image reports
+        uses: actions/download-artifact@v4
+        with:
+          pattern: stale-vex-*
+          merge-multiple: true
+          path: reports/raw
+
+      - name: Build combined report
+        run: |
+          chmod +x ./aggregate_stale_vex_reports.sh
+          mkdir -p reports/final
+          ./aggregate_stale_vex_reports.sh \
+            reports/raw \
+            reports/final/stale-vex-report.md \
+            reports/final/stale-vex-report.json
+
+      - name: Publish workflow summary
+        run: cat reports/final/stale-vex-report.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Sync cleanup issue
+        uses: actions/github-script@v8
+        env:
+          ISSUE_TITLE: "chore(security): remove stale OpenVEX statements"
+          ISSUE_MARKER: "<!-- stale-openvex-cleanup -->"
+          REPORT_JSON_PATH: reports/final/stale-vex-report.json
+          REPORT_MD_PATH: reports/final/stale-vex-report.md
+          RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        with:
+          script: |
+            const fs = require('fs');
+
+            const issueTitle = process.env.ISSUE_TITLE;
+            const issueMarker = process.env.ISSUE_MARKER;
+            const reportJsonPath = process.env.REPORT_JSON_PATH;
+            const reportMarkdownPath = process.env.REPORT_MD_PATH;
+            const runUrl = process.env.RUN_URL;
+
+            const report = JSON.parse(fs.readFileSync(reportJsonPath, 'utf8'));
+            const reportMarkdown = fs.readFileSync(reportMarkdownPath, 'utf8');
+            const removable = report.files.filter((file) => file.removable);
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+
+            const issues = await github.paginate(github.rest.issues.listForRepo, {
+              owner,
+              repo,
+              state: 'all',
+              per_page: 100,
+            });
+
+            const existingIssue = issues.find((issue) =>
+              !issue.pull_request &&
+              issue.title === issueTitle &&
+              typeof issue.body === 'string' &&
+              issue.body.includes(issueMarker)
+            );
+
+            if (removable.length === 0) {
+              await core.summary.addRaw('No removable OpenVEX candidates found.').write();
+
+              if (existingIssue && existingIssue.state === 'open') {
+                await github.rest.issues.update({
+                  owner,
+                  repo,
+                  issue_number: existingIssue.number,
+                  state: 'closed',
+                  state_reason: 'completed',
+                  body: [
+                    issueMarker,
+                    '',
+                    'No globally removable OpenVEX statements were found in the latest scheduled review.',
+                    '',
+                    `Latest run: ${runUrl}`,
+                    '',
+                    reportMarkdown,
+                  ].join('\n'),
+                });
+              }
+
+              return;
+            }
+
+            const candidateList = removable
+              .map((file) => {
+                const statuses = file.image_statuses
+                  .map((status) => `- \`${status.image}\`: ${status.status}`)
+                  .join('\n');
+                return `### \`${file.vex_file}\`\n${statuses}`;
+              })
+              .join('\n\n');
+
+            const body = [
+              issueMarker,
+              '',
+              'The latest stale-OpenVEX review found statements that appear removable across all scanned images.',
+              '',
+              `Workflow run: ${runUrl}`,
+              '',
+              '## Candidates',
+              '',
+              candidateList,
+              '',
+              '## Full report',
+              '',
+              reportMarkdown,
+            ].join('\n');
+
+            if (existingIssue) {
+              await github.rest.issues.update({
+                owner,
+                repo,
+                issue_number: existingIssue.number,
+                title: issueTitle,
+                state: 'open',
+                body,
+              });
+              await core.summary.addRaw(`Updated cleanup issue #${existingIssue.number}.`).write();
+              return;
+            }
+
+            const created = await github.rest.issues.create({
+              owner,
+              repo,
+              title: issueTitle,
+              body,
+            });
+
+            await core.summary.addRaw(`Created cleanup issue #${created.data.number}.`).write();
+
+      - name: Upload aggregate report
+        uses: actions/upload-artifact@v4
+        with:
+          name: stale-vex-report
+          path: reports/final/
