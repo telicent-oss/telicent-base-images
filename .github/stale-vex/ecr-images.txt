@@ -1,0 +1,16 @@
+# Generated file. Refresh with:
+#   ./refresh_stale_vex_ecr_images.sh --repositories-file ./.github/stale-vex/ecr-repositories.txt --output-file ./.github/stale-vex/ecr-images.txt
+098669589541.dkr.ecr.eu-west-2.amazonaws.com/search-api-server:c70a37b8421bfd2faa3415265fb825e826f3f129
+098669589541.dkr.ecr.eu-west-2.amazonaws.com/smart-cache-elastic-index:c70a37b8421bfd2faa3415265fb825e826f3f129
+098669589541.dkr.ecr.eu-west-2.amazonaws.com/telicent-notifications-projector:e751eadb248e03ef53471f51aa83b0f7d9e85f27
+098669589541.dkr.ecr.eu-west-2.amazonaws.com/telicent-notifications-api-server:e751eadb248e03ef53471f51aa83b0f7d9e85f27
+098669589541.dkr.ecr.eu-west-2.amazonaws.com/telicent-auth-server:1708936fc91f51dfe77fb2737ed0b2168b5d3fe3
+098669589541.dkr.ecr.eu-west-2.amazonaws.com/telicent-document-content-extractor:38153339453915835d8598f753bdc1b9ca5caa33
+098669589541.dkr.ecr.eu-west-2.amazonaws.com/telicent-document-content-indexer:38153339453915835d8598f753bdc1b9ca5caa33
+098669589541.dkr.ecr.eu-west-2.amazonaws.com/telicent-document-http-ingester:38153339453915835d8598f753bdc1b9ca5caa33
+098669589541.dkr.ecr.eu-west-2.amazonaws.com/telicent-document-catalogue-updater:38153339453915835d8598f753bdc1b9ca5caa33
+098669589541.dkr.ecr.eu-west-2.amazonaws.com/telicent-dev-token-minter:16c66fc15b76039b49152838a96017e85da55559
+098669589541.dkr.ecr.eu-west-2.amazonaws.com/telicent-user-preferences-service:7c547681f3652e52a1dfc684c05ab8e2a206b88c
+098669589541.dkr.ecr.eu-west-2.amazonaws.com/telicent-admin:c2775d3e93492f3179cfe68018753bddd74b1eb9
+098669589541.dkr.ecr.eu-west-2.amazonaws.com/telicent-user-portal:458728638f573cbb143a03630789415fc7674509
+098669589541.dkr.ecr.eu-west-2.amazonaws.com/telicent-graph:647b2108483d494f5c36c1a9fe4419c53d3b4167

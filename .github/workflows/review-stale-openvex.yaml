@@ -21,20 +21,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Configure AWS credentials from main account
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: arn:aws:iam::098669589541:role/GitHubDeploymentRole
-          aws-region: eu-west-2
-          mask-aws-account-id: false
-
       - name: Generate image matrix
         id: generate-matrix
         run: |
           chmod +x ./generate_stale_vex_matrix.sh
           MATRIX_JSON="$(./generate_stale_vex_matrix.sh \
             --public-images-file .github/stale-vex/public-images.txt \
-            --ecr-repositories-file .github/stale-vex/ecr-repositories.txt \
+            --ecr-images-file .github/stale-vex/ecr-images.txt \
           )"
           echo "$MATRIX_JSON" | jq .
           echo "matrix=$(echo "$MATRIX_JSON" | jq -c .)" >> "$GITHUB_OUTPUT"
@@ -75,21 +68,13 @@ jobs:
           trivy --version
           jq --version
 
-      - name: Resolve image reference
-        id: resolve-image
-        run: |
-          chmod +x ./resolve_image_ref.sh
-          RESOLVED_IMAGE="$(./resolve_image_ref.sh "${{ matrix.image-artifact.image }}")"
-          echo "Resolved image: $RESOLVED_IMAGE"
-          echo "image=$RESOLVED_IMAGE" >> "$GITHUB_OUTPUT"
-
       - name: Run stale VEX scan
         run: |
           chmod +x ./find_stale_vex.sh
           mkdir -p reports
           ./find_stale_vex.sh \
             --json-output "reports/${{ matrix.image-artifact.artifact }}.json" \
-            "${{ steps.resolve-image.outputs.image }}" \
+            "${{ matrix.image-artifact.image }}" \
             | tee "reports/${{ matrix.image-artifact.artifact }}.txt"
 
       - name: Upload per-image reports
