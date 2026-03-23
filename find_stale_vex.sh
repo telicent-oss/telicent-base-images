@@ -307,10 +307,10 @@ for f in "${VEX_FILES[@]}"; do
   fi
 
   case "$status" in
-    ACTIVE)        say "${GREEN}ACTIVE${RESET}        $f"; ((ACTIVE++)) ;;
-    STALE)     say "${YELLOW}STALE${RESET}      $f"; STALE_LIST+=( "$f" ); ((STALE++)) ;;
-    UNRELATED) say "${BLUE}UNRELATED${RESET}  $f"; UNRELATED_LIST+=( "$f" ); ((UNRELATED++)) ;;
-    *)         say "${RED}UNKNOWN${RESET}    $f  (no usable product metadata)"; ((UNKNOWN++)) ;;
+    ACTIVE)        say "${GREEN}ACTIVE${RESET}        $f"; ((ACTIVE+=1)) ;;
+    STALE)     say "${YELLOW}STALE${RESET}      $f"; STALE_LIST+=( "$f" ); ((STALE+=1)) ;;
+    UNRELATED) say "${BLUE}UNRELATED${RESET}  $f"; UNRELATED_LIST+=( "$f" ); ((UNRELATED+=1)) ;;
+    *)         say "${RED}UNKNOWN${RESET}    $f  (no usable product metadata)"; ((UNKNOWN+=1)) ;;
   esac
 
   [[ -n "$CVE_LIST" ]] && say "           CVEs  -> present:[${present_cves[*]:-}]  gone:[${absent_cves[*]:-}]"
