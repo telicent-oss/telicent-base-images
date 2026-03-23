@@ -13,3 +13,5 @@ telicent-admin
 telicent-user-portal
 telicent-graph
 telicent-search
+telicent-paperback-writer
+telicent-catalogue-api
