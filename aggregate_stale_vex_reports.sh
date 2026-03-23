@@ -16,9 +16,10 @@ JSON_OUTPUT="${3:-}"
 [[ -n "$REPORT_DIR" && -n "$MARKDOWN_OUTPUT" ]] || usage
 [[ -d "$REPORT_DIR" ]] || { echo "Report directory '$REPORT_DIR' does not exist." >&2; exit 1; }
 
-shopt -s nullglob
-REPORT_FILES=( "$REPORT_DIR"/*.json )
-shopt -u nullglob
+REPORT_FILES=()
+while IFS= read -r report_file; do
+  REPORT_FILES+=( "$report_file" )
+done < <(find "$REPORT_DIR" -type f -name '*.json' | sort)
 
 if (( ${#REPORT_FILES[@]} == 0 )); then
   echo "No JSON reports found under '$REPORT_DIR'." >&2

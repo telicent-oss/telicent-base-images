@@ -81,7 +81,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: stale-vex-${{ matrix.image-artifact.artifact }}
-          path: reports/
+          path: reports/*.json
+          if-no-files-found: error
 
   aggregate-report:
     name: Aggregate stale VEX report
