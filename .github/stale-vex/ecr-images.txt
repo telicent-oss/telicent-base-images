@@ -14,5 +14,5 @@
 098669589541.dkr.ecr.eu-west-2.amazonaws.com/telicent-admin:c2775d3e93492f3179cfe68018753bddd74b1eb9
 098669589541.dkr.ecr.eu-west-2.amazonaws.com/telicent-user-portal:458728638f573cbb143a03630789415fc7674509
 098669589541.dkr.ecr.eu-west-2.amazonaws.com/telicent-graph:647b2108483d494f5c36c1a9fe4419c53d3b4167
-098669589541.dkr.ecr.eu-west-2.amazonaws.com/telicent-paperback-writertelicent-paperback-writer:latest
+098669589541.dkr.ecr.eu-west-2.amazonaws.com/telicent-paperback-writer:latest
 098669589541.dkr.ecr.eu-west-2.amazonaws.com/telicent-catalogue-api:latest
