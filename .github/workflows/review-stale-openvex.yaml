@@ -70,6 +70,7 @@ jobs:
 
       - name: Run stale VEX scan
         run: |
+          set -o pipefail
           chmod +x ./find_stale_vex.sh
           mkdir -p reports
           ./find_stale_vex.sh \
