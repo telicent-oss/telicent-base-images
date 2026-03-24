@@ -45,7 +45,7 @@ jobs:
         image: ${{ fromJson(inputs.IMAGE-DESCRIPTORS)}}
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           ref: ${{ inputs.TAG }}
           fetch-depth: 0
