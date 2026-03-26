@@ -19,7 +19,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Generate image matrix
         id: generate-matrix
@@ -43,10 +43,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Configure AWS credentials from main account
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: arn:aws:iam::098669589541:role/GitHubDeploymentRole
           aws-region: eu-west-2
@@ -79,7 +79,7 @@ jobs:
             | tee "reports/${{ matrix.image-artifact.artifact }}.txt"
 
       - name: Upload per-image reports
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: stale-vex-${{ matrix.image-artifact.artifact }}
           path: reports/*.json
@@ -92,10 +92,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Download per-image reports
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           pattern: stale-vex-*
           merge-multiple: true
@@ -224,7 +224,7 @@ jobs:
             await core.summary.addRaw(`Created cleanup issue #${created.data.number}.`).write();
 
       - name: Upload aggregate report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: stale-vex-report
           path: reports/final/

@@ -36,7 +36,7 @@ jobs:
     steps:
       - name: Download and Extract Tag Artifact (if triggered by workflow)
         if: ${{ github.event_name == 'workflow_run' }}
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: tag_version
           path: ./tag

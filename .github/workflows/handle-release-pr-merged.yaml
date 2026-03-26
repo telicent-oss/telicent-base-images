@@ -24,7 +24,7 @@ jobs:
       tag: ${{ steps.set-outputs.outputs.tag }}
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
@@ -91,7 +91,7 @@ jobs:
           mkdir -p ./tag
           echo $TAG > ./tag/tag_version
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         with:
           name: tag_version
           path: tag/
