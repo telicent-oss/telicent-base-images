@@ -1,5 +1,25 @@
 # Changelog
 
+## Changes from v0.7.2 to v0.7.3
+
+### Chores
+- update base for descriptors (#334)  ([f21da10](https://github.com/telicent-oss/telicent-base-images/commit/f21da10b14af6b53393b22df12aba96363ca7dde))
+- adding CVE-2026-4424 and -27135 (#320)  ([7dcaf7b](https://github.com/telicent-oss/telicent-base-images/commit/7dcaf7b8164637622008e1ee0d39d800eb058719))
+### Others
+- [Minor] Addressing more false-positive CVEs related to our Open Telemetry usage. Also updating scripts with tweaks I've made over the last few weeks. (#333) ([cef1c2c](https://github.com/telicent-oss/telicent-base-images/commit/cef1c2cff7e7161ac8d5035e9c99418a20c8275c))
+- [CORE-1238] Addressing Nodejs 20 warnings (#329) ([73910b1](https://github.com/telicent-oss/telicent-base-images/commit/73910b199dab2fcbc45a917cc8dd1ea6f688c47e))
+- [Minor] Addressing CVE-2026-4519 (again). Needed to add "GHSA-xw7x-h9fj-p2c7" vulnerability ID (#332) ([8148e8a](https://github.com/telicent-oss/telicent-base-images/commit/8148e8aacd272bdf5e50cccd1bb6af8a4b0cac03))
+- [Minor] Addressing CVE-2026-4519 (#331) ([b1a24f9](https://github.com/telicent-oss/telicent-base-images/commit/b1a24f98dfb22d1ac0542486a8ea1df2bb62ec91))
+- [Minor] Addressing CVE-2026-33701 (#330) ([fe489b7](https://github.com/telicent-oss/telicent-base-images/commit/fe489b7ad4c1674198fb9dbf36f77a78d7c67436))
+- [Minor] Adding "test" image to stale checks and fixing CVEs that haven't been patched yet in Alpine (#328) ([9331a4d](https://github.com/telicent-oss/telicent-base-images/commit/9331a4d3829b35802eba2ba8f771496706a89776))
+- Fix typo in paperback writer image reference (#327) ([83860dd](https://github.com/telicent-oss/telicent-base-images/commit/83860dd5d6fbd6bc4dc1885f3d943e04a0e2f902))
+- [Minor] Adding Python images (#326) ([db36432](https://github.com/telicent-oss/telicent-base-images/commit/db364327668764ea603fe9044fbe2a6f9186a78e))
+- [CORE-1228] Fixing issues with actions. (#325) ([94458a3](https://github.com/telicent-oss/telicent-base-images/commit/94458a3f67ae839fa68a3a0834e7ac49e539bd4a))
+- [CORE-1228] Fixing issues with file location (#323) ([133b85f](https://github.com/telicent-oss/telicent-base-images/commit/133b85f34b8788be14611008cad4eba5520395fb))
+- [CORE-1228] Flag stale vex - v2 (#322) ([29ae856](https://github.com/telicent-oss/telicent-base-images/commit/29ae856bd51956fb37527ac3a67652b5e340bca5))
+- [CORE-1228] Adding stale VEX statements checks.  (#321) ([85f355b](https://github.com/telicent-oss/telicent-base-images/commit/85f355b93adab17a5975bcb5af22dfa83260877f))
+- [Minor] fixing image urls for teams posts (#319) ([28a16fd](https://github.com/telicent-oss/telicent-base-images/commit/28a16fd50abbe317f5964894839368cf0a52d9f4))
+
 ## Changes from v0.7.1 to v0.7.2
 
 ### Chores
