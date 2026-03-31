@@ -1,36 +1,62 @@
 #!/usr/bin/env bash
-set -euo pipefail
+  set -euo pipefail
 
-SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-CACHE_DIR="${TRIVY_CACHE_DIR:-$SCRIPT_DIR/.cache/trivy}"
-TRIVY_ARGS=()
+  SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+  CACHE_DIR="${TRIVY_CACHE_DIR:-$SCRIPT_DIR/.cache/trivy}"
+  TRIVY_ARGS=()
 
-[[ "$(uname)" == "Darwin" ]] || {
-  echo "Error: macOS only. Detected: $(uname)" >&2
-  exit 1
-}
+  [[ "$(uname)" == "Darwin" ]] || {
+    echo "Error: macOS only. Detected: $(uname)" >&2
+    exit 1
+  }
 
-if [[ $# -ne 1 ]]; then
-  echo "Usage: $0 <image-name>" >&2
-  exit 1
-fi
-IMAGE="$1"
+  usage() {
+    echo "Usage:" >&2
+    echo "  $0 <image-name>" >&2
+    echo "  $0 image <image-name>" >&2
+    echo "  $0 fs <path>" >&2
+    exit 1
+  }
 
-cd "$SCRIPT_DIR"
-mkdir -p "$CACHE_DIR"
+  if [[ $# -eq 1 ]]; then
+    MODE="image"
+    TARGET="$1"
+  elif [[ $# -eq 2 ]]; then
+    MODE="$1"
+    TARGET="$2"
+  else
+    usage
+  fi
 
-# enable Bash nullglob (drop non-matching globs)
-shopt -s nullglob
-VEX_FILES=(./.vex/*.json)
-shopt -u nullglob
+  case "$MODE" in
+    image)
+      ;;
+    fs)
+      [[ -e "$TARGET" ]] || {
+        echo "Error: fs target does not exist: $TARGET" >&2
+        exit 1
+      }
+      ;;
+    *)
+      echo "Error: unsupported mode '$MODE' (expected 'image' or 'fs')" >&2
+      usage
+      ;;
+  esac
 
-for vex_file in "${VEX_FILES[@]}"; do
-  TRIVY_ARGS+=(--vex "$vex_file")
-done
+  cd "$SCRIPT_DIR"
+  mkdir -p "$CACHE_DIR"
 
-trivy image \
-  --cache-dir "$CACHE_DIR" \
-  --show-suppressed \
-  --severity HIGH,CRITICAL \
-  "${TRIVY_ARGS[@]}" \
-  "$IMAGE"
+  shopt -s nullglob
+  VEX_FILES=(./.vex/*.json)
+  shopt -u nullglob
+
+  for vex_file in "${VEX_FILES[@]}"; do
+    TRIVY_ARGS+=(--vex "$vex_file")
+  done
+
+  trivy "$MODE" \
+    --cache-dir "$CACHE_DIR" \
+    --show-suppressed \
+    --severity HIGH,CRITICAL \
+    "${TRIVY_ARGS[@]}" \
+    "$TARGET"
