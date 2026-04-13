@@ -1,15 +1,15 @@
 schema_version: 1
 
 name: "telicent.container.nginx129"
-version: "1.0.0"
+version: "1.0.1"
 
-description: "Builds and installs NGINX 1.29.5 on UBI9 Minimal and configures it to run as a non-root user (GUID 185)."
+description: "Builds and installs NGINX 1.29.8 on UBI9 Minimal and configures it to run as a non-root user (GUID 185)."
 
 envs:
   - name: "NGINX_VERSION"
-    value: "1.29.5"
+    value: "1.29.8"
   - name: "NGINX_GPG_KEY"
-    value: "43387825DDB1BB97EC36BA5D007C8D7C15D87369"
+    value: "8540A6F18833A80E9C1653A42FD21310B49F6B46"
   - name: UID
     value: "185"
 
