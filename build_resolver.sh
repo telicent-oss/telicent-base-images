@@ -14,7 +14,7 @@ DEBUG=${DEBUG:-0}
 
 function debug_print() {
   if [[ "$DEBUG" == 1 ]]; then
-    echo "[DEBUG] $1"
+    echo "[DEBUG] $1" >&2
   fi
 }
 
@@ -34,9 +34,6 @@ function get_commit_range() {
   fi
 }
 
-declare -a module_map_keys
-declare -a module_map_values
-
 function build_module_map() {
   find modules -name module.yaml -print0 | while IFS= read -r -d $'\0' module_yaml; do
     module_name=$(grep -m 1 'name:' "$module_yaml" | sed -E 's/^name: *"?([^"]*)"?/\1/' | tr -d ' ' | tr -d '\n')
@@ -50,9 +47,8 @@ function build_module_map() {
 
     module_dir=$(dirname "$module_yaml")
 
-    # Simulate associative array
-    module_map_keys+=("$module_name")
-    module_map_values+=("$module_dir")
+    # Write a temporary pointer file to the module
+    echo "$module_dir" > ".$module_name.pointer"
 
     debug_print "Mapped module $module_name to $module_dir"
   done
@@ -64,35 +60,23 @@ function extract_modules_from_install_section() {
   local in_install_section=false
   local modules_found=()
 
+  debug_print "Locating modules for descriptor $file"
+
+  cat "$file" | yq '.modules.install[].name' > .temp-modules
+
   while IFS= read -r line; do
-    if [[ "$line" =~ ^[[:space:]]*modules: ]]; then
-      in_modules_section=true
-      continue
-    fi
+    local module_name=$(echo "$line" | tr -d ' ' | tr -d '\n')
 
-    if [[ "$in_modules_section" && ! "$line" =~ ^[[:space:]] ]]; then
-      in_modules_section=false
-      in_install_section=false
+    if [[ -n "$module_name" ]]; then
+      debug_print "  Located module $module_name"
+      modules_found+=("$module_name")
     fi
+  done < .temp-modules
+  rm -f .temp-modules
 
-    if [[ "$in_modules_section" && "$line" =~ ^[[:space:]]*install: ]]; then
-      in_install_section=true
-      continue
-    fi
-
-    if [[ "$in_install_section" && ! "$line" =~ ^[[:space:]] ]]; then
-      in_install_section=false
-    fi
-
-    if $in_install_section && [[ "$line" =~ ^[[:space:]]*-?[[:space:]]*name: ]]; then
-      local module_name=$(echo "$line" | grep -o '(?<=name: )\S+')
-      module_name=$(echo "$module_name" | tr -d ' ' | tr -d '\n')
-
-      if [[ -n "$module_name" ]]; then
-        modules_found+=("$module_name")
-      fi
-    fi
-  done < "$file"
+  if [ "${#modules_found[@]}" -eq 0 ]; then
+    debug_print "  No modules found"
+  fi
 
   echo "${modules_found[@]}"
 }
@@ -100,24 +84,14 @@ function extract_modules_from_install_section() {
 # Function to recursively check if a module or its dependencies have changed
 function track_module_dependencies() {
   local module_name=$1
-    # Simulate associative array lookup
-    local module_index=-1
-    for i in "${!module_map_keys[@]}"; do
-      if [[ "${module_map_keys[$i]}" == "$module_name" ]]; then
-        module_index="$i"
-        break
-      fi
-    done
-
-    if [[ "$module_index" -eq -1 ]]; then
-      echo "Module $module_name not found." >&2
-      return 1
-    fi
-
-    local module_path="${module_map_values[$module_index]}"
-
+  local pointer_file=".$module_name.pointer"
+  if [[ ! -f "$pointer_file" ]]; then
+    echo "Module $module_name not found (unknown module)." >&2
+  fi
+  local module_path=$(cat "$pointer_file")
+  
   if [[ -z "$module_path" ]]; then
-    echo "Module $module_name not found." >&2
+    echo "Module $module_name not found (no location)." >&2
     return 1
   fi
 
@@ -150,7 +124,7 @@ function check_modules_in_image_descriptor() {
   for module_name in "${modules_in_descriptor[@]}"; do
     debug_print "Checking module: $module_name in $descriptor_file"
     if track_module_dependencies "$module_name"; then
-      echo "$descriptor_file requires build since $module_name dependant on it has changed."
+      echo "$descriptor_file requires build since $module_name dependency has changed."
       return 0
     fi
   done
@@ -174,8 +148,10 @@ function detect_image_changes() {
 
   echo "----------------------------------------"
   echo "Module Map:"
-  for i in "${!module_map_keys[@]}"; do # Iterate through the keys
-    echo "Module: ${module_map_keys[$i]} => Path: ${module_map_values[$i]}"
+  for pointer_file in $(ls .*.pointer); do
+    module_name="${pointer_file%%.pointer}"
+    module_name="${module_name:1}"
+    echo "Module: ${module_name} => Path: $(cat "$pointer_file")"
   done
   echo "----------------------------------------"
 
@@ -197,11 +173,16 @@ function detect_image_changes() {
       image_name=$(basename "$descriptor" | awk -F'.' '{print $1}')
       affected_images+=("$image_name")
     else
+      debug_print "No direct changes to image descriptor: $descriptor"
+      debug_print "Checking for any changes to installed modules..."
       if check_modules_in_image_descriptor "$descriptor"; then
         echo "Image $descriptor modules have changed. Rebuild required."
         image_name=$(basename "$descriptor" | awk -F'.' '{print $1}')
         affected_images+=("$image_name")
       fi
+    fi
+    if [ "$DEBUG" -eq 1 ]; then
+      echo
     fi
   done < .changed-descriptors
   rm -f .changed-descriptors
@@ -228,3 +209,4 @@ if [[ "$1" == "use_last" ]]; then
 fi
 
 detect_image_changes "image-descriptors" $USE_LAST
+rm -f .*.pointer
