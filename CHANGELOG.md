@@ -1,5 +1,22 @@
 # Changelog
 
+## Changes from v0.7.3 to v0.7.4
+
+### Chores
+- Add VEX statement for CVE-2026-4878  ([7b08d74](https://github.com/telicent-oss/telicent-base-images/commit/7b08d7429a429e0a3026290a18c8d286579122fd))
+### Fixes
+- Fix build_resolver.sh script  ([1b08506](https://github.com/telicent-oss/telicent-base-images/commit/1b08506876cacf71a45afe46a6575dd55e84f19e))
+- use correct gpg key  ([87aab34](https://github.com/telicent-oss/telicent-base-images/commit/87aab3437708ba1f81317e6fb1829e6c0849e0b0))
+- trigger workflow  ([7f4cecc](https://github.com/telicent-oss/telicent-base-images/commit/7f4ceccb51a3e597c1ff58d8df0ae8ac6553d047))
+### Others
+- Update NGINX version to 1.29.8 in module.yaml ([6313601](https://github.com/telicent-oss/telicent-base-images/commit/6313601f91418b56108dc23648a238c5d8af7a62))
+- [Minor] Fixing CVE that's triggered by Grype Action tests (#341) ([308fa1f](https://github.com/telicent-oss/telicent-base-images/commit/308fa1fe7d6861661cf679e0ab9b710e26ddafda))
+- [Minor] Fixing CVE that's triggered by Trivy Action test (#340) ([9019d96](https://github.com/telicent-oss/telicent-base-images/commit/9019d964e515845989f5624dc5db216343ce875d))
+- [Minor] Adding extra OS coverage for CVE-2026-4424 (#339) ([2bdf411](https://github.com/telicent-oss/telicent-base-images/commit/2bdf411d774a9b0cde901a9453a018ab2f2e8496))
+- [Minor] Adding extra OS coverage for CVE-2026-4424 (#338) ([0cae230](https://github.com/telicent-oss/telicent-base-images/commit/0cae2303054051af25b61c683bdb97726fe6089a))
+- [CORE-1245] Extending the coverage for CVE-2026-4519 (#337) ([8c704fe](https://github.com/telicent-oss/telicent-base-images/commit/8c704fe71ac7127c2926e0c51a436a2e69d68100))
+- [CORE-1245] Addressing CVE-2026-4046 (#336) ([ebcad65](https://github.com/telicent-oss/telicent-base-images/commit/ebcad65479c19397413aeed4c0397b7c53225c3f))
+
 ## Changes from v0.7.2 to v0.7.3
 
 ### Chores
