@@ -1,5 +1,10 @@
 # Changelog
 
+## Changes from v0.7.4 to v0.7.5
+
+### Fixes
+- resolved cve issues in Python images (#349)  ([d104d91](https://github.com/telicent-oss/telicent-base-images/commit/d104d916b149572c1ebd96cddfda97fa492b0e40))
+
 ## Changes from v0.7.3 to v0.7.4
 
 ### Chores
