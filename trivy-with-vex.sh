@@ -56,6 +56,7 @@
 
   trivy "$MODE" \
     --cache-dir "$CACHE_DIR" \
+    --skip-version-check \
     --show-suppressed \
     --severity HIGH,CRITICAL \
     "${TRIVY_ARGS[@]}" \
