@@ -1,5 +1,18 @@
 # Changelog
 
+## Changes from v0.7.5 to v0.7.6
+
+### Chores
+- update base for descriptors (#356)  ([af87f44](https://github.com/telicent-oss/telicent-base-images/commit/af87f44b2fb879955eaf2718a7904792225a4875))
+### Fixes
+- Adding CVE-2026-5358 (#353)  ([d195360](https://github.com/telicent-oss/telicent-base-images/commit/d195360d04da08832478b1205a624798a6931462))
+- Removing unused suppressions. (#348)  ([eaa6690](https://github.com/telicent-oss/telicent-base-images/commit/eaa6690f88d8b01194364dadb88a90eb5661a83c))
+### Others
+- [Minor] Adding suppression for CVE-2026-40356 (#355) ([40af09b](https://github.com/telicent-oss/telicent-base-images/commit/40af09bc6db2064af687f97ae88c6fbae25e2022))
+- [Minor] Adding Open JDK Suppression until Adoptium updates JDK 21 from 21.0.10+7-LTS to 21.0.11. https://github.com/adoptium/temurin/issues/167 (#354) ([8a919f1](https://github.com/telicent-oss/telicent-base-images/commit/8a919f1ee044140019c8adda45ef44b5e82cf37e))
+- [Minor] Updating CVEs after recent failures - forgot add new file. (#352) ([987d73e](https://github.com/telicent-oss/telicent-base-images/commit/987d73e995868d5573b9793129ebe6a03069a78a))
+- [Minor] Updating CVEs after recent failures (#351) ([5beb6e7](https://github.com/telicent-oss/telicent-base-images/commit/5beb6e773b4893c3ee98d67f86e7d97edd064829))
+
 ## Changes from v0.7.4 to v0.7.5
 
 ### Fixes
