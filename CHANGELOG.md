@@ -1,5 +1,19 @@
 # Changelog
 
+## Changes from v0.7.6 to v0.8.0
+
+### Features
+- add nginx 1.30.1 module and image descriptor  ([b2f27b3](https://github.com/telicent-oss/telicent-base-images/commit/b2f27b359dd740bb19e36e56a25160919dd84cd0))
+### Fixes
+- build-nginx130.sh  ([1cc425c](https://github.com/telicent-oss/telicent-base-images/commit/1cc425c00d823b3b7c0355df048cb8fe4a5c396e))
+- Adding CVE-2026-42010 - spelling it correctly (#362)  ([8430d89](https://github.com/telicent-oss/telicent-base-images/commit/8430d8930d93767745c4d1940a59bc8a3907c180))
+- Adding CVE-2026-42010 (#361)  ([0206208](https://github.com/telicent-oss/telicent-base-images/commit/020620891d00cda19f6534c9e61640d8a82e6565))
+- Adding CVE-2026-43689  ([005610f](https://github.com/telicent-oss/telicent-base-images/commit/005610fe6baddfefced180c96cf67fb1959610e4))
+### Others
+- Add suppression for CVE-2026-5598 (#363) ([ffc236e](https://github.com/telicent-oss/telicent-base-images/commit/ffc236e97c19a1e1ff2be4b02243e30b2d6ba054))
+- Update CVE-2026-43689.openvex.json (#360) ([1ef1828](https://github.com/telicent-oss/telicent-base-images/commit/1ef18287e668c6e0b7a4b83067967ee1e9d83c4d))
+- [Minor] Adding suppression for CVE-2026-33845 & CVE-2026-33846. And also removing annoying warnings about upgrades from trivy. (#358) ([a858901](https://github.com/telicent-oss/telicent-base-images/commit/a8589010e4e47c022b472f13db88771cb8fa9428))
+
 ## Changes from v0.7.5 to v0.7.6
 
 ### Chores
