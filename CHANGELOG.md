@@ -1,5 +1,12 @@
 # Changelog
 
+## Changes from v0.8.0 to v0.9.0
+
+### Features
+- add 22 long-term-support version  ([04f1f5a](https://github.com/telicent-oss/telicent-base-images/commit/04f1f5aef61449705568155547737e08b23d6792))
+### Fixes
+- Adding CVE-2026-42009 - rolling in with CVE-2026-42010. (#367)  ([a6d157a](https://github.com/telicent-oss/telicent-base-images/commit/a6d157ac7c38d6181db6486cec3b05423a28b910))
+
 ## Changes from v0.7.6 to v0.8.0
 
 ### Features
