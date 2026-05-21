@@ -1,8 +1,5 @@
-lddf-edge-observations-can-events-mapper
 search-api-server
 smart-cache-elastic-index
-telicent-acled-flow
-telicent-acled-to-canonical-events-mock-mapper
 telicent-admin
 telicent-auth-server
 telicent-canonicals-event-document-mapper
@@ -15,11 +12,9 @@ telicent-document-content-extractor
 telicent-document-content-indexer
 telicent-document-http-ingester
 telicent-graph
-telicent-json-validation-mapper
 telicent-notifications-api-server
 telicent-notifications-projector
 telicent-paperback-writer
-telicent-pdp
 telicent-pipeline-entity-extraction
 telicent-query
 telicent-rdf-document-tagger-dc
