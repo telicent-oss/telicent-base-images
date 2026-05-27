@@ -1,5 +1,18 @@
 # Changelog
 
+## Changes from v0.9.1 to v0.9.2
+
+### Chores
+- update base for descriptors (#377)  ([efea048](https://github.com/telicent-oss/telicent-base-images/commit/efea0480dd6fd6c3b2de615b0ee5d35d1c02c4b5))
+### Fixes
+- fix:add vex CVEs  ([aa41da9](https://github.com/telicent-oss/telicent-base-images/commit/aa41da9ef6c51c243900e537a4db70db4ee8a142))
+- Updating CVE-2026-40356 - extending coverage (#372)  ([ea3cf2e](https://github.com/telicent-oss/telicent-base-images/commit/ea3cf2e1d34f39e9f2ee40234edc7760ab4e4b3e))
+- Updating CVE-2026-4878 - extending coverage (#371)  ([6f6f546](https://github.com/telicent-oss/telicent-base-images/commit/6f6f546b490633fbfca0ece184ce79a06871cdd5))
+### Others
+- fix missing product (#376) ([2a62e17](https://github.com/telicent-oss/telicent-base-images/commit/2a62e175847396929395af1027cc353fdc97b059))
+- [Minor] Updating ECR images (#374) ([309d2d0](https://github.com/telicent-oss/telicent-base-images/commit/309d2d083d6c59d6cd0724fdd35d86eae503c641))
+- [Minor] Updating ECR images (#373) ([7ab8a29](https://github.com/telicent-oss/telicent-base-images/commit/7ab8a29ea894ba341d2e5ec0fc12f1130ef784d4))
+
 ## Changes from v0.9.0 to v0.9.1
 
 ### Chores
