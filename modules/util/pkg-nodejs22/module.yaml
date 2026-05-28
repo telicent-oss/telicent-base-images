@@ -1,0 +1,11 @@
+schema_version: 1
+name: telicent.container.util.pkg-nodejs22
+version: '1.0'
+description: "Enable NodeJS 22 module stream before package install"
+
+envs:
+  - name: "NODEJS_VERSION"
+    value: "22"
+
+execute:
+- script: exec.sh

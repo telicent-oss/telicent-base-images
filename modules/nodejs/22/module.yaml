@@ -12,11 +12,6 @@ labels:
 - name: "org.telicent.product.nodejs.version"
   value: *nodever
 
-# NODEJS_VERSION is set at descriptor level (mirrors nodejs20 pattern).
-# telicent.container.util.pkg-nodejs is intentionally absent: that module
-# hard-codes NODEJS_VERSION=20 and would override the descriptor env.
-# exec.sh handles the microdnf module enable directly.
-# PATH/NPM_CONFIG_PREFIX/HOME are wired here (previously provided by pkg-nodejs).
 envs:
   - name: "HOME"
     value: "/home/user"
@@ -27,6 +22,7 @@ envs:
 
 modules:
   install:
+    - name: telicent.container.util.pkg-nodejs22
     - name: telicent.container.user
     - name: telicent.container.util.pkg-update
     - name: telicent.container.util.tzdata
@@ -39,5 +35,3 @@ packages:
     - findutils
     - which
 
-execute:
-  - script: exec.sh
