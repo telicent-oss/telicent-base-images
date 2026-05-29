@@ -12,6 +12,11 @@ labels:
 - name: "org.telicent.product.nodejs.version"
   value: *nodever
 
+# telicent.container.util.pkg-nodejs (used by nodejs20) hard-codes NODEJS_VERSION=20.
+# pkg-nodejs22 is a minimal fork that sets NODEJS_VERSION=22 and enables the
+# nodejs:22 module stream as a dependency — before packages: install runs.
+# PATH/NPM_CONFIG_PREFIX/HOME are wired here (previously provided by pkg-nodejs).
+
 envs:
   - name: "HOME"
     value: "/home/user"
