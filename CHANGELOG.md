@@ -5,6 +5,22 @@
 ### Chores
 - update base for descriptors (#377)  ([efea048](https://github.com/telicent-oss/telicent-base-images/commit/efea0480dd6fd6c3b2de615b0ee5d35d1c02c4b5))
 ### Fixes
+- remove old exec.sh  ([bfd5188](https://github.com/telicent-oss/telicent-base-images/commit/bfd51886011a9c3655a04751ec6e8cb10fa2fb49))
+- better ocmment  ([f52cca2](https://github.com/telicent-oss/telicent-base-images/commit/f52cca212a5429e5fbea9b93a0708825baf34b96))
+- enable module stream before package install  ([56f384e](https://github.com/telicent-oss/telicent-base-images/commit/56f384ead4f62289399b1c3a1a022c66443a8c95))
+- fix:add vex CVEs  ([aa41da9](https://github.com/telicent-oss/telicent-base-images/commit/aa41da9ef6c51c243900e537a4db70db4ee8a142))
+- Updating CVE-2026-40356 - extending coverage (#372)  ([ea3cf2e](https://github.com/telicent-oss/telicent-base-images/commit/ea3cf2e1d34f39e9f2ee40234edc7760ab4e4b3e))
+- Updating CVE-2026-4878 - extending coverage (#371)  ([6f6f546](https://github.com/telicent-oss/telicent-base-images/commit/6f6f546b490633fbfca0ece184ce79a06871cdd5))
+### Others
+- fix missing product (#376) ([2a62e17](https://github.com/telicent-oss/telicent-base-images/commit/2a62e175847396929395af1027cc353fdc97b059))
+- [Minor] Updating ECR images (#374) ([309d2d0](https://github.com/telicent-oss/telicent-base-images/commit/309d2d083d6c59d6cd0724fdd35d86eae503c641))
+- [Minor] Updating ECR images (#373) ([7ab8a29](https://github.com/telicent-oss/telicent-base-images/commit/7ab8a29ea894ba341d2e5ec0fc12f1130ef784d4))
+
+## Changes from v0.9.1 to v0.9.2
+
+### Chores
+- update base for descriptors (#377)  ([efea048](https://github.com/telicent-oss/telicent-base-images/commit/efea0480dd6fd6c3b2de615b0ee5d35d1c02c4b5))
+### Fixes
 - fix:add vex CVEs  ([aa41da9](https://github.com/telicent-oss/telicent-base-images/commit/aa41da9ef6c51c243900e537a4db70db4ee8a142))
 - Updating CVE-2026-40356 - extending coverage (#372)  ([ea3cf2e](https://github.com/telicent-oss/telicent-base-images/commit/ea3cf2e1d34f39e9f2ee40234edc7760ab4e4b3e))
 - Updating CVE-2026-4878 - extending coverage (#371)  ([6f6f546](https://github.com/telicent-oss/telicent-base-images/commit/6f6f546b490633fbfca0ece184ce79a06871cdd5))
