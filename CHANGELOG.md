@@ -1,5 +1,12 @@
 # Changelog
 
+## Changes from v0.9.2 to v0.9.3
+
+### Fixes
+- bump 1.30.1 to 1.30.2 for CVE-2026-9256 (#381)  ([091bbff](https://github.com/telicent-oss/telicent-base-images/commit/091bbff2dafc4e4270cdf3b2258328ee3aa14160))
+### Others
+- [Minor] Updating CVEs targeting GNU TLS after base image updte (#383) ([2a4f166](https://github.com/telicent-oss/telicent-base-images/commit/2a4f166d07b9247a2751f530e40e72deb1dc40db))
+
 ## Changes from v0.9.1 to v0.9.2
 
 ### Chores
