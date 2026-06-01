@@ -1,5 +1,10 @@
 # Changelog
 
+## Changes from v0.9.3 to v0.9.4
+
+### Fixes
+- strip npm CLI to cut CVE surface (picomatch HIGH)  ([7556e64](https://github.com/telicent-oss/telicent-base-images/commit/7556e64e75a3ddbc6ba162d367ea8475a43bbbcd))
+
 ## Changes from v0.9.2 to v0.9.3
 
 ### Fixes
