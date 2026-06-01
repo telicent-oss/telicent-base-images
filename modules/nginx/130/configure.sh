@@ -3,7 +3,7 @@
 #!/bin/bash
 set -e
 
-NGINX_VERSION="${NGINX_VERSION:-1.30.1}"
+NGINX_VERSION="${NGINX_VERSION:-1.30.2}"
 NGINX_SRC_URL="http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz"
 
 RED="\033[31m"
