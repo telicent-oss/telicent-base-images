@@ -34,7 +34,7 @@ labels:
     value: "Telicent OSS"
 
 ports:
-- value: 8080
+  - value: 8080
 
 envs:
   - name: "LANG"
@@ -50,13 +50,14 @@ packages:
 
 modules:
   repositories:
-   - path: ../modules
+    - path: ../modules
   install:
     - name: telicent.container.nodejs
       version: "22"
     - name: telicent.container.util.cleanup.microdnf
     - name: telicent.container.util.devtools
+    - name: telicent.container.util.cleanup.npm
 
 # CHANGE_CHECKSUM_TO_FORCE_REBUILD
 # Base: v1.0.0
-# When: 2026-05-15T00:00:00.000Z
+# When: 2026-06-01T00:00:00.000Z

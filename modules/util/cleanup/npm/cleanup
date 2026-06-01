@@ -1,0 +1,9 @@
+#!/bin/bash
+
+set -e
+
+# Why rm?
+# - npm ships as files inside the nodejs rpm
+# - reduce cve surface area
+# note: node binary is unaffected
+rm -rf /usr/lib/node_modules/npm
