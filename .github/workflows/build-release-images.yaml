@@ -52,6 +52,7 @@ jobs:
           fi
 
       - name: Validate Tag
+        id: validate
         env:
           TAG_FROM_ARTIFACT: ${{ github.event_name == 'workflow_run' }}
           TAG_FROM_INPUTS: ${{ github.event.inputs.tag || '' }}
@@ -81,7 +82,7 @@ jobs:
             exit 1
           fi
           echo "Tag validated: $TAG"
-          echo "tag=$TAG" >> $GITHUB_ENV
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
 
   detect-changed-images:
     needs: validate-tag
@@ -89,23 +90,46 @@ jobs:
     with:
       TAG_VERSION: ${{ needs.validate-tag.outputs.tag }}
 
+  resolve-images:
+    needs: detect-changed-images
+    runs-on: ubuntu-latest
+    outputs:
+      images: ${{ steps.resolve.outputs.images }}
+    steps:
+      - name: Resolve image matrix
+        id: resolve
+        env:
+          MANUAL_IMAGES: ${{ github.event.inputs.image_matrix || '' }}
+          DETECTED_IMAGES: ${{ needs.detect-changed-images.outputs.images }}
+        run: |
+          if [ -n "$MANUAL_IMAGES" ]; then
+            # Accept comma and/or space separated descriptor names, convert to JSON array
+            images=$(echo "$MANUAL_IMAGES" | tr ' ' ',' | jq -R -c 'split(",") | map(select(length > 0))')
+            echo "Using manually supplied image matrix: $images"
+          else
+            images="$DETECTED_IMAGES"
+            echo "Using change-detected image matrix: $images"
+          fi
+          echo "images=$images" >> "$GITHUB_OUTPUT"
+
   build-images-with-reusable-workflow:
-    if: ${{ needs.detect-changed-images.outputs.images != '["[]"]' }}
+    if: ${{ needs.resolve-images.outputs.images != '["[]"]' && needs.resolve-images.outputs.images != '[]' }}
     secrets: inherit
     permissions:
       contents: write
     needs:
       - validate-tag
-      - detect-changed-images
+      - resolve-images
     uses: ./.github/workflows/reusable-image-builder.yaml
     with:
-      IMAGE-DESCRIPTORS: ${{ needs.detect-changed-images.outputs.images }}
+      IMAGE-DESCRIPTORS: ${{ needs.resolve-images.outputs.images }}
       TAG: ${{ needs.validate-tag.outputs.tag }}
       GRYPE_SECURITY_ISSUES_BLOCK_ONLY_IF_FIX_AVAILABLE: true
       ENABLE_ARM64: ${{ fromJSON(github.event.inputs.enable_arm64 || 'true') }}
 
   no-changes:
-    if: ${{ needs.detect-changed-images.outputs.images == '["[]"]' }}
+    if: ${{ needs.resolve-images.outputs.images == '["[]"]' || needs.resolve-images.outputs.images == '[]' }}
+    needs: resolve-images
     runs-on: ubuntu-latest
     steps:
       - name: No images to build
