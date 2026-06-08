@@ -22,8 +22,8 @@ on:
           - debug
           - perf
       tag:
-        description: "Tag to build from (must exist, format v<major>.<minor>.<patch>)"
-        required: true
+        description: "Release tag to build from (format v<major>.<minor>.<patch>). Leave blank to use the latest release tag, which matches the currently deployed telicent-base-java."
+        required: false
         type: string
       enable_arm64:
         description: "Enable native arm64 builds (QEMU on ubuntu-latest)"
@@ -46,11 +46,23 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Validate tag
+      - name: Resolve and validate tag
         id: validate
         env:
-          TAG: ${{ github.event.inputs.tag }}
+          INPUT_TAG: ${{ github.event.inputs.tag }}
         run: |
+          TAG="$INPUT_TAG"
+          if [ -z "$TAG" ]; then
+            # No tag supplied: use the latest semver release tag. The base image
+            # currently deployed to Docker Hub was built from this tag, so the
+            # debug/perf images will share its version.
+            TAG=$(git tag --sort=-v:refname | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | head -n 1)
+            if [ -z "$TAG" ]; then
+              echo "Error: could not determine a latest release tag."
+              exit 1
+            fi
+            echo "No tag supplied; using latest release tag: $TAG"
+          fi
           echo "Validating tag: $TAG"
           if [[ ! "$TAG" =~ ^v[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
             echo "Error: tag must be in the format v<major>.<minor>.<patch>."
@@ -60,7 +72,7 @@ jobs:
             echo "Error: tag ($TAG) does not exist in the repository."
             exit 1
           fi
-          echo "Tag validated: $TAG"
+          echo "Tag resolved: $TAG"
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
 
       - name: Build image matrix
