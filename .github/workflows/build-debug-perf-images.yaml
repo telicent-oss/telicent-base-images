@@ -1,0 +1,146 @@
+name: build-debug-perf-images
+
+# Standalone, manual-only workflow that builds AND pushes the Telicent Java
+# debug / perf base images to Docker Hub.
+#
+# These two images are intentionally NOT published by the normal release flow
+# (build-release-images.yaml builds them but never pushes them). Use this
+# workflow to publish updated debug/perf base images for QA/SI troubleshooting.
+#
+# This workflow is fully self-contained and does not touch the release pipeline.
+
+on:
+  workflow_dispatch:
+    inputs:
+      variant:
+        description: "Which variant(s) to build and push"
+        required: true
+        default: both
+        type: choice
+        options:
+          - both
+          - debug
+          - perf
+      tag:
+        description: "Tag to build from (must exist, format v<major>.<minor>.<patch>)"
+        required: true
+        type: string
+      enable_arm64:
+        description: "Enable native arm64 builds (QEMU on ubuntu-latest)"
+        required: false
+        default: true
+        type: boolean
+
+permissions:
+  contents: read
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.validate.outputs.tag }}
+      images: ${{ steps.matrix.outputs.images }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Validate tag
+        id: validate
+        env:
+          TAG: ${{ github.event.inputs.tag }}
+        run: |
+          echo "Validating tag: $TAG"
+          if [[ ! "$TAG" =~ ^v[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
+            echo "Error: tag must be in the format v<major>.<minor>.<patch>."
+            exit 1
+          fi
+          if ! git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "Error: tag ($TAG) does not exist in the repository."
+            exit 1
+          fi
+          echo "Tag validated: $TAG"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+
+      - name: Build image matrix
+        id: matrix
+        env:
+          VARIANT: ${{ github.event.inputs.variant }}
+        run: |
+          case "$VARIANT" in
+            debug) images='["telicent-base-java-debug"]' ;;
+            perf)  images='["telicent-base-java-perf"]' ;;
+            both)  images='["telicent-base-java-debug","telicent-base-java-perf"]' ;;
+            *) echo "Error: unknown variant '$VARIANT'" && exit 1 ;;
+          esac
+          echo "Image matrix: $images"
+          echo "images=$images" >> "$GITHUB_OUTPUT"
+
+  build-and-push:
+    needs: prepare
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        image: ${{ fromJson(needs.prepare.outputs.images) }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ needs.prepare.outputs.tag }}
+          fetch-depth: 0
+
+      - name: Install Python and PIP
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3 python3-pip
+
+      - name: Install Cekit
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install cekit
+
+      - name: Generate Dockerfile
+        run: |
+          cekit --descriptor image-descriptors/${{ matrix.image }}.yaml build --dry-run docker
+
+      - name: Extract Image Version and Name
+        id: extract
+        run: |
+          descriptor_path="target/image.yaml"
+          current_version=$(yq eval '.version' "$descriptor_path" | sed 's/^[ \t]*//;s/[ \t]*$//')
+          image_name=$(yq eval '.labels[] | select(.name == "name") | .value' "$descriptor_path")
+          echo "Extracted version: $current_version"
+          echo "Extracted image name: $image_name"
+          echo "image_version=$current_version" >> "$GITHUB_OUTPUT"
+          echo "image_name=$image_name" >> "$GITHUB_OUTPUT"
+
+      - name: Verify Correct Context
+        shell: bash
+        run: |
+          [ -f ./target/image/Dockerfile ] || { echo "Missing Dockerfile in ./target" && exit 1; }
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+        if: ${{ fromJSON(github.event.inputs.enable_arm64 || 'true') }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: "${{ secrets.DOCKER_USERNAME }}"
+          password: "${{ secrets.DOCKER_PASSWORD }}"
+
+      - name: Build and Push Image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./target/image
+          file: ./target/image/Dockerfile
+          platforms: ${{ fromJSON(github.event.inputs.enable_arm64 || 'true') && 'linux/amd64,linux/arm64' || 'linux/amd64' }}
+          push: true
+          tags: |
+            "telicent/${{ steps.extract.outputs.image_name }}:latest"
+            "telicent/${{ steps.extract.outputs.image_name }}:${{ steps.extract.outputs.image_version }}"
