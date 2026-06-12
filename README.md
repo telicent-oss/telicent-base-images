@@ -453,3 +453,62 @@ To run:
 ```bash
 ./find_stale_vex.sh telicent/telicent-java21:latest
 ```
+
+## Debug / Performance images
+In order to assist with investigating issues in SI/QA we can improve the tooling provided in the underlying java base image. 
+
+### Build
+
+#### Debug Image
+```bash
+./.dev/build-image.sh ./image-descriptors/telicent-base-java-debug.yaml
+```
+
+#### Perf Image
+```bash
+./.dev/build-image.sh ./image-descriptors/telicent-base-java-perf.yaml
+```
+
+### Upload 
+
+#### Login
+```bash
+aws ecr get-login-password --region eu-west-2 | docker login --username AWS --password-stdin 098669589541.dkr.ecr.eu-west-2.amazonaws.com
+```
+
+#### Check Repo exists
+```bash
+aws ecr describe-repositories --repository-names telicent-java21-debug --region eu-west-2 
+```
+
+```bash
+aws ecr describe-repositories --repository-names telicent-java21-perf --region eu-west-2 
+```
+
+#### Create repo
+```bash
+aws ecr create-repository --repository-name telicent-java21-debug --region eu-west-2
+```
+
+```bash
+aws ecr create-repository --repository-name telicent-java21-perf --region eu-west-2
+```
+
+#### Docker
+##### Tag
+Replace 1.2.50 with current version
+```bash
+docker tag telicent-java21-debug:1.2.50 098669589541.dkr.ecr.eu-west-2.amazonaws.com/telicent-java21-debug:1.2.50
+```
+```bash
+docker tag telicent-java21-perf:1.2.50 098669589541.dkr.ecr.eu-west-2.amazonaws.com/telicent-java21-perf:1.2.50
+```
+
+##### Push
+Replace 1.2.50 with current version
+```bash
+docker push 098669589541.dkr.ecr.eu-west-2.amazonaws.com/telicent-java21-debug:1.2.50
+```
+```bash
+docker push 098669589541.dkr.ecr.eu-west-2.amazonaws.com/telicent-java21-perf:1.2.50
+```
