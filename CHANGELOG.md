@@ -1,5 +1,22 @@
 # Changelog
 
+## Changes from v0.9.5 to v0.10.0
+
+### Features
+- add manual workflow to build and push java debug/perf base images (#389)  ([c448532](https://github.com/telicent-oss/telicent-base-images/commit/c448532e89d2e2b6c86be7f14c3413e3730a1eaa))
+### Chores
+- update base for descriptors (#397)  ([87109fb](https://github.com/telicent-oss/telicent-base-images/commit/87109fb5dff43b6cd5e8b167e818b2ec5febf9a8))
+- update gnutls CVE statements and add tar CVE suppression (#391)  ([47a547c](https://github.com/telicent-oss/telicent-base-images/commit/47a547ca31281edd2180a953aa6638a1908a3b71))
+### Fixes
+- Updating CVEs (#398)  ([2a0a381](https://github.com/telicent-oss/telicent-base-images/commit/2a0a38133d3218978907ecefe71eb63297685552))
+- Updating CVE-2026-40356 - extending coverage again (#396)  ([37624c1](https://github.com/telicent-oss/telicent-base-images/commit/37624c1a395b8d48b2a67a1aa1f532b080be1efc))
+- Updating CVE-2026-40356 - extending coverage for openssl too (#395)  ([d77b415](https://github.com/telicent-oss/telicent-base-images/commit/d77b415b7620102daeac775228e67b8bd37b9609))
+### Others
+- [Minor] Adding documentation to help build debug images (#393) ([8e77515](https://github.com/telicent-oss/telicent-base-images/commit/8e775157d6cfc87376eec044ddc272d24f12a24f))
+- [Minor] Addressing CVE-2026-45447 for GUI apps on older OS (#394) ([418aee5](https://github.com/telicent-oss/telicent-base-images/commit/418aee5a967b3f920d3a271c05e189b0de07b9d7))
+- [Minor] Addressing CVE-2026-45447 (#392) ([cb80736](https://github.com/telicent-oss/telicent-base-images/commit/cb80736c8600fa97543b72ff33cdd99755f9e25a))
+- [Minor] Automatically resolve the tag to use (#390) ([f2d1100](https://github.com/telicent-oss/telicent-base-images/commit/f2d11002d1cfe7e7a9ee95497269812293355c88))
+
 ## Changes from v0.9.4 to v0.9.5
 
 ### Chores
