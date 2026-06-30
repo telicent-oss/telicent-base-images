@@ -87,7 +87,7 @@ jobs:
           [ -f ./target/image/Dockerfile ] || $(echo "Missing Dockerfile in ./target" && exit 1)
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
+        uses: docker/setup-qemu-action@v4
         if: ${{ inputs.ENABLE_ARM64 }}
 
       - name: Set up Docker Buildx
