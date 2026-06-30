@@ -100,7 +100,7 @@ jobs:
           password: "${{ secrets.DOCKER_PASSWORD }}"
 
       - name: Build and Push Image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v7
         env:
           ENABLE_ARM64: ${{ inputs.ENABLE_ARM64 }}
         with:
