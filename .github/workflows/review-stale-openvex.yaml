@@ -46,7 +46,7 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Configure AWS credentials from main account
-        uses: aws-actions/configure-aws-credentials@v5
+        uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: arn:aws:iam::098669589541:role/GitHubDeploymentRole
           aws-region: eu-west-2
