@@ -79,7 +79,7 @@ jobs:
             | tee "reports/${{ matrix.image-artifact.artifact }}.txt"
 
       - name: Upload per-image reports
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: stale-vex-${{ matrix.image-artifact.artifact }}
           path: reports/*.json
@@ -224,7 +224,7 @@ jobs:
             await core.summary.addRaw(`Created cleanup issue #${created.data.number}.`).write();
 
       - name: Upload aggregate report
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: stale-vex-report
           path: reports/final/
