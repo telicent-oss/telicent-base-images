@@ -1,5 +1,13 @@
 # Changelog
 
+## Changes from v0.10.0 to v0.10.1
+
+### Chores
+- update base for descriptors  ([73bbca6](https://github.com/telicent-oss/telicent-base-images/commit/73bbca6c5ecdf3906898be25f3220cff94815f08))
+### Fixes
+- Adding the GHSA equivalents of some CVEs that are tripping up in grype. (#401)  ([427e456](https://github.com/telicent-oss/telicent-base-images/commit/427e456b7d3583883b9d599b76b88b9acac1497b))
+- Updating for CVE-2026-49268 (brought in by Apache Jena Fuseki) (#400)  ([4956eea](https://github.com/telicent-oss/telicent-base-images/commit/4956eeac202941f48efcf3c23d93f6cc0f224032))
+
 ## Changes from v0.9.5 to v0.10.0
 
 ### Features
