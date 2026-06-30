@@ -65,7 +65,7 @@ jobs:
           git commit -m "chore: prepare release ${{ steps.determine-version.outputs.new_version }}" || echo "No changes to commit."
 
       - name: Open or Update Release PR
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "chore: prepare release ${{ steps.determine-version.outputs.new_version }}"

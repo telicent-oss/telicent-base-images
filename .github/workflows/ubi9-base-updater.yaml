@@ -42,7 +42,7 @@ jobs:
           git commit -m "chore(bot): update base for descriptors" || echo "No changes to commit."
 
       - name: Open or Update PR
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           author: "dependencies[bot] <41898282+dependencies[bot]@users.noreply.github.com>"
