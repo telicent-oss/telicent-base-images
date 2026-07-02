@@ -1,5 +1,24 @@
 # Changelog
 
+## Changes from v0.10.1 to v0.10.2
+
+### Chores
+- update base for descriptors  ([6d65ed1](https://github.com/telicent-oss/telicent-base-images/commit/6d65ed1b066eacf84f756b97309f6184922a0317))
+- bump docker/build-push-action from 5 to 7  ([c054bd2](https://github.com/telicent-oss/telicent-base-images/commit/c054bd27125dac448002b02b7bd198772e32461f))
+- bump actions/download-artifact from 7 to 8  ([5d4d778](https://github.com/telicent-oss/telicent-base-images/commit/5d4d7786fd3b6e634bc5e2563dd10bba31ae574c))
+- bump aws-actions/configure-aws-credentials from 5 to 6  ([d269ed8](https://github.com/telicent-oss/telicent-base-images/commit/d269ed86632063dc3e5ae6c34cbd9a5911c49071))
+- bump docker/login-action from 3 to 4  ([9be6e04](https://github.com/telicent-oss/telicent-base-images/commit/9be6e045cc3854f9660e221b1caf5cbdac1561e1))
+- bump aquasecurity/setup-trivy from 0.2.6 to 0.3.1  ([19cc097](https://github.com/telicent-oss/telicent-base-images/commit/19cc0971c207c6935288b4e7eda5e4fa301157de))
+- bump actions/checkout from 5 to 7  ([61c43c2](https://github.com/telicent-oss/telicent-base-images/commit/61c43c291dfcb4448b2faa784e59233d0d127bd8))
+- bump docker/setup-buildx-action from 3 to 4  ([8b324d3](https://github.com/telicent-oss/telicent-base-images/commit/8b324d3b2093b11d62c3241a339fae93577fd314))
+- bump actions/github-script from 8 to 9  ([43a89e6](https://github.com/telicent-oss/telicent-base-images/commit/43a89e62bce72ff06b39469cb9cdf6b5fdd59e1b))
+- bump docker/setup-qemu-action from 3 to 4  ([a57468e](https://github.com/telicent-oss/telicent-base-images/commit/a57468ed0e7672f2d48f7323a92fceec98576e90))
+- bump peter-evans/create-pull-request from 7 to 8  ([4df5853](https://github.com/telicent-oss/telicent-base-images/commit/4df5853039818f2be8220dcf266551c33095e960))
+- bump actions/upload-artifact from 6 to 7  ([57ddd67](https://github.com/telicent-oss/telicent-base-images/commit/57ddd675794ed0d9b747ced520a44529a9dddf84))
+- Enable Dependabot  ([c3860a3](https://github.com/telicent-oss/telicent-base-images/commit/c3860a32ce18e8238856ed5d36212c39b906a3a6))
+### Fixes
+- Add VEX suppressions for new CVEs  ([ea738c8](https://github.com/telicent-oss/telicent-base-images/commit/ea738c8e77c1be8a0ce290ad495cad028362621e))
+
 ## Changes from v0.10.0 to v0.10.1
 
 ### Chores
