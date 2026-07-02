@@ -147,7 +147,7 @@ jobs:
           password: "${{ secrets.DOCKER_PASSWORD }}"
 
       - name: Build and Push Image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v7
         with:
           context: ./target/image
           file: ./target/image/Dockerfile
