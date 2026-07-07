@@ -1,5 +1,10 @@
 # Changelog
 
+## Changes from v0.10.2 to v0.10.3
+
+### Fixes
+- bump nginx to 1.30.3 for CVE-2026-42055 (#420)  ([ef9888c](https://github.com/telicent-oss/telicent-base-images/commit/ef9888c72471d92f97e8770ba8f36e8414c9dee5))
+
 ## Changes from v0.10.1 to v0.10.2
 
 ### Chores
