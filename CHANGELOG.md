@@ -1,5 +1,13 @@
 # Changelog
 
+## Changes from v0.10.3 to v0.10.4
+
+### Fixes
+- VEX no-fix curl CVEs + rebuild nodejs22 for 22.23.1 (#422)  ([959320c](https://github.com/telicent-oss/telicent-base-images/commit/959320c4da4a6731a094d4d89eb93f9fe764bf21))
+### Others
+- [Minor] Updating tar CVEs (CVE-2026-59873 & CVE-2026-59874) but removing now defunct - CVE-2005-2541. (#425) ([9ce4c31](https://github.com/telicent-oss/telicent-base-images/commit/9ce4c31b8975b496d94c8e9d1403ef4dbb726b65))
+- [Minor] Addressing CVE-2026-8286, CVE-2026-8925, CVE-2026-9547, CVE-2026-11352, CVE-2026-11586 & CVE-2026-12064 (#423) ([5be552b](https://github.com/telicent-oss/telicent-base-images/commit/5be552b9ad56e1d77139a7ee04f9599947fd9d20))
+
 ## Changes from v0.10.2 to v0.10.3
 
 ### Fixes
