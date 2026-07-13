@@ -1,5 +1,11 @@
 # Changelog
 
+## Changes from v0.10.4 to v0.10.4
+
+### Others
+- [Minor] Addressing a number of CVE failures across images and bumping NGINX-127 (#428) ([0c2a838](https://github.com/telicent-oss/telicent-base-images/commit/0c2a8389ac4ddd107178bb8f612ef52afb5a82eb))
+- [Minor] Addressing a number of CVE failures across images and bumping NGINX-127 (#426) ([05bcacd](https://github.com/telicent-oss/telicent-base-images/commit/05bcacd2bbb102ced85b0a94682a926eccc45850))
+
 ## Changes from v0.10.3 to v0.10.4
 
 ### Fixes
