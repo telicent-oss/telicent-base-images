@@ -1,5 +1,14 @@
 # Changelog
 
+## Changes from v0.10.4 to v0.10.5
+
+### Chores
+- VEX CVE-2026-13149 (brace-expansion ReDoS) not_affected for telicent-nodejs22 (#432)  ([5dd1c5c](https://github.com/telicent-oss/telicent-base-images/commit/5dd1c5c340dff594cfc58a40c29cbd1d4847f8c5))
+- update base for descriptors (#429)  ([59dea3d](https://github.com/telicent-oss/telicent-base-images/commit/59dea3dd940dc67ac9474a80270a5622b96eb44a))
+### Others
+- [Minor] Addressing a number of CVE failures across images and bumping NGINX-127 (#428) ([0c2a838](https://github.com/telicent-oss/telicent-base-images/commit/0c2a8389ac4ddd107178bb8f612ef52afb5a82eb))
+- [Minor] Addressing a number of CVE failures across images and bumping NGINX-127 (#426) ([05bcacd](https://github.com/telicent-oss/telicent-base-images/commit/05bcacd2bbb102ced85b0a94682a926eccc45850))
+
 ## Changes from v0.10.3 to v0.10.4
 
 ### Fixes
