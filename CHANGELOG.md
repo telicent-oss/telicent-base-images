@@ -1,5 +1,13 @@
 # Changelog
 
+## Changes from v0.10.5 to v0.10.6
+
+### Chores
+- update base for descriptors (#433)  ([5733b25](https://github.com/telicent-oss/telicent-base-images/commit/5733b2579937885134f7fc2d2fc2702e9537edb1))
+- bump actions/setup-python from 6 to 7 (#431)  ([581ac9c](https://github.com/telicent-oss/telicent-base-images/commit/581ac9c63b5280858a33e64f9eee4b7972cc8f62))
+### Fixes
+- Since we stopped publishing to Dockerhub we might as well check all ECR Java Images instead (#434)  ([bb55597](https://github.com/telicent-oss/telicent-base-images/commit/bb555976cd87e652c481f816b643df2709b39df7))
+
 ## Changes from v0.10.4 to v0.10.5
 
 ### Chores
