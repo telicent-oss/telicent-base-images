@@ -112,6 +112,17 @@ jobs:
             "telicent/${{ steps.extract.outputs.image_name }}:latest"
             "telicent/${{ steps.extract.outputs.image_name }}:${{ steps.extract.outputs.image_version }}"
 
+      # Non-blocking: confirms the npm cleanup module actually removed npm from
+      # the shipped nodejs image (npm carries CVEs such as CVE-2026-13149).
+      # Reports as a failed step in the UI but does not fail the build.
+      - name: Verify npm removed from nodejs image (non-blocking)
+        if: contains(matrix.image, 'nodejs')
+        continue-on-error: true
+        env:
+          IMAGE_NAME: ${{ steps.extract.outputs.image_name }}
+          IMAGE_VERSION: ${{ steps.extract.outputs.image_version }}
+        run: ./check_no_npm.sh "telicent/${IMAGE_NAME}:${IMAGE_VERSION}"
+
   notify-teams:
     name: Notify Teams on Workflow Result
     needs: [ test_inputs, build-push-image ]
