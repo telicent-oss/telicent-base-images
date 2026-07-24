@@ -1,0 +1,24 @@
+name: verify-npm-removed
+
+# Runs check_no_npm.sh against the published nodejs image on every PR to main,
+# so npm removal (which clears CVEs such as CVE-2026-13149) is visibly verified.
+# Non-blocking: the step reports pass/fail but continue-on-error keeps it from
+# gating merges.
+
+on:
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: read
+
+jobs:
+  verify-npm-removed:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v7
+
+      - name: Verify npm removed from published nodejs22 image (non-blocking)
+        continue-on-error: true
+        run: ./check_no_npm.sh "telicent/telicent-nodejs22:latest"
