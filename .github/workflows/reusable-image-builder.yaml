@@ -118,7 +118,10 @@ jobs:
       - name: Verify npm removed from nodejs image (non-blocking)
         if: contains(matrix.image, 'nodejs')
         continue-on-error: true
-        run: ./check_no_npm.sh "telicent/${{ steps.extract.outputs.image_name }}:${{ steps.extract.outputs.image_version }}"
+        env:
+          IMAGE_NAME: ${{ steps.extract.outputs.image_name }}
+          IMAGE_VERSION: ${{ steps.extract.outputs.image_version }}
+        run: ./check_no_npm.sh "telicent/${IMAGE_NAME}:${IMAGE_VERSION}"
 
   notify-teams:
     name: Notify Teams on Workflow Result
