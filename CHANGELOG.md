@@ -1,5 +1,18 @@
 # Changelog
 
+## Changes from v0.10.6 to v0.10.7
+
+### Chores
+- update base for descriptors  ([386c78d](https://github.com/telicent-oss/telicent-base-images/commit/386c78d71f0b44c9af3f29e7096665cb741fd82b))
+### Fixes
+- restore arm64 CVE-2026-13149 suppression + npm-absence CI check (#442)  ([8721b71](https://github.com/telicent-oss/telicent-base-images/commit/8721b71ef54e1548de6e12d1f476e362e853ca88))
+- Address NodeJS 20 warnings (#438)  ([b4ced27](https://github.com/telicent-oss/telicent-base-images/commit/b4ced273154ea8387d43a2bed8c1442e243b429f))
+- Remove otherwise defunct images (#437)  ([447a326](https://github.com/telicent-oss/telicent-base-images/commit/447a32648e62501bb35a6fdf1b5f23a1873cdd91))
+- Remove otherwise defunct images (#436)  ([12b89db](https://github.com/telicent-oss/telicent-base-images/commit/12b89db5ff1f9367154c423e0b05132a9eb54bab))
+### Others
+- [Minor] Addressing a number of CVE failures due to Jackson - tweaking for trivy (#440) ([4d76017](https://github.com/telicent-oss/telicent-base-images/commit/4d76017ecef76fe0d4d7c7d751d738b507f53b7d))
+- [Minor] Addressing a number of CVE failures due to Jackson (#439) ([f711910](https://github.com/telicent-oss/telicent-base-images/commit/f711910642cf878bfe00d4a15b26a150a0fa212b))
+
 ## Changes from v0.10.5 to v0.10.6
 
 ### Chores
