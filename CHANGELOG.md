@@ -1,5 +1,13 @@
 # Changelog
 
+## Changes from v0.10.7 to v0.10.8
+
+### Chores
+- upversion nginx 130 (#448)  ([bff12c3](https://github.com/telicent-oss/telicent-base-images/commit/bff12c3cd29f3f2dee2aae4dc141ff5435ec0516))
+- Suppress PIP 26.2 dependency vulnerabilities. (#447)  ([1a283f5](https://github.com/telicent-oss/telicent-base-images/commit/1a283f57557a61d500e5173654d5cbcb9c406494))
+### Others
+- [Minor] Addressing CVE-2026-8927 - more curl-minimal and libcurl-minimal issues that don't affect us (#446) ([afa4b4f](https://github.com/telicent-oss/telicent-base-images/commit/afa4b4f3d358da1b07bf86bbce4a51c4cec4ba68))
+
 ## Changes from v0.10.6 to v0.10.7
 
 ### Chores
