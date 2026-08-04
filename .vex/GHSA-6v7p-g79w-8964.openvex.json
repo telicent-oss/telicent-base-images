@@ -1,0 +1,23 @@
+{
+  "@context": "https://openvex.dev/ns/v0.2.0",
+  "@id": "https://openvex.dev/docs/public/vex-eaa2ea04-73bd-4f54-8d8c-64e38fa71cdb",
+  "author": "Telicent Ltd",
+  "timestamp": "2026-08-04T09:15:30Z",
+  "version": 1,
+  "statements": [
+    {
+      "vulnerability": {
+        "name": "GHSA-6v7p-g79w-8964"
+      },
+      "timestamp": "2026-08-04T09:15:30Z",
+      "products": [
+        {
+          "@id": "pkg:pypi/msgpack@1.1.2"
+        }
+      ],
+      "status": "not_affected",
+      "justification": "vulnerable_code_not_in_execute_path",
+      "impact_statement": "This finding refers to msgpack 1.1.2 vendored inside pip 26.2 (declared via pip's embedded SBOM); msgpack is not installed as a standalone package. The vulnerability is an out-of-bounds read when an Unpacker instance is reused after a caught error; pip's only use of msgpack is CacheControl deserialising pip's own local HTTP cache via one-shot loads() calls, which never reuses an Unpacker after an error, so the vulnerable code path is not exercised. pip main has already bumped its vendored msgpack to 1.2.1 - this suppression becomes stale and should be removed at the next pip release and image rebuild."
+    }
+  ]
+}
