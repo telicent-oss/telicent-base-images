@@ -1,5 +1,14 @@
 # Changelog
 
+## Changes from v0.10.8 to v0.10.9
+
+### Chores
+- update base for descriptors (#449)  ([c2e9ab4](https://github.com/telicent-oss/telicent-base-images/commit/c2e9ab44c1256159414f3a0be3405a492075b356))
+### Fixes
+- add openvex suppression for CVE-2026-11940  ([53c8c23](https://github.com/telicent-oss/telicent-base-images/commit/53c8c2368a88dddb58c8332d85087818a67e7f39))
+### Others
+- [Minor] Updating CVE-2026-8927 and adding CVE-2026-8458 (#453) ([29cd060](https://github.com/telicent-oss/telicent-base-images/commit/29cd0604b1ac1383a39d2f8d4d8a99fd3fc64d67))
+
 ## Changes from v0.10.7 to v0.10.8
 
 ### Chores
