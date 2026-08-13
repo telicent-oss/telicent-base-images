@@ -1,5 +1,12 @@
 # Changelog
 
+## Changes from v0.10.9 to v0.10.10
+
+### Chores
+- update base for descriptors (#452)  ([289d343](https://github.com/telicent-oss/telicent-base-images/commit/289d34324829012ce099ba246029c8d82b89ecae))
+### Others
+- [Minor] Addressing CVE-2026-54399 (#455) ([d533c16](https://github.com/telicent-oss/telicent-base-images/commit/d533c1627bf861590c442b90dda35ed60fc7b4fb))
+
 ## Changes from v0.10.8 to v0.10.9
 
 ### Chores
