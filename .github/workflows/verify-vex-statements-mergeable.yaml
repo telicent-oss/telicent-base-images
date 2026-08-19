@@ -1,0 +1,28 @@
+name: Verify OpenVEX statements are Mergeable
+
+on:
+  push:
+    paths:
+      - .vex/*
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+  id-token: write
+
+jobs:
+  verify-mergeable-vex:
+    name: Verify Mergeable OpenVEX Satements
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Merge OpenVex Statements
+        uses: telicent-oss/merge-vex-action@v1
+        with:
+          name: base-images
+
+  
