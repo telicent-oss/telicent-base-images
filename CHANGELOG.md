@@ -1,5 +1,20 @@
 # Changelog
 
+## Changes from v0.10.11 to v0.10.12
+
+### Chores
+- suppress CVE-2026-53613  ([629fb3b](https://github.com/telicent-oss/telicent-base-images/commit/629fb3b252bfc9d2a2a54f1f2ceef43aa83446aa))
+- bump aws-actions/configure-aws-credentials from 5 to 6  ([19c382f](https://github.com/telicent-oss/telicent-base-images/commit/19c382f794de4ae3b7fbe7a76b717f3752ae1ed4))
+- bump actions/checkout from 5 to 7  ([563d0a8](https://github.com/telicent-oss/telicent-base-images/commit/563d0a81c0440e25694b85bc5d8f1cbc6a827868))
+### Fixes
+- suppress  CVE-2026-14456 now with product  ([1a4c70b](https://github.com/telicent-oss/telicent-base-images/commit/1a4c70bb6b4fea3240152df3315ab64a890ceced))
+- suppress  CVE-2026-14456  ([1f6adc1](https://github.com/telicent-oss/telicent-base-images/commit/1f6adc172a68ca1884eaae8ee1ebf18f7743bd69))
+### Others
+- [Minor] Bumping NGINX from 1.30.3 to 1.30.4. (#470) ([aeb6e11](https://github.com/telicent-oss/telicent-base-images/commit/aeb6e11bb9812caecebdb50f1336ac043bdfdc5e))
+- Adds a VEX validator workflow (#466) ([bafc7b9](https://github.com/telicent-oss/telicent-base-images/commit/bafc7b910d09faeec296ff7d334cd9347847c9cb))
+- Revert "fix: suppress  CVE-2026-14456" ([bce6659](https://github.com/telicent-oss/telicent-base-images/commit/bce66597cd43bab9c987d643df00e73792214099))
+- [Minor] Updating the Curl CVEs to cover newer base images (#463) ([3265736](https://github.com/telicent-oss/telicent-base-images/commit/3265736dad4d1094858e0736b4be64bb50b74515))
+
 ## Changes from v0.10.10 to v0.10.11
 
 ### Chores
