@@ -1,5 +1,12 @@
 # Changelog
 
+## Changes from v0.10.12 to v0.10.13
+
+### Chores
+- update base for descriptors (#472)  ([5b115a0](https://github.com/telicent-oss/telicent-base-images/commit/5b115a0185a3a2c99e88950223ebc788ff74ad70))
+### Others
+- [Minor] Removing CVE suppressions that are no longer used (#469) ([ae952f1](https://github.com/telicent-oss/telicent-base-images/commit/ae952f1b2f42dc12df2995d835fc5ab404122124))
+
 ## Changes from v0.10.11 to v0.10.12
 
 ### Chores
