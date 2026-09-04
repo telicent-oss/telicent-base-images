@@ -1,5 +1,15 @@
 # Changelog
 
+## Changes from v0.10.13 to v0.10.14
+
+### Chores
+- update base for descriptors (#475)  ([9141d53](https://github.com/telicent-oss/telicent-base-images/commit/9141d531f18438c54db12c1e4646dd7066bdf757))
+### Fixes
+- VEX CVE-2026-16742 - systemd-homed privesc; homed is not in the images (#476)  ([a572922](https://github.com/telicent-oss/telicent-base-images/commit/a5729225b713e717f2581dd6f38ec2ee93540064))
+### Others
+- Fix/vex CVE 2026 16742 (#478) ([99c49cc](https://github.com/telicent-oss/telicent-base-images/commit/99c49ccc8819effd99ff7ee84ec4543ad75d60c2))
+- [Minor] Addressing 5 CVEs impacting the data team (telicent-canonicals-region-resolver-mapper). ([264d8fa](https://github.com/telicent-oss/telicent-base-images/commit/264d8fa3c344e59e9fe08aeca9edcf72a0a36ad4))
+
 ## Changes from v0.10.12 to v0.10.13
 
 ### Chores
