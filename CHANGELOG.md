@@ -1,5 +1,14 @@
 # Changelog
 
+## Changes from v0.10.14 to v0.10.15
+
+### Chores
+- update base for descriptors (#480)  ([7c9127b](https://github.com/telicent-oss/telicent-base-images/commit/7c9127bb15a00a17207a93ad320bfe96302f4d75))
+### Fixes
+- VEX CVE-2026-86140 and CVE-2026-74860 - libxml2 2.9.13-14.el9_8.2; bindings absent, no XML path (#481)  ([8587d3e](https://github.com/telicent-oss/telicent-base-images/commit/8587d3ec0e8277b6b0a538e9cec9fbb6f9d8f246))
+### Others
+- [Minor] Addressing CVE-2026-11822, CVE-2026-11824, CVE-2026-63385 which don't impact Telicent code are use transitive dependencies from Red Hat. ([4291d89](https://github.com/telicent-oss/telicent-base-images/commit/4291d89cdde99fd079f8a467c9581766440dff02))
+
 ## Changes from v0.10.13 to v0.10.14
 
 ### Chores
