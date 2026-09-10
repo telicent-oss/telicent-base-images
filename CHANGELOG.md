@@ -1,5 +1,10 @@
 # Changelog
 
+## Changes from v0.10.15 to v0.10.16
+
+### Chores
+- update base for descriptors (#483)  ([a116a1b](https://github.com/telicent-oss/telicent-base-images/commit/a116a1b783989cdbea0f49931a0ba808039bb11d))
+
 ## Changes from v0.10.14 to v0.10.15
 
 ### Chores
