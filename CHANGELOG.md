@@ -1,5 +1,12 @@
 # Changelog
 
+## Changes from v0.10.16 to v0.10.17
+
+### Chores
+- update base for descriptors (#486)  ([ef731a9](https://github.com/telicent-oss/telicent-base-images/commit/ef731a9ebf2043b08b7392d1633329badd280ab4))
+### Others
+- [Minor] Addressing CVE-2026-86415 & CVE-2026-89161 (#485) ([4f4add4](https://github.com/telicent-oss/telicent-base-images/commit/4f4add43d08e5120e00a20982fcb4a36bac252e9))
+
 ## Changes from v0.10.15 to v0.10.16
 
 ### Chores
