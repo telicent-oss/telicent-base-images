@@ -1,5 +1,10 @@
 # Changelog
 
+## Changes from v0.10.21 to v0.10.22
+
+### Fixes
+- bump nginx to 1.30.4 (#496)  ([0822ca8](https://github.com/telicent-oss/telicent-base-images/commit/0822ca84af7cd13a9fb0fb82c05517a9a2029bde))
+
 ## Changes from v0.10.20 to v0.10.21
 
 ### Chores
