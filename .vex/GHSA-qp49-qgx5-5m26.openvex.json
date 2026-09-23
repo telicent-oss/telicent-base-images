@@ -1,0 +1,26 @@
+{
+  "@context": "https://openvex.dev/ns/v0.2.0",
+  "@id": "https://telicent.io/vex/telicent-base-images-ghsa-qp49-qgx5-5m26-20260922",
+  "author": "Telicent Ltd",
+  "timestamp": "2026-09-22T14:37:08Z",
+  "version": 1,
+  "statements": [
+    {
+      "vulnerability": {
+        "name": "GHSA-qp49-qgx5-5m26",
+        "aliases": [
+          "CVE-2026-13506"
+        ]
+      },
+      "timestamp": "2026-09-22T14:37:08Z",
+      "products": [
+        {
+          "@id": "pkg:maven/org.bouncycastle/bcprov-jdk18on@1.84"
+        }
+      ],
+      "status": "not_affected",
+      "justification": "vulnerable_code_cannot_be_controlled_by_adversary",
+      "impact_statement": "GHSA-qp49-qgx5-5m26 is the GitHub Security Advisory alias for CVE-2026-13506, an uncontrolled recursion (CWE-674) in Bouncy Castle's ASN.1 parser (ASN1InputStream / LazyEncodedSequence, fixed in 1.85): forcing a lazily-encoded sequence resets the nesting-depth guard, so deeply nested ASN.1 input can exhaust stack or memory and crash the process. Grype reports this finding under its GHSA identifier rather than the CVE, so a separate VEX statement is required alongside CVE-2026-13506.openvex.json. bcprov-jdk18on 1.84 is present in the Telicent images only as a transitive dependency; the ASN.1 decoder is reached solely when reading keys, certificates and keystores supplied by operator-controlled deployment configuration, not when handling request data from untrusted clients. The malformed, deeply nested DER input required to trigger the flaw therefore cannot be supplied by an adversary on this execution path. Re-evaluate if Bouncy Castle is ever used to parse ASN.1 from untrusted sources, and take bcprov-jdk18on 1.85 or later when the upstream dependency chain permits."
+    }
+  ]
+}

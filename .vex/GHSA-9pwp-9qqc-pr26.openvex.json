@@ -1,0 +1,26 @@
+{
+  "@context": "https://openvex.dev/ns/v0.2.0",
+  "@id": "https://telicent.io/vex/telicent-base-images-ghsa-9pwp-9qqc-pr26-20260922",
+  "author": "Telicent Ltd",
+  "timestamp": "2026-09-22T14:37:08Z",
+  "version": 1,
+  "statements": [
+    {
+      "vulnerability": {
+        "name": "GHSA-9pwp-9qqc-pr26",
+        "aliases": [
+          "CVE-2026-8763"
+        ]
+      },
+      "timestamp": "2026-09-22T14:37:08Z",
+      "products": [
+        {
+          "@id": "pkg:maven/org.bouncycastle/bcprov-jdk18on@1.84"
+        }
+      ],
+      "status": "not_affected",
+      "justification": "vulnerable_code_not_in_execute_path",
+      "impact_statement": "GHSA-9pwp-9qqc-pr26 is the GitHub Security Advisory alias for CVE-2026-8763, a Name Constraints bypass in Bouncy Castle for Java (bcprov/bcpkix before 1.85): a trailing dot in an rfc822Name or URI general name allows a certificate to evade name-constraint checks during X.509 path validation. Grype reports this finding under its GHSA identifier rather than the CVE, so a separate VEX statement is required alongside CVE-2026-8763.openvex.json. bcprov-jdk18on 1.84 is present in the Telicent images only as a transitive dependency of application libraries; the Bouncy Castle provider is not registered as the JSSE/X.509 trust provider and no Telicent code calls Bouncy Castle's certificate path validation. TLS handshakes and certificate chain validation in these images are performed by the JDK's default SunJSSE/SunPKIX providers, so the vulnerable name-constraint code is not in the execute path. Re-evaluate if Bouncy Castle is ever installed as the security provider or used for CertPath validation, and take bcprov-jdk18on 1.85 or later when the upstream dependency chain permits."
+    }
+  ]
+}
