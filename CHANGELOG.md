@@ -1,5 +1,16 @@
 # Changelog
 
+## Changes from v0.10.22 to v0.10.23
+
+### Chores
+- update base for descriptors (#503)  ([9beacfd](https://github.com/telicent-oss/telicent-base-images/commit/9beacfde2ec9b4cbeca4195d89362e26dbaecff0))
+### Others
+- [Minor] Adding GHSA aliases - in their own suppression files ([7bc791c](https://github.com/telicent-oss/telicent-base-images/commit/7bc791cee6deafe83a240fb213a2cc952eb09dce))
+- [Minor] Adding GHSA aliases ([e3d233e](https://github.com/telicent-oss/telicent-base-images/commit/e3d233eb4f7a761fb2c528df7d0d0cfd85a9fca3))
+- [Minor] Extending coverage of existing CVE suppressions (#500) ([c85e019](https://github.com/telicent-oss/telicent-base-images/commit/c85e019893157357afc6a39a8ba6cdcfe9b56d4a))
+- [Minor] Extending coverage of existing CVE suppressions (#499) ([36739a9](https://github.com/telicent-oss/telicent-base-images/commit/36739a9cd960257a6ddff9e4a27108c9ef6d4adf))
+- [Minor] Addressing CVE-2026-8763 (Critical) & CVE-2026-13506 (High) for Bouncy Castle. (#498) ([e8f4c6e](https://github.com/telicent-oss/telicent-base-images/commit/e8f4c6e9c4e70914fa32b83ecd5beb3d6bd7bef9))
+
 ## Changes from v0.10.21 to v0.10.22
 
 ### Fixes
