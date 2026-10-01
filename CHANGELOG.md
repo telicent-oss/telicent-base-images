@@ -1,5 +1,14 @@
 # Changelog
 
+## Changes from v0.10.24 to v0.10.25
+
+### Chores
+- update base for descriptors (#512)  ([0294c6d](https://github.com/telicent-oss/telicent-base-images/commit/0294c6d0b7f975ca8ad748806dd866574a98c634))
+### Others
+- [Minor] Updating CVE-2026-84782 to cover more ([09676e6](https://github.com/telicent-oss/telicent-base-images/commit/09676e6075794e9a62bfdb03f200ffac101f7f7a))
+- [Minor[ Adding CVE-2026-75804 and CVE-2026-84782. ([215ffd0](https://github.com/telicent-oss/telicent-base-images/commit/215ffd0a0372e83eca2bd0881e1da81d921963d3))
+- [Minor] Adding CVE-2026-68497 & CVE-2026-84782 (#510) ([b3913c7](https://github.com/telicent-oss/telicent-base-images/commit/b3913c7868c5df795e51d6638dc0f898b50a9a2b))
+
 ## Changes from v0.10.23 to v0.10.24
 
 ### Chores
