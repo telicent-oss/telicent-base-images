@@ -1,5 +1,18 @@
 # Changelog
 
+## Changes from v0.10.25 to v0.10.26
+
+### Chores
+- update base for descriptors (#522)  ([956fd10](https://github.com/telicent-oss/telicent-base-images/commit/956fd10b3b5b535d32d97b0ef1f022e96356b073))
+- urllib3 2.7.0 vendored in pip 26.2.1 - CVE-2026-97687/97688/97689  ([32013e1](https://github.com/telicent-oss/telicent-base-images/commit/32013e1364a21c2e49bbe78dcfabf05752e76a59))
+### Others
+- [Minor] Adding CVE-2026-47884 For Spring WebMVC - adding GHSA-pc63-qcmh-9cmg alias ([911ee59](https://github.com/telicent-oss/telicent-base-images/commit/911ee5910b2505e41cec290d59381b1fe6d08f15))
+- [Minor] Adding CVE-2026-47884 For Spring WebMVC (#520) ([a3ac35e](https://github.com/telicent-oss/telicent-base-images/commit/a3ac35ebf3ae8bcd72d5374fa3da6d7ca029cf6c))
+- [Minor] Adding CVE-2026-57585 for Python PIP ([0ab5360](https://github.com/telicent-oss/telicent-base-images/commit/0ab53600c1329746c72d7d0df27aeb9a60e010c3))
+- [Minor] Updating CVE-2026-75804 for new base images (#516) ([834ee02](https://github.com/telicent-oss/telicent-base-images/commit/834ee020266c3176cd3db8a6d0086a021d1dd748))
+- [Minor] Populating products for CVE-2026-97687, CVE-2026-97688 and CVE-2026-97689. ([7ca139f](https://github.com/telicent-oss/telicent-base-images/commit/7ca139ff53b11a45898d5245cfcf05db784dd358))
+- [Minor] Adding CVE-2026-103111 and CVE-2026-19553. ([c724b4d](https://github.com/telicent-oss/telicent-base-images/commit/c724b4d8ebd70f806174941a54d214735feb9086))
+
 ## Changes from v0.10.24 to v0.10.25
 
 ### Chores
