@@ -1,5 +1,13 @@
 # Changelog
 
+## Changes from v0.10.26 to v0.10.27
+
+### Chores
+- update base for descriptors  ([fdeedf9](https://github.com/telicent-oss/telicent-base-images/commit/fdeedf9493e13c501bc0068907d4c115483b1e5c))
+### Others
+- [Minor] Adding CVE-2026-47890 For Spring WebMVC ([efaaee9](https://github.com/telicent-oss/telicent-base-images/commit/efaaee979ab0dab45bae15c4a43c3f6aa4d655e1))
+- [Minor] Adding CVE-2026-47884 For Spring WebMVC - adding GHSA-j9f9-w8pj-32f8 alias (#524) ([823f98f](https://github.com/telicent-oss/telicent-base-images/commit/823f98f99715a94d22944249dde486b38180fc68))
+
 ## Changes from v0.10.25 to v0.10.26
 
 ### Chores
