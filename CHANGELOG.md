@@ -1,5 +1,16 @@
 # Changelog
 
+## Changes from v0.10.27 to v0.10.28
+
+### Chores
+- update base for descriptors  ([b890dca](https://github.com/telicent-oss/telicent-base-images/commit/b890dca506e2bd2c1e8b7d067565c214debd8cd8))
+- update base for descriptors (#531)  ([7ccb368](https://github.com/telicent-oss/telicent-base-images/commit/7ccb368d64d06f8391e7d3f960f8806c9734c6cf))
+### Others
+- [Minor] Adding CVE-2026-106451 (and GHSA alias). ([f6d3c77](https://github.com/telicent-oss/telicent-base-images/commit/f6d3c7731f9f53d3722ecda2697fc52a61ca02a1))
+- Add another GnuTLS version (#530) ([0817c41](https://github.com/telicent-oss/telicent-base-images/commit/0817c41a7beccb49740db8c0f5c23cf02116666a))
+- Add GnuTLS version ([ec73dc7](https://github.com/telicent-oss/telicent-base-images/commit/ec73dc7f324c6995732861cf5fd929e81c03ff25))
+- Adding VEX statements for GnuTLS CVEs ([1ab4ab0](https://github.com/telicent-oss/telicent-base-images/commit/1ab4ab0834ee3e17bdfef66bfa324824e937ae15))
+
 ## Changes from v0.10.26 to v0.10.27
 
 ### Chores
