@@ -1,0 +1,23 @@
+{
+  "@context": "https://openvex.dev/ns/v0.2.0",
+  "@id": "https://openvex.dev/docs/public/vex-3be17bd4-4e42-4dc7-a8ad-dc223f59acc5",
+  "author": "Telicent Ltd",
+  "timestamp": "2026-10-21T15:47:26Z",
+  "version": 1,
+  "statements": [
+    {
+      "vulnerability": {
+        "name": "GHSA-6q48-6c7w-9gw2"
+      },
+      "timestamp": "2026-10-21T15:47:26Z",
+      "products": [
+        {
+          "@id": "pkg:pypi/certifi@2026.6.17"
+        }
+      ],
+      "status": "not_affected",
+      "justification": "vulnerable_code_not_in_execute_path",
+      "impact_statement": "certifi 2026.6.17 is present only as pip's vendored copy (pip/_vendor/certifi) and is not installed as a standalone package. Since 24.2, pip uses the OS trust store via truststore by default."
+    }
+  ]
+}
