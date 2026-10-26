@@ -1,5 +1,14 @@
 # Changelog
 
+## Changes from v0.10.29 to v0.10.30
+
+### Documentation
+- explain nginx GPG signing keys when bumping versions (#544)  ([e3283ef](https://github.com/telicent-oss/telicent-base-images/commit/e3283efa467a6ca050e6cda7a24cbd143750b489))
+### Chores
+- update base for descriptors (#539)  ([0520815](https://github.com/telicent-oss/telicent-base-images/commit/0520815562faf91694cef78bfba087cb685d9650))
+### Fixes
+- import both nginx release signing keys (#543)  ([defa895](https://github.com/telicent-oss/telicent-base-images/commit/defa8953d697717cf340d850a6cc6e2b3cd20282))
+
 ## Changes from v0.10.28 to v0.10.29
 
 ### Chores
