@@ -38,7 +38,8 @@ wget "${NGINX_SRC_URL}"
 wget "${NGINX_SRC_URL}.asc"
 
 log "Importing NGINX GPG key..."
-gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys "${NGINX_GPG_KEY}"
+# shellcheck disable=SC2086 # space-separated list of release signing keys
+gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys ${NGINX_GPG_KEY}
 
 log "Verifying NGINX source tarball..."
 TARBALL="nginx-${NGINX_VERSION}.tar.gz"
