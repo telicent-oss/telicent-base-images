@@ -268,6 +268,22 @@ Nginx is installed under /usr/local/nginx.
 Default logging as per default conf is /usr/local/nginx/logs...
 Default logging needs updated to /var/log/nginx/access.log | error.log in order to be propagated to docker.
 
+#### Bumping the Nginx version
+
+Update `NGINX_VERSION` in both `module.yaml` and the default in `configure.sh` for each module
+under `modules/nginx/`.
+
+The build verifies the source tarball with `gpg --verify`. `NGINX_GPG_KEY` is a space-separated
+list of release signing keys. nginx releases are signed by different maintainers, so a bump can
+fail with `gpg: Can't check signature: No public key` if the release was signed by a key not in
+the list.
+
+To fix it, take the fingerprint from the `using RSA key` line in the build log. Confirm it matches
+a key on https://nginx.org/en/pgp_keys.html before adding it. A fingerprint from the signature
+alone only proves the tarball matches that key, not that the key belongs to nginx.
+
+Check a fingerprint with `curl -s https://nginx.org/keys/<name>.key | gpg --show-keys`.
+
 
 ### Node image
 
