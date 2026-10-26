@@ -1,5 +1,16 @@
 # Changelog
 
+## Changes from v0.10.28 to v0.10.29
+
+### Chores
+- chore:suppress vulnerability  ([c2836bb](https://github.com/telicent-oss/telicent-base-images/commit/c2836bb308ba6b4189cfa6402e866afcaa5ac074))
+### Fixes
+- Bumping NGINX from v1.30.4 to v1.30.6  ([03f2d47](https://github.com/telicent-oss/telicent-base-images/commit/03f2d470a391bd59a901e034869246775921b5ff))
+### Others
+- [TC-575] Adding CVE 2026 114406 (#538) ([d8ba32c](https://github.com/telicent-oss/telicent-base-images/commit/d8ba32cd158ab7c921bbdf496084ffdd290cee2a))
+- [Minor] Adding CVE-2026-76641, CVE-2026-77214 & CVE-2026-79824 (#536) ([8546969](https://github.com/telicent-oss/telicent-base-images/commit/8546969a1a337a813967beb5d720540ed3aac348))
+- [Minor] Adding CVE-2026-53615 (#535) ([7338d3d](https://github.com/telicent-oss/telicent-base-images/commit/7338d3dccf6e1b989735f85d20c989de723af39f))
+
 ## Changes from v0.10.27 to v0.10.28
 
 ### Chores
