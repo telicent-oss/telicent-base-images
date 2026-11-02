@@ -1,5 +1,12 @@
 # Changelog
 
+## Changes from v0.10.32 to v0.10.33
+
+### Chores
+- update base for descriptors (#553)  ([0b092cf](https://github.com/telicent-oss/telicent-base-images/commit/0b092cf3aff9a664f81d5afd330fcac4ddbbb646))
+### Others
+- [TC-607] Adding CVE-2026-119373, CVE-2026-119586, CVE-2026-120194 ([be78a1b](https://github.com/telicent-oss/telicent-base-images/commit/be78a1b4f43d2ca27f67aaf4fcda3f65a618f7ca))
+
 ## Changes from v0.10.31 to v0.10.32
 
 ### Chores
