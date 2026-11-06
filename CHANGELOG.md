@@ -1,5 +1,13 @@
 # Changelog
 
+## Changes from v0.10.33 to v0.10.34
+
+### Chores
+- update base for descriptors (#557)  ([ab7e273](https://github.com/telicent-oss/telicent-base-images/commit/ab7e273cdbc1121ac68aa2f908f10aabfcee6ff5))
+### Others
+- [TC-607] Extending CVE-2026-102554 coverage ([d6f6245](https://github.com/telicent-oss/telicent-base-images/commit/d6f6245e6ca1a889162690f0bfab47b59a39f43a))
+- [TC-607] Extending CVE-2026-119373, CVE-2026-119586 coverage. ([be11055](https://github.com/telicent-oss/telicent-base-images/commit/be1105505aacfe24fa2247af3d5d96e3e76aedca))
+
 ## Changes from v0.10.32 to v0.10.33
 
 ### Chores
