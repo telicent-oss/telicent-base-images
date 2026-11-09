@@ -1,5 +1,14 @@
 # Changelog
 
+## Changes from v0.10.34 to v0.10.35
+
+### Chores
+- update base for descriptors (#561)  ([bc17d92](https://github.com/telicent-oss/telicent-base-images/commit/bc17d92d41e4eeff0dc2efd6686ae8929b43a058))
+### Others
+- [TC-643] Extend CVE-2026-76641 to cover newer base OS ([ba85f45](https://github.com/telicent-oss/telicent-base-images/commit/ba85f45f550410bd7bce89aa34e995ff73e80b3d))
+- [TC-643] CVE-2026-115506 ([89699ed](https://github.com/telicent-oss/telicent-base-images/commit/89699ed3914c0041542967222d67542b38e3d00a))
+- Adding statements for GnuPG and SQLite CVEs (#559) ([6c0c1b6](https://github.com/telicent-oss/telicent-base-images/commit/6c0c1b617ab956fbe1a7fec930ceeb162b5f7847))
+
 ## Changes from v0.10.33 to v0.10.34
 
 ### Chores
