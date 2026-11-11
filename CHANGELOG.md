@@ -1,5 +1,15 @@
 # Changelog
 
+## Changes from v0.10.35 to v0.10.36
+
+### Chores
+- update base for descriptors (#567)  ([9cae1cb](https://github.com/telicent-oss/telicent-base-images/commit/9cae1cb6d3737e4e66163aa852920648b27710d3))
+### Others
+- Suppress yet more Kerberos CVEs ([4e30088](https://github.com/telicent-oss/telicent-base-images/commit/4e30088c07a71bd894f8f3d46077f13eda0761b8))
+- [TC-643] Extending coverage of 10 High Level CVEs associated with Kerberos that do not affect us. ([89eade7](https://github.com/telicent-oss/telicent-base-images/commit/89eade7da18bcbd7440325df63ea30f3a7d17426))
+- [TC-643] Addressing 10 High Level CVEs associated with Kerberos that do not affect us. ([807f09a](https://github.com/telicent-oss/telicent-base-images/commit/807f09abbc0636b1559d0cb48a6f16897f3fe829))
+- [TC-643] Addressing 6 High Level CVEs associated with Thrift ([0081315](https://github.com/telicent-oss/telicent-base-images/commit/0081315fa6f1badd29abcde31e3f310c1987b3cd))
+
 ## Changes from v0.10.34 to v0.10.35
 
 ### Chores
