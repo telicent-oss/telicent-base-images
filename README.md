@@ -134,6 +134,17 @@ Included tools (perf additions):
 - sysstat
 - kernel-tools (perf) when `ubi-9-codeready-builder-rpms` is available
 
+Remote debugging (JDWP):
+- The JDWP agent is enabled by default via `JDK_JAVA_OPTIONS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005`
+  and port `5005` is exposed.
+- `JDK_JAVA_OPTIONS` is used rather than `JAVA_TOOL_OPTIONS` because the latter is also picked up by `jcmd`, `jstack`
+  and `jfr`, which would fail trying to bind the same port. Only the `java` launcher reads `JDK_JAVA_OPTIONS`.
+- Child images that set `JDK_JAVA_OPTIONS` must append to it (`ENV JDK_JAVA_OPTIONS="${JDK_JAVA_OPTIONS} ..."`) or the
+  agent is lost. Setting it at runtime replaces the whole value, so include the JDWP agent again if you still want it.
+- To make the JVM wait for a debugger at startup use `suspend=y`.
+- JDWP is unauthenticated and allows arbitrary code execution, so only use this image in non-production environments
+  and do not expose port 5005 beyond a trusted network (prefer `kubectl port-forward`).
+
 Example use:
 ```
 FROM telicent/telicent-java21-perf:latest
