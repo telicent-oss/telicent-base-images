@@ -1,5 +1,10 @@
 # Changelog
 
+## Changes from v0.10.36 to v0.10.36
+
+### Others
+- [Minor] Enable the JDWP agent so a debugger can attach to the running app when using the perf image (#570) ([98dcab2](https://github.com/telicent-oss/telicent-base-images/commit/98dcab254677d7f32246f2802922ac3b3726a48a))
+
 ## Changes from v0.10.35 to v0.10.36
 
 ### Chores
