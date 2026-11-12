@@ -42,6 +42,11 @@ labels:
 envs:
   - name: "LANG"
     value: "C.utf8"
+  - name: "JDK_JAVA_OPTIONS"
+    value: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
+
+ports:
+  - value: 5005
 
 packages:
   manager: microdnf
