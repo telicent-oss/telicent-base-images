@@ -1,5 +1,11 @@
 # Changelog
 
+## Changes from v0.10.36 to v0.10.37
+
+### Others
+- [Minor] Extend the coverage of CVE-2026-74860 and CVE-2026-86140 ([aea9f1c](https://github.com/telicent-oss/telicent-base-images/commit/aea9f1c9d5d3e6fe9679efa25e060ff9a3585cad))
+- [Minor] Enable the JDWP agent so a debugger can attach to the running app when using the perf image (#570) ([98dcab2](https://github.com/telicent-oss/telicent-base-images/commit/98dcab254677d7f32246f2802922ac3b3726a48a))
+
 ## Changes from v0.10.36 to v0.10.36
 
 ### Others
