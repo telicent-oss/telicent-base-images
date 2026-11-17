@@ -1,5 +1,15 @@
 # Changelog
 
+## Changes from v0.10.37 to v0.10.38
+
+### Chores
+- update base for descriptors (#575)  ([79af9c4](https://github.com/telicent-oss/telicent-base-images/commit/79af9c435eaf1754816b61cde4e7b1e0e605ae64))
+- CVE 2026 53615 (#577)  ([346f579](https://github.com/telicent-oss/telicent-base-images/commit/346f579a78f3855a375157b161fee1776cd55713))
+### Others
+- [TC-643] Extending CVE-2026-57585 ([885c603](https://github.com/telicent-oss/telicent-base-images/commit/885c6030459cf09262733e062b0e09c0889abf96))
+- [TC-643] Addressing CVE-2026-76844 ([562ce76](https://github.com/telicent-oss/telicent-base-images/commit/562ce765fe5a0e128a55a7d65bcf742777e86d1d))
+- [Minor] Extend the coverage of four expat CVEs to 2.5.0-6.el9_8.7 (#574) ([884eb7a](https://github.com/telicent-oss/telicent-base-images/commit/884eb7a9f8654fae33f17d4a965f7674846ca1d6))
+
 ## Changes from v0.10.36 to v0.10.37
 
 ### Others
