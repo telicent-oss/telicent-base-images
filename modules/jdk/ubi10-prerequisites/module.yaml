@@ -1,0 +1,8 @@
+schema_version: 1
+name: telicent.container.openjdk.ubi10-prerequisites
+version: '1.0'
+description: "Install GnuPG for Temurin download signature verification on UBI 10."
+
+packages:
+  install:
+    - gnupg2

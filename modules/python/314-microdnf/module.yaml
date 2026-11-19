@@ -1,0 +1,22 @@
+schema_version: 1
+
+name: "telicent.container.python314-microdnf"
+description: "Installs Python 3.14 from UBI 10 AppStream and creates the application virtual environment."
+version: &pythonver "3.14"
+
+labels:
+  - name: "org.telicent.product"
+    value: "python"
+  - name: "org.telicent.product.version"
+    value: *pythonver
+  - name: "org.telicent.product.python.version"
+    value: *pythonver
+
+packages:
+  install:
+    - glibc-langpack-en
+    - python3.14
+    - python3.14-pip
+
+execute:
+  - script: home-perms

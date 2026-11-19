@@ -1,0 +1,8 @@
+schema_version: 1
+name: telicent.container.util.tzdata-ubi10
+version: '1.0'
+description: "Install timezone data on UBI 10 minimal."
+
+packages:
+  install:
+    - tzdata
