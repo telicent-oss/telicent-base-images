@@ -5,7 +5,7 @@ schema_version: 1
 from: "redhat/ubi9-minimal:9.9-1795001629"
 
 name: &name "telicent-nginx1.29"
-version: &version "1.2.85"
+version: &version "1.2.86"
 description: "Telicent's NGINX base image built on Red Hat UBI9 minimal."
 
 # Ensure compliance with Red Hat UBI EULA
