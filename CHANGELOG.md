@@ -1,5 +1,15 @@
 # Changelog
 
+## Changes from v0.10.39 to v0.10.40
+
+### Chores
+- add products to CVE-2026-115506 (#585)  ([4b7ac1b](https://github.com/telicent-oss/telicent-base-images/commit/4b7ac1b374457de85373281c93a63745061200b6))
+- Update Curl CVE supressions  ([d6ed314](https://github.com/telicent-oss/telicent-base-images/commit/d6ed3141909840b14e5164110daca3471814160b))
+### Fixes
+- rebuild images for curl CVE-2026-8286/8458/8927/9547  ([9619e18](https://github.com/telicent-oss/telicent-base-images/commit/9619e184bee298c1e223a1abb1608a898677c55b))
+### Others
+- Suppress CVE-2026-1296483 ([214e736](https://github.com/telicent-oss/telicent-base-images/commit/214e7365655291131e7d4e7b22076026525f1aea))
+
 ## Changes from v0.10.38 to v0.10.39
 
 ### Chores
