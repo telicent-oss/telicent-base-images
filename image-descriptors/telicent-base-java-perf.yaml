@@ -1,5 +1,7 @@
 schema_version: 1
 
+# Rebuild picks up curl-minimal/libcurl-minimal 7.76.1-44.el9_9.1 via util.pkg-update
+# (CVE-2026-8286, CVE-2026-8458, CVE-2026-8927, CVE-2026-9547).
 from: "redhat/ubi9-minimal:9.9-1795001629"
 
 name: &name "telicent-java21-perf"
