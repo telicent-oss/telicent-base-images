@@ -1,5 +1,14 @@
 # Changelog
 
+## Changes from v0.10.40 to v0.10.41
+
+### Chores
+- update base for descriptors  ([7c0e6d0](https://github.com/telicent-oss/telicent-base-images/commit/7c0e6d09e5ee6970c58e1dc7c642021cf394eb37))
+### Fixes
+- bump nginx to 1.30.7 for critical CVEs  ([ec7dd81](https://github.com/telicent-oss/telicent-base-images/commit/ec7dd81eea694e43c470cf99c708900b13fb87fa))
+### Others
+- [TC-643] Extending Curl CVE coverage ([c845917](https://github.com/telicent-oss/telicent-base-images/commit/c8459179817fbd31c33b68c9187f04fd3aea057d))
+
 ## Changes from v0.10.39 to v0.10.40
 
 ### Chores
