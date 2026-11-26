@@ -1,0 +1,62 @@
+# Experimental UBI 10 variant; excluded from automated releases.
+schema_version: 1
+
+from: "registry.access.redhat.com/ubi10/ubi-minimal:10.3-1795002774"
+
+name: &name "telicent-java21-ubi10"
+version: &version "0.1.0"
+description: &description "Telicent's java base image built on Red Hat UBI10 minimal."
+
+# Ensure compliance with Red Hat UBI EULA
+labels:
+  - name: "name"
+    value: *name
+  - name: "version"
+    value: *version
+  - name: "description"
+    value: "Telicent's base image built on Red Hat UBI10 minimal with added Temurin OpenJDK and dumb-init"
+  - name: "com.redhat.license_terms"
+    value: "https://www.redhat.com/en/about-red-hat-end-user-license-agreements#UBI" # DO NOT REMOVE
+  - name: "io.k8s.display-name"
+    value: "Telicent UBI Java Base"
+  - name: "io.openshift.tags"
+    value: "base ubi10 telicent-java21-ubi10"
+  - name: "org.opencontainers.image.source"
+    value: "https://github.com/telicent-oss/telicent-base-images"
+  - name: "summary"
+    value: "Telicent Base Java Image built from Red Hat Universal Base Image 10 with added non root default user"
+  - name: "maintainer"
+    value: "Telicent OSS <opensource@telicent.io>"
+  - name: "vendor"
+    value: "Telicent OSS"
+  - name: "org.opencontainers.image.authors"
+    value: "Telicent OSS <opensource@telicent.io>"
+  - name: "org.opencontainers.image.title"
+    value: *name
+  - name: "org.opencontainers.image.description"
+    value: *description
+  - name: "org.opencontainers.image.version"
+    value: *version
+  - name: "org.opencontainers.image.vendor"
+    value: "Telicent OSS"
+
+envs:
+  - name: "LANG"
+    value: "C.utf8"
+
+packages:
+  manager: microdnf
+  manager_flags: --setopt=tsflags=nodocs --setopt=install_weak_deps=0 --enablerepo=ubi-10-appstream-rpms
+
+modules:
+  repositories:
+   - path: ../modules
+  install:
+    - name: telicent.container.util.pkg-update
+    - name: telicent.container.util.tzdata-ubi10
+    - name: telicent.container.tar-gzip
+    - name: telicent.container.openjdk.ubi10-prerequisites
+    - name: telicent.container.openjdk
+      version: "21"
+    - name: telicent.container.dumb-init
+      version: "1.2.5"
